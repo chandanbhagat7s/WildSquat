@@ -30,7 +30,8 @@ const createTokenSendRes = (id, res, statusCode, data) => {
     // we will set cookies 
     res.status(statusCode).json({
         status: "success",
-        data
+        data,
+        token
 
     })
 }
@@ -59,8 +60,40 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.signUp = catchAsync(async (req, res, next) => {
     console.log(req.body);
-    const { userName, email, password, mobile } = req.body;
-    const newUser = await User.create({ userName, email, password, mobile });
+    const { name
+        , email
+        , mobile
+        , state
+        , country
+        , district
+        , pinCode
+        , password
+        , addressLine1 } = req.body;
+
+    if (
+        !name ||
+        !email ||
+        !mobile ||
+        !state ||
+        !country ||
+        !district ||
+        !pinCode ||
+        !password ||
+        !addressLine1
+    ) {
+        return next(new appError("Please fill all the fields", 400))
+    }
+    const newUser = await User.create({
+        name
+        , email
+        , mobile
+        , state
+        , country
+        , district
+        , pinCode
+        , addressLine1
+        , password
+    });
     if (!newUser) {
         return next(new appError("something went wrrong  ", 500));
 

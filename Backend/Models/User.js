@@ -3,10 +3,10 @@ const mongoose = require("mongoose")
 const bcrypt = require('bcryptjs');
 // creating schema
 const userSchema = new mongoose.Schema({
-    userName: {
+    name: {
         type: String,
         required: [true, "name should be provided"],
-        maxLength: 20,
+        maxLength: 25,
         minLenght: 5
     },
     email: {
@@ -17,24 +17,40 @@ const userSchema = new mongoose.Schema({
         minLenght: 5
     },
     mobile: {
-        type: String,
+        type: Number,
         required: true,
         maxLength: 10,
         minLenght: 10
     },
-    address: {
+    addressLine1: {
         type: String,
         maxLength: 50,
         minLenght: 5
     },
-
-
-
+    role: {
+        type: String,
+        default: "user"
+    },
     password: {
         type: String,
         required: [true, "user must provide password "],
         select: false
     },
+    country: {
+        type: String,
+        required: [true, "You are from which country must be provided"]
+    },
+    state: {
+
+        type: String,
+        required: [true, "You are from which country must be provided"]
+
+    },
+    pinCode: {
+        type: Number,
+        required: [true, "You are from which state must be provided"]
+
+    }
 
 
 

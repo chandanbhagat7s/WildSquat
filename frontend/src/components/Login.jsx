@@ -1,13 +1,35 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { error, success, warning } from "../redux/slices/errorSlice";
+import { loginForm } from "../redux/slices/authSlice";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    password: "",
+    email: "",
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempted with:", { email, password });
+    if (!formData.email || !formData.password) {
+      return dispatch(warning({ message: "please enter all the details" }));
+    }
+    const res = await dispatch(loginForm(formData));
+    //console.log(res);
+    if (res?.payload?.data?.status == "success") {
+      dispatch(success({ message: "Logged in successfully " }));
+      // nevigate("/home");
+    } else {
+      dispatch(error({ message: res?.payload?.data?.msg }));
+    }
   };
 
   return (
@@ -32,8 +54,8 @@ const LoginPage = () => {
               required
               className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
 
@@ -52,8 +74,8 @@ const LoginPage = () => {
               required
               className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
 

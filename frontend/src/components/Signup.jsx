@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signupForm } from "../redux/slices/authSlice";
+import { error, success, warning } from "../redux/slices/errorSlice";
 
 const SignUpPage = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
+    password: "",
     email: "",
-    phoneNumber: "",
+    mobile: "",
     state: "",
     country: "",
     district: "",
@@ -20,10 +25,30 @@ const SignUpPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign-up logic here
-    console.log("Sign-up attempted with:", formData);
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.mobile ||
+      !formData.state ||
+      !formData.country ||
+      !formData.district ||
+      !formData.pinCode ||
+      !formData.password ||
+      !formData.addressLine1
+    ) {
+      return dispatch(warning({ message: "please enter all the details" }));
+    }
+    const res = await dispatch(signupForm(formData));
+
+    if (res?.payload?.data?.status == "success") {
+      dispatch(success({ message: "Logged in successfully " }));
+      // nevigate("/home");
+    } else {
+      dispatch(error({ message: res?.payload?.data?.msg }));
+    }
   };
 
   return (
@@ -68,13 +93,28 @@ const SignUpPage = () => {
               />
             </div>
             <div className="my-2">
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Password "
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="my-2">
               <label htmlFor="phone-number" className="sr-only">
                 Phone Number
               </label>
               <input
                 id="phone-number"
-                name="phoneNumber"
-                type="tel"
+                name="mobile"
+                type="number"
                 autoComplete="tel"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
