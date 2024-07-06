@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ProductActions from "./ProductsCRUD";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -76,7 +77,7 @@ const AdminPanel = () => {
         </div>
 
         <div>
-          {tabs.map((tab) => (
+          {/* {tabs.map((tab) => (
             <div
               key={tab.id}
               className={`p-4 rounded-lg bg-white ${
@@ -85,10 +86,12 @@ const AdminPanel = () => {
               role="tabpanel"
               aria-labelledby={`${tab.id}-tab`}
             >
-              <h2 className="text-2xl font-semibold mb-4">{tab.label}</h2>
-              <p>{tab.content}</p>
+             
             </div>
-          ))}
+          ))} */}
+
+          {activeTab == "products" && <ProductActions />}
+          {/* <ProductActions/> */}
         </div>
       </div>
     </div>

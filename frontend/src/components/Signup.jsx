@@ -52,7 +52,10 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 py-12 px-4 sm:px-6 lg:px-8"
+      id="signup"
+    >
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -211,7 +214,7 @@ const SignUpPage = () => {
         </form>
         <div className="text-sm text-center">
           <a
-            href="#"
+            href="#login"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Already have an account? Sign in

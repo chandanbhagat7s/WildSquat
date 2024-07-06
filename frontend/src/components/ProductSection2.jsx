@@ -65,7 +65,7 @@ const ProductCard = ({ product }) => {
             New
           </div>
         </div>
-        <div className="md:w-3/5 p-6 flex flex-col justify-between">
+        <div className="md:w-3/5 p-6 flex flex-col space-y-2 justify-between">
           <div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">
               {product.name}
@@ -89,19 +89,19 @@ const ProductCard = ({ product }) => {
             </div>
             <p className="text-gray-600 mb-4">{product.description}</p>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-col md:flex-row">
             <span className="text-3xl font-bold text-gray-900">
               ${product.price.toFixed(2)}
             </span>
-            <div className="space-x-2">
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center">
+            <div className="space-x-2 flex ">
+              <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center ">
                 <FaShoppingCart className="mr-2" />
                 Add to Cart
               </button>
-              <button className="bg-gray-200 text-gray-800 p-2 rounded-full hover:bg-gray-300 transition-colors duration-300">
+              <button className="bg-red-600 text-white text-center p-3 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center  ">
                 <FaHeart />
               </button>
-              <button className="bg-gray-200 text-gray-800 p-2 rounded-full hover:bg-gray-300 transition-colors duration-300">
+              <button className="bg-green-600 text-white text-center p-3 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center 2">
                 <FaSearch />
               </button>
             </div>

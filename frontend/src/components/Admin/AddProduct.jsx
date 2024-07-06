@@ -4,11 +4,12 @@ import { MdColorLens } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
 import { GiClothes, GiRuleBook } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
+import axios from "axios";
 
 const CreateProductForm = () => {
   const [product, setProduct] = useState({
     name: "",
-    price: "",
+    price: 1000,
     shortDescription: "",
     longDescription: "",
     sizes: [],
@@ -22,7 +23,8 @@ const CreateProductForm = () => {
     category: "",
     colorCategory: "",
     careInstructions: "",
-    madeIn: "",
+    madeIn: "India",
+    stock: 20,
   });
 
   const sizeOptions = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -80,14 +82,24 @@ const CreateProductForm = () => {
     setProduct({ ...product, images: newImages });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Product data:", product);
-    // Handle form submission here
+
+    const fd = new FormData();
+    for (const key in product) {
+      fd.append(`${key}`, product[key]);
+    }
+
+    product.images.map((el) => {
+      fd.append("images", el);
+    });
+
+    const res = await axios.post("/api/v1/admin/create", fd);
+    console.log(res);
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-100 min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 py-6 px-8">
           <h1 className="text-3xl font-bold text-white">Create New Product</h1>
@@ -108,6 +120,7 @@ const CreateProductForm = () => {
                 value={product.name}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Track pant"
                 required
               />
             </div>
@@ -144,6 +157,7 @@ const CreateProductForm = () => {
               value={product.shortDescription}
               onChange={handleInputChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder=" Comfortable, stylish, and perfect for any workout or casual day out."
               required
             />
           </div>
@@ -162,6 +176,7 @@ const CreateProductForm = () => {
               value={product.longDescription}
               onChange={handleInputChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Elevate your athleisure wardrobe with our Classic Black Track Pants. Designed for both comfort and style, these pants are crafted from a soft, breathable fabric that moves with you. The elastic waistband ensures a secure fit,"
               required
             ></textarea>
           </div>
@@ -199,6 +214,7 @@ const CreateProductForm = () => {
               value={product.material}
               onChange={handleInputChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Polyester,Nylon,Fleece etc"
             />
           </div>
 
@@ -338,6 +354,7 @@ const CreateProductForm = () => {
                 value={product.shippingDetails}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Rs 50.99, delivery in 5-7 business days"
               ></textarea>
             </div>
             <div>
@@ -354,6 +371,7 @@ const CreateProductForm = () => {
                 value={product.returnDetails}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="7-Day Return Policy etc.. "
               ></textarea>
             </div>
           </div>
@@ -363,6 +381,7 @@ const CreateProductForm = () => {
               <label
                 htmlFor="category"
                 className="block text-sm font-medium text-gray-700"
+                placeholder="Pant , Track pant , jeans .. etc"
               >
                 Category
               </label>
@@ -434,6 +453,22 @@ const CreateProductForm = () => {
               id="madeIn"
               name="madeIn"
               value={product.madeIn}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="stock"
+              className="block text-sm font-medium text-gray-700"
+            >
+              stock
+            </label>
+            <input
+              type="text"
+              id="stock"
+              name="stock"
+              value={product.stock}
               onChange={handleInputChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />

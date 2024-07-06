@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { error, success, warning } from "../redux/slices/errorSlice";
 import { loginForm } from "../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const nevigate = useNavigate();
   const [formData, setFormData] = useState({
     password: "",
     email: "",
@@ -26,14 +28,21 @@ const LoginPage = () => {
     //console.log(res);
     if (res?.payload?.data?.status == "success") {
       dispatch(success({ message: "Logged in successfully " }));
-      // nevigate("/home");
+      if (res?.payload?.data?.data?.role == "ADMIN") {
+        nevigate("/adminDash");
+      } else {
+        nevigate("/");
+      }
     } else {
       dispatch(error({ message: res?.payload?.data?.msg }));
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+    <div
+      id="login"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"
+    >
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
           Welcome Back
@@ -79,22 +88,7 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
+          <div className="flex items-center justify-end">
             <div className="text-sm">
               <a
                 href="#"
@@ -122,24 +116,18 @@ const LoginPage = () => {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white text-gray-500">
-                Or continue with
+                Or Create an Account
               </span>
             </div>
           </div>
 
           <div className="mt-6 flex justify-center items-center">
-            <div>
-              <a
-                href="#"
-                className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              >
-                <img
-                  className="h-5 w-5"
-                  src="https://www.svgrepo.com/show/512120/facebook-176.svg"
-                  alt="Facebook"
-                />
-              </a>
-            </div>
+            <a
+              className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              href="#signup"
+            >
+              Register
+            </a>
           </div>
         </div>
       </div>

@@ -18,9 +18,9 @@ const products = [
     reviews: 256,
     colors: ["#8B4513", "#000000", "#A52A2A"],
     images: [
-      "https://via.placeholder.com/500x600?text=Handbag+1",
-      "https://via.placeholder.com/500x600?text=Handbag+2",
-      "https://via.placeholder.com/500x600?text=Handbag+3",
+      "https://static.cilory.com/480395-thickbox_default/octane-blue-full-sleeves-t-shirt-by-nologo.jpg",
+      "https://m.media-amazon.com/images/I/71QOhw6WJxL._AC_UY1100_.jpg",
+      "https://static.cilory.com/480395-thickbox_default/octane-blue-full-sleeves-t-shirt-by-nologo.jpg",
     ],
   },
   {
