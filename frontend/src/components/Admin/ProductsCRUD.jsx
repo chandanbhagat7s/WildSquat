@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import CreateProductForm from "./AddProduct";
+import EditProductForm from "./EditProduct";
 
 const ProductActions = () => {
   const [activeComponent, setActiveComponent] = useState("create");
@@ -21,7 +22,7 @@ const ProductActions = () => {
       case "hide":
         return <HideProduct />;
       case "edit":
-        return <EditProduct />;
+        return <EditProductForm />;
       default:
         return null;
     }

@@ -6,6 +6,7 @@ import ProductListing from "../ProductL";
 import ProductSection2 from "../ProductSection2";
 import CreateProductForm from "../Admin/AddProduct";
 import AdminPanel from "../Admin/AdminDash";
+import ProductOverview from "../common/ProductOverwiew";
 
 export default function AppRoutes() {
   return (
@@ -23,6 +24,14 @@ export default function AppRoutes() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/createProduct" element={<CreateProductForm />} />
         <Route path="/adminDash" element={<AdminPanel />} />
+        <Route
+          path="/productDetails"
+          element={
+            <MainLayout>
+              <ProductOverview />{" "}
+            </MainLayout>
+          }
+        />
       </Routes>
     </>
   );

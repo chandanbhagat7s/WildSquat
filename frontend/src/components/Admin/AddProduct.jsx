@@ -5,8 +5,11 @@ import { BiCategory } from "react-icons/bi";
 import { GiClothes, GiRuleBook } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { error, success } from "../../redux/slices/errorSlice";
 
 const CreateProductForm = () => {
+  const dispatch = useDispatch();
   const [product, setProduct] = useState({
     name: "",
     price: 1000,
@@ -17,7 +20,7 @@ const CreateProductForm = () => {
     images: [],
     coverImage: null,
     features: ["", "", "", "", ""],
-    colors: ["#000000", "#000000", "#000000", "#000000", "#000000"],
+    colors: ["", "", "", "", ""],
     shippingDetails: "",
     returnDetails: "",
     category: "",
@@ -85,17 +88,41 @@ const CreateProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const fd = new FormData();
-    for (const key in product) {
-      fd.append(`${key}`, product[key]);
+    try {
+      const fd = new FormData();
+      for (const key in product) {
+        if (key == "images") {
+          product.images.map((el) => {
+            fd.append("images", el);
+          });
+        } else if (key == "features") {
+          product.features.map((el) => {
+            fd.append("features", el);
+          });
+        } else if (key == "colors") {
+          product.colors.map((el) => {
+            fd.append("colors", el);
+          });
+        } else if (key == "sizes") {
+          product.sizes.map((el) => {
+            fd.append("sizes", el);
+          });
+        } else {
+          fd.append(`${key}`, product[key]);
+        }
+      }
+
+      const res = await axios.post("/api/v1/admin/create", fd);
+      console.log(res);
+      if (res.data.status == "success") {
+        dispatch(success({ message: "product added successfully" }));
+      } else {
+        dispatch(error({ message: "something went wrong please try again" }));
+      }
+    } catch (error) {
+      dispatch(error({ message: "something went wrong please try again" }));
+      console.log(error);
     }
-
-    product.images.map((el) => {
-      fd.append("images", el);
-    });
-
-    const res = await axios.post("/api/v1/admin/create", fd);
-    console.log(res);
   };
 
   return (

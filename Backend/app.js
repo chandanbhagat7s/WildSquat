@@ -8,6 +8,7 @@ const globalErrorHandler = require('./utils/globalErrorHandler');
 const authRoute = require('./Routes/authRoutes');
 const adminRouter = require('./Routes/adminRoutes');
 const path = require('path');
+const productRouter = require('./Routes/productRoute');
 
 const app = express()
 env.config({ path: "./config.env" })
@@ -36,6 +37,7 @@ mongoose.connect(process.env.DATABASE_URL, {
 
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/admin', adminRouter)
+app.use('/api/v1/product', productRouter)
 
 
 

@@ -1,147 +1,230 @@
-import React, { useState } from "react";
-import { FaHeart, FaShare } from "react-icons/fa";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import {
+  FaBoxOpen,
+  FaExchangeAlt,
+  FaGlobeAsia,
+  FaHeart,
+  FaShare,
+  FaShippingFast,
+  FaTshirt,
+} from "react-icons/fa";
+import { IoMdArrowBack } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { error } from "../../redux/slices/errorSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import { MdLocalLaundryService } from "react-icons/md";
 
 const ProductOverview = () => {
+  const nevigate = useNavigate();
+  const { state } = useLocation();
+  const dispatch = useDispatch();
+  const [images, setImage] = useState([]);
   const [selectedImage, setSelectedImage] = useState(0);
-  const product = {
-    name: "Track Pant",
-    price: "1000",
-    shortDescription:
-      "Relaxed Fit Track Pants: Enjoy ultimate comfort with a relaxed fit and adjustable waistband. Slim Fit Track Pants: Sporty and trendy, these track pants offer a snug fit for an athletic look.",
-    longDescription:
-      "Elevate your athleisure wardrobe with our Classic Black Track Pants. Des  mo  workouts, casual outings, or lounging at home, these track pants are a versatile addition to any wardrs",
-    sizes: ["XS", "S", "M", "L"],
-    material: ["Polyester", "Cotton Blend"],
-    features: [
-      "Elastic Waistband: Adjustable and comfortable fit",
-      "Moisture-Wicking Fabric: Keeps you dry during workouts.",
-      "Zippered Pockets: Secure storage for essentials",
-      "Tapered Leg Design: Modern and stylish look",
-      "Breathable Material: Ensures comfort and ventilation",
-    ],
-    colors: ["#a53131", "#000000", "#000000", "#000000", "#000000"],
-    shippingDetails:
-      "Free Shipping: On orders over $50. Standard Shipping: $5.99, delivery in 5-7 business days.",
-    returnDetails: "30-Day Return Policy: Hassle-free returns within 30 days.",
-    category: "Casual",
-    colorCategory: "Green",
-    careInstructions: [
-      "Machine Washable: Easy to clean in a washing machine.",
-      "Cold Water Wash: Use cold water to preserve fabric quality.",
-      "Tumble Dry Low: Dry on low heat to prevent shrinking.",
-      "Do Not Bleach: Avoid using bleach to maintain color.",
-      "Iron Low Heat: Use a low heat setting when ironing.",
-    ],
-    madeIn: "India",
-    stock: "20",
+  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState({});
+
+  const getData = async () => {
+    try {
+      const res = await axios.get(`/api/v1/product/getProduct/${state.id}`);
+      console.log(res);
+      if (res?.data?.status == "success") {
+        // Assuming we have two placeholder images
+        let i = res?.data?.product?.images.map(
+          (el) => `http://127.0.0.1:4000/img/${el}`
+        );
+        setImage([...i]);
+        setProduct({ ...res?.data?.product });
+        setLoading(false);
+      }
+    } catch (e) {
+      dispatch(error({ message: e.responce.msg || "something went wrong" }));
+    }
   };
 
-  // Assuming we have two placeholder images
-  const images = [
-    "http://127.0.0.1:4000/img/Track Pant-1.jpeg",
-    "http://127.0.0.1:4000/img/Track Pant-0.jpeg",
-  ];
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 pt-5 pb-8">
+      <div className=" mb-2  ">
+        <button
+          className="border border-1 border-double   rounded-full flex space-x-2 px-3 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
+          onClick={() => nevigate(-1)}
+        >
+          <IoMdArrowBack className="text-2xl font-bold " />
+        </button>
+      </div>
       <div className="flex flex-col md:flex-row -mx-4">
-        {/* Left side - Image gallery */}
-        <div className="md:w-2/5 px-4">
-          <div className="sticky top-0">
-            <div className="mb-4">
-              <img
-                src={images[selectedImage]}
-                alt={`Track Pant - Image ${selectedImage + 1}`}
-                className="w-full rounded-lg"
-              />
+        {loading ? (
+          <>loading</>
+        ) : (
+          <>
+            {/* Left side - Image gallery */}
+            <div className="md:w-2/5 px-4">
+              <div className="sticky top-0 space-y-2">
+                <div className="mb-4">
+                  <img
+                    src={images[selectedImage]}
+                    alt={`Track Pant - Image ${selectedImage + 1}`}
+                    className="h-96 mx-auto rounded-lg"
+                  />
+                </div>
+                <div className="flex space-x-2 overflow-x-auto">
+                  {images.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className={`w-20 h-20 object-cover rounded-md cursor-pointer ${
+                        selectedImage === index
+                          ? "border-2 border-blue-500"
+                          : ""
+                      }`}
+                      onClick={() => setSelectedImage(index)}
+                    />
+                  ))}
+                </div>
+                {/* Action Buttons */}
+                <div className="flex space-x-4 mb-6">
+                  <button className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-300 text-white shadow-lg  py-3 rounded-md">
+                    ADD TO CART
+                  </button>
+                  <button className="flex-1 bg-gradient-to-r from-purple-800 to-indigo-600 text-white shadow-lg py-3 rounded-md">
+                    BUY NOW
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="flex space-x-2 overflow-x-auto">
-              {images.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Thumbnail ${index + 1}`}
-                  className={`w-20 h-20 object-cover rounded-md cursor-pointer ${
-                    selectedImage === index ? "border-2 border-blue-500" : ""
-                  }`}
-                  onClick={() => setSelectedImage(index)}
-                />
-              ))}
+
+            {/* Right side - Product information */}
+            <div className="md:w-3/5 px-4 mt-8 md:mt-0 max-h-screen overflow-y-scroll">
+              <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
+              <p className="text-md text-gray-500 mb-4">
+                {product.shortDescription}
+              </p>
+              <div className="flex items-center mb-4">
+                <span className="text-3xl font-bold">₹{product.price}</span>
+                <span className="ml-2 text-green-500">Extra ₹4000 off</span>
+              </div>
+
+              {/* Size Selection */}
+              <div className="mb-4">
+                <h2 className="font-semibold mb-2">Size</h2>
+                <div className="flex space-x-2">
+                  {product.sizes.map((size) => (
+                    <button
+                      key={size}
+                      className="px-4 py-2 border rounded-md hover:border-blue-500"
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Selection */}
+              <div className="mb-4">
+                <h2 className="font-semibold mb-2">Color</h2>
+                <div className="flex space-x-2">
+                  {product.colors.map((color, index) => (
+                    <button
+                      key={index}
+                      className="w-8 h-8 rounded-full border-2 hover:border-blue-500"
+                      style={{ backgroundColor: color }}
+                    ></button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="mb-6">
+                <h2 className="font-semibold mb-2">Features</h2>
+                <ul className="list-disc list-inside">
+                  {product.features.map((feature, index) => (
+                    <li key={index} className="text-gray-600">
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Additional Information */}
+              <div className="bg-white shadow-md rounded-lg p-6 mt-8">
+                <h2 className="text-2xl font-semibold mb-6">
+                  Additional Information
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Shipping Details */}
+                  <div className="flex items-start">
+                    <FaShippingFast className="text-2xl text-indigo-600 mr-4 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Shipping</h3>
+                      <p className="text-gray-600">{product.shippingDetails}</p>
+                    </div>
+                  </div>
+
+                  {/* Return Policy */}
+                  <div className="flex items-start">
+                    <FaExchangeAlt className="text-2xl text-indigo-600 mr-4 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Returns</h3>
+                      <p className="text-gray-600">{product.returnDetails}</p>
+                    </div>
+                  </div>
+
+                  {/* Category */}
+                  <div className="flex items-start">
+                    <FaTshirt className="text-2xl text-indigo-600 mr-4 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Category</h3>
+                      <p className="text-gray-600">
+                        {product.category} - {product.colorCategory}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Made In */}
+                  <div className="flex items-start">
+                    <FaGlobeAsia className="text-2xl text-indigo-600 mr-4 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Origin</h3>
+                      <p className="text-gray-600">Made in {product.madeIn}</p>
+                    </div>
+                  </div>
+
+                  {/* Stock */}
+                  <div className="flex items-start">
+                    <FaBoxOpen className="text-2xl text-indigo-600 mr-4 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">
+                        Availability
+                      </h3>
+                      <p className="text-gray-600">{product.stock} in stock</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Care Instructions */}
+                <div className="mt-8">
+                  <div className="flex items-center mb-4">
+                    <MdLocalLaundryService className="text-2xl text-indigo-600 mr-4" />
+                    <h3 className="font-semibold text-lg">Care Instructions</h3>
+                  </div>
+                  {product.careInstructions}
+                </div>
+
+                {/* logng desc */}
+                <p className="text-2xl font-bold my-2">Description</p>
+                <p className="text-xl text-gray-500 mb-4">
+                  {product.longDescription}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Right side - Product information */}
-        <div className="md:w-3/5 px-4 mt-8 md:mt-0">
-          <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-          <p className="text-sm text-gray-500 mb-4">
-            {product.shortDescription}
-          </p>
-          <div className="flex items-center mb-4">
-            <span className="text-3xl font-bold">₹{product.price}</span>
-            <span className="ml-2 text-green-500">Extra ₹4000 off</span>
-          </div>
-
-          {/* Size Selection */}
-          <div className="mb-4">
-            <h2 className="font-semibold mb-2">Size</h2>
-            <div className="flex space-x-2">
-              {product.sizes.map((size) => (
-                <button
-                  key={size}
-                  className="px-4 py-2 border rounded-md hover:border-blue-500"
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Color Selection */}
-          <div className="mb-4">
-            <h2 className="font-semibold mb-2">Color</h2>
-            <div className="flex space-x-2">
-              {product.colors.map((color, index) => (
-                <button
-                  key={index}
-                  className="w-8 h-8 rounded-full border-2 hover:border-blue-500"
-                  style={{ backgroundColor: color }}
-                ></button>
-              ))}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex space-x-4 mb-6">
-            <button className="flex-1 bg-orange-500 text-white py-3 rounded-md">
-              ADD TO CART
-            </button>
-            <button className="flex-1 bg-orange-600 text-white py-3 rounded-md">
-              BUY NOW
-            </button>
-          </div>
-
-          {/* Features */}
-          <div className="mb-6">
-            <h2 className="font-semibold mb-2">Features</h2>
-            <ul className="list-disc list-inside">
-              {product.features.map((feature, index) => (
-                <li key={index} className="text-gray-600">
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Additional Information */}
-          <div className="text-sm text-gray-600">
-            <p>Category: {product.category}</p>
-            <p>Material: {product.material.join(", ")}</p>
-            <p>Made in: {product.madeIn}</p>
-            <p>{product.shippingDetails}</p>
-            <p>{product.returnDetails}</p>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

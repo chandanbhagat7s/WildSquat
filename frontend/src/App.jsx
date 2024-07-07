@@ -3,13 +3,14 @@ import Footer from "./components/common/Footer";
 import Navbar from "./components/common/Navbar";
 import ProductOverview from "./components/common/ProductOverwiew";
 import AppRoutes from "./components/Routes/appRoutes";
+import "./App.css";
 
 function App() {
   return (
     <>
       <AlertBox />
       <AppRoutes />
-      <ProductOverview />
+      {/* <ProductOverview /> */}
     </>
   );
 }

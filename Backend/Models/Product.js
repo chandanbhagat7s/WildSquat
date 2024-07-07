@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
         trim: true
     },
     material: {
-        type: String,
+        type: [String],
         required: true,
         trim: true
     },
@@ -117,6 +117,13 @@ const productSchema = new mongoose.Schema({
     },
     orderedByCount: {
         type: Number
+    },
+    discount: {
+        type: Number,
+    },
+    hide: {
+        type: Boolean,
+        default: false
     }
 
 });

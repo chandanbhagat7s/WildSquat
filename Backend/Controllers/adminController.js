@@ -106,6 +106,61 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 })
 
 
+exports.editProduct = catchAsync(async (req, res, next) => {
+    const id = req.params?.productId;
+
+    const {
+        name,
+        price,
+        shortDescription,
+        longDescription,
+        sizes,
+        material,
+        features,
+        colors,
+        shippingDetails,
+        returnDetails,
+        category,
+        colorCategory,
+        careInstructions,
+        stock,
+        brand,
+        madeIn,
+    } = req.body;
+    console.log(req.body, id);
+    const product = await Product.findByIdAndUpdate(id, {
+        name,
+        price,
+        shortDescription,
+        longDescription,
+        sizes,
+        material,
+        features,
+        colors,
+        shippingDetails,
+        returnDetails,
+        category,
+        colorCategory,
+        careInstructions,
+        stock,
+        brand,
+        madeIn,
+    }, {
+        runValidators: true,
+        new: true
+    })
+
+    if (!product) {
+        return next(new appError("Please try again ", 500))
+    }
+
+    res.status(200).send({
+        status: "success",
+        msg: "product updated successfully"
+    })
+})
+
+
 
 
 

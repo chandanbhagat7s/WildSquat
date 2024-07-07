@@ -1,37 +1,32 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FiShoppingCart, FiHeart } from "react-icons/fi";
+import { useDispatch } from "react-redux";
+import url from "../../public/url";
+import { useNavigate } from "react-router-dom";
+import { error } from "../redux/slices/errorSlice";
 
 const ProductListing = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Sport Running Shoes",
-      price: 89.99,
-      image:
-        "https://thefoomer.in/cdn/shop/files/jpeg-optimizer_PATP1125.jpg?v=1705733425",
-    },
-    {
-      id: 2,
-      name: "Breathable Sport Tee",
-      price: 29.99,
-      image:
-        "https://thefoomer.in/cdn/shop/files/jpeg-optimizer_PATP1125.jpg?v=1705733425",
-    },
-    {
-      id: 3,
-      name: "Compression Leggings",
-      price: 49.99,
-      image:
-        "https://thefoomer.in/cdn/shop/files/jpeg-optimizer_PATP1125.jpg?v=1705733425",
-    },
-    {
-      id: 4,
-      name: "Lightweight Jacket",
-      price: 69.99,
-      image:
-        "https://thefoomer.in/cdn/shop/files/jpeg-optimizer_PATP1125.jpg?v=1705733425",
-    },
-  ];
+  const dispatch = useDispatch();
+  const [product, setProduct] = useState([]);
+  const nevigate = useNavigate();
+
+  async function getAllProductDetails() {
+    try {
+      const res = await axios.get("/api/v1/product/getAllMiniCardProduct");
+
+      console.log(res);
+      if (res?.data?.product?.length > 0) {
+        setProduct([...res?.data?.product]);
+      }
+    } catch (e) {
+      dispatch(error({ message: e?.response?.msg || "something went wrong" }));
+    }
+  }
+
+  useEffect(() => {
+    getAllProductDetails();
+  }, []);
 
   return (
     <div className="bg-gray-100 py-16 ">
@@ -46,42 +41,44 @@ const ProductListing = () => {
         </div>
 
         <div className="mt-10 grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="group relative shadow-lg rounded-xl p-2"
-            >
-              <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                />
-              </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-700">
-                    <a href="#">
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {product.name}
-                    </a>
-                  </h3>
+          {product.length > 0 &&
+            product.map((p) => (
+              <div
+                key={p._id}
+                className="group relative shadow-lg rounded-xl p-2"
+                onClick={() =>
+                  nevigate("/productDetails", { state: { id: p._id } })
+                }
+              >
+                <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <img
+                    src={`${url}img/${p.coverImage}`}
+                    alt={p.name}
+                    className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                  />
                 </div>
-                <p className="text-sm font-medium text-gray-900">
-                  ${product.price}
-                </p>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <span aria-hidden="true" className="absolute inset-0" />
+                      {p.name}
+                    </h3>
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">
+                    ${p.price}
+                  </p>
+                </div>
+                <div className="mt-4 flex justify-between items-center">
+                  <button className="text-indigo-600 hover:text-indigo-900 flex items-center">
+                    <FiShoppingCart className="mr-2" />
+                    Add to Cart
+                  </button>
+                  <button className="text-gray-400 hover:text-red-500">
+                    <FiHeart className="h-6 w-6" />
+                  </button>
+                </div>
               </div>
-              <div className="mt-4 flex justify-between items-center">
-                <button className="text-indigo-600 hover:text-indigo-900 flex items-center">
-                  <FiShoppingCart className="mr-2" />
-                  Add to Cart
-                </button>
-                <button className="text-gray-400 hover:text-red-500">
-                  <FiHeart className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <div className="mt-16 text-center">
