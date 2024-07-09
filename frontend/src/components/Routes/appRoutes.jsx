@@ -28,7 +28,9 @@ export default function AppRoutes() {
           path="/productDetails"
           element={
             <MainLayout>
-              <ProductOverview />{" "}
+              <div className="">
+                <ProductOverview />{" "}
+              </div>
             </MainLayout>
           }
         />

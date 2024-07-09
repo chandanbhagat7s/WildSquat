@@ -27,13 +27,11 @@ const EditProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(editedProduct);
       const res = await axios.patch(
         `/api/v1/admin/edit/${editedProduct._id}`,
         editedProduct
       );
 
-      console.log(res);
       if (res.data?.status == "success") {
         dispatch(success({ message: "product updated successfully" }));
       }
@@ -81,13 +79,15 @@ const EditProductForm = () => {
 
   return (
     <>
-      <ProductSearch setSelectedProduct={setSelectedProduct} />
+      <div className="mb-10">
+        <ProductSearch setSelectedProduct={setSelectedProduct} />
+      </div>
       {editedProduct?.name && (
         <>
           {console.log("product is", editedProduct)}
           <form
             onSubmit={handleSubmit}
-            className="max-w-4xl mx-auto space-y-8 bg-white p-8 rounded-2xl shadow-2xl"
+            className="max-w-4xl mx-auto space-y-8   p-8 rounded-2xl shadow-2xl bg-gray-100"
           >
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
@@ -101,7 +101,7 @@ const EditProductForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               {/* Name */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Name
                 </label>
                 <input
@@ -115,7 +115,7 @@ const EditProductForm = () => {
 
               {/* Short Description */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Short Description
                 </label>
                 <textarea
@@ -129,7 +129,7 @@ const EditProductForm = () => {
 
               {/* Long Description */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Long Description
                 </label>
                 <textarea
@@ -143,7 +143,7 @@ const EditProductForm = () => {
 
               {/* Price */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Price
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
@@ -163,7 +163,7 @@ const EditProductForm = () => {
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Category
                 </label>
                 <input
@@ -184,7 +184,7 @@ const EditProductForm = () => {
 
               {/* Color Category */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Color Category
                 </label>
                 <input
@@ -198,7 +198,7 @@ const EditProductForm = () => {
 
               {/* Colors */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Colors
                 </label>
                 {editedProduct.colors.map((color, index) => (
@@ -229,7 +229,7 @@ const EditProductForm = () => {
 
               {/* Features */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Features
                 </label>
                 {editedProduct.features.map((feature, index) => (
@@ -260,7 +260,7 @@ const EditProductForm = () => {
 
               {/* Made In */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Made In
                 </label>
                 <input
@@ -274,7 +274,7 @@ const EditProductForm = () => {
 
               {/* Material */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Material
                 </label>
                 <input
@@ -295,7 +295,7 @@ const EditProductForm = () => {
 
               {/* Sizes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Sizes
                 </label>
                 <input
@@ -316,7 +316,7 @@ const EditProductForm = () => {
 
               {/* Stock */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Stock
                 </label>
                 <input
@@ -330,7 +330,7 @@ const EditProductForm = () => {
 
               {/* Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Status
                 </label>
                 <select
@@ -346,7 +346,7 @@ const EditProductForm = () => {
 
               {/* Care Instructions */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Care Instructions
                 </label>
                 <textarea
@@ -360,7 +360,7 @@ const EditProductForm = () => {
 
               {/* Return Details */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Return Details
                 </label>
                 <textarea
@@ -374,7 +374,7 @@ const EditProductForm = () => {
 
               {/* Shipping Details */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Shipping Details
                 </label>
                 <textarea

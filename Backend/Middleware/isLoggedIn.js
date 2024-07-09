@@ -1,11 +1,13 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require('util');
+const User = require("../Models/User");
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
 
+    console.log("CAME INTO MIDDLEWARE");
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
         token = req.headers.authorization.split(' ')[1];

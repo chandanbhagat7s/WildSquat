@@ -11,9 +11,12 @@ import {
 } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
 import { useDispatch } from "react-redux";
-import { error } from "../../redux/slices/errorSlice";
+import { error, info } from "../../redux/slices/errorSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdLocalLaundryService } from "react-icons/md";
+import ReviewForm from "./CreateReview";
+import ReviewComponent from "./ReviewComponent";
+import BuyNowPopup from "../Payments/paymentDialog";
 
 const ProductOverview = () => {
   const nevigate = useNavigate();
@@ -23,6 +26,71 @@ const ProductOverview = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const p = {
+    name: "Example Product",
+    image: "https://example.com/product-image.jpg",
+    number: "7498608775",
+    MUID: "MUID" + Date.now(),
+    transactionId: "T" + Date.now(),
+    amount: 1,
+  };
+
+  // const [loading2, setLoading2] = useState(false);
+
+  const handleStatus = async (data) => {
+    const res = await axios.post("/api/v1/payment/verifyPayment", {
+      ...data,
+      productid: product._id,
+      productName: product.name,
+    });
+
+    console.log(res);
+  };
+
+  const handlePayment = async () => {
+    try {
+      // Step 1: Create an order on your server
+      const orderResponse = await axios.post("/api/v1/payment/createOrder", {
+        amount: product.price * 100, // Razorpay expects amount in paise
+        name: product.name,
+      });
+      console.log(orderResponse);
+
+      const options = {
+        key: orderResponse.data.key_id, // Replace with your Razorpay Key ID
+        amount: product.price,
+        currency: "INR",
+        name: "WILDSQUAT",
+        description: `Payment for ${product.name}`,
+        order_id: orderResponse.data.order_id,
+        handler: function (response) {
+          // Handle successful payment
+          console.log("Payment successful:", response);
+          handleStatus(response);
+          // You should verify the payment signature on your server here
+        },
+        prefill: {
+          name: "Customer Name",
+          email: "customer@example.com",
+          contact: "9999999999",
+        },
+        notes: {
+          address: "Customer Address",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+    }
+  };
 
   const getData = async () => {
     try {
@@ -38,9 +106,29 @@ const ProductOverview = () => {
         setLoading(false);
       }
     } catch (e) {
-      dispatch(error({ message: e.responce.msg || "something went wrong" }));
+      dispatch(
+        error({ message: e?.response?.data?.msg || "something went wrong" })
+      );
     }
   };
+
+  async function addToCart() {
+    try {
+      const res = await axios.get(`/api/v1/product/addToCart/${product._id}`);
+
+      if (res.data?.status == "success") {
+        dispatch(info({ message: "product added to cart" }));
+      }
+    } catch (e) {
+      dispatch(
+        error({
+          message:
+            e?.response?.data?.msg ||
+            "product not added to cart, please try again",
+        })
+      );
+    }
+  }
 
   useEffect(() => {
     getData();
@@ -61,9 +149,16 @@ const ProductOverview = () => {
           <>loading</>
         ) : (
           <>
+            {showPopup && (
+              <BuyNowPopup
+                product={p}
+                onClose={() => setShowPopup(false)}
+                onPay={handlePayment}
+              />
+            )}
             {/* Left side - Image gallery */}
             <div className="md:w-2/5 px-4">
-              <div className="sticky top-0 space-y-2">
+              <div className="sticky top-0 space-y-2 ">
                 <div className="mb-4">
                   <img
                     src={images[selectedImage]}
@@ -88,10 +183,16 @@ const ProductOverview = () => {
                 </div>
                 {/* Action Buttons */}
                 <div className="flex space-x-4 mb-6">
-                  <button className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-300 text-white shadow-lg  py-3 rounded-md">
+                  <button
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-300 text-white shadow-lg  py-3 rounded-md"
+                    onClick={addToCart}
+                  >
                     ADD TO CART
                   </button>
-                  <button className="flex-1 bg-gradient-to-r from-purple-800 to-indigo-600 text-white shadow-lg py-3 rounded-md">
+                  <button
+                    className="flex-1 bg-gradient-to-r from-purple-800 to-indigo-600 text-white shadow-lg py-3 rounded-md"
+                    onClick={() => setShowPopup(true)}
+                  >
                     BUY NOW
                   </button>
                 </div>
@@ -217,10 +318,21 @@ const ProductOverview = () => {
                 </div>
 
                 {/* logng desc */}
-                <p className="text-2xl font-bold my-2">Description</p>
-                <p className="text-xl text-gray-500 mb-4">
+                <p className="text-xl font-bold my-2">Description</p>
+                <p className="text-md text-gray-500 mb-4">
                   {product.longDescription}
                 </p>
+
+                {/* reviews */}
+
+                <p className="text-xl font-bold my-2">
+                  Review for{" "}
+                  <span className="text-indigo-700">{product.name}</span>
+                </p>
+                <ReviewComponent />
+                {/* <ReviewForm ofProduct={product._id} /> */}
+
+                <div className="pb-32"></div>
               </div>
             </div>
           </>

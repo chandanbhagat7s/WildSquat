@@ -162,7 +162,28 @@ exports.editProduct = catchAsync(async (req, res, next) => {
 
 
 
+exports.hideProduct = catchAsync(async (req, res, next) => {
 
+
+    const { productId } = req.params;
+    if (!productId) {
+        return next(new appError("please describe the product", 400))
+    }
+
+    const product = await Product.findByIdAndUpdate(productId, {
+        hidden: true
+    }, {
+        new: true
+    })
+    if (!product) {
+        return next(new appError("product not updated to hide , please try again ", 400))
+    }
+
+    res.status(200).send({
+        status: "success",
+        msg: "product hidden successfully"
+    })
+})
 
 
 

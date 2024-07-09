@@ -50,6 +50,25 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: [true, "You are from which state must be provided"]
 
+    },
+    cart: {
+        type: [mongoose.mongo.ObjectId],
+        ref: "Product"
+    },
+    heart: {
+        type: [mongoose.mongo.ObjectId],
+        ref: "Product"
+
+    },
+    Ordred: {
+
+        type: [mongoose.mongo.ObjectId],
+        ref: "Product"
+    },
+    alreadyOrdred: {
+
+        type: [mongoose.mongo.ObjectId],
+        ref: "Product"
     }
 
 
