@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import EachReview from "./EachReview";
 import axios from "axios";
 
-export default function ReviewComponent() {
+export default function ReviewComponent({ pid }) {
   const [reviewData, setReviewData] = useState([]);
   async function getData() {
     try {
+      console.log(pid);
       const res = await axios.get(
-        "/api/v1/review/getAllReview?fields=review,rating,createdAt"
+        `/api/v1/review/getAllReview/${pid}?fields=review,rating,createdAt`
       );
       if (res?.data?.status == "success") {
         setReviewData([...res.data.data]);

@@ -51,10 +51,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
 
 
-exports.getAllReview = (req, res) => {
-    const ofProduct = req.params;
-    factory.getAllByFilterOut(Review, { ofProduct })
-}
+exports.getAllReview = factory.getAllByFilterOut(Review)
 
 
 

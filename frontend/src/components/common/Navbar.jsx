@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FiLogIn } from "react-icons/fi";
 import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const nevigate = useNavigate();
@@ -97,10 +97,10 @@ const Navbar = () => {
             </button>
             <button className="p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               {isLoggedIn ? (
-                <>
+                <Link to={"/profile"}>
                   <span className="sr-only">View profile</span>
                   <FiUser className="h-6 w-6" />
-                </>
+                </Link>
               ) : (
                 <button
                   className="bg-gray-300 text-black font-bold p-2 rounded-xl shadow-md hover:bg-gray-500 hover:text-white"

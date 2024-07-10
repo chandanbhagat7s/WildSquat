@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 const BuyNowPopup = ({ product, onClose, onPay }) => {
   const [quantity, setQuantity] = useState(1);
 
-  const totalPrice = product.amount * quantity;
+  const totalPrice = product.price * quantity;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -20,9 +20,9 @@ const BuyNowPopup = ({ product, onClose, onPay }) => {
         </div>
         <div className="mb-4">
           <img
-            src={product.image}
+            src={`http://127.0.0.1:4000/img/${product.name}-cover.jpeg`}
             alt={product.name}
-            className="w-full h-48 object-cover rounded-lg"
+            className="mx-auto h-48 object-cover rounded-lg"
           />
         </div>
         <h3 className="text-xl font-semibold text-gray-800 mb-2">

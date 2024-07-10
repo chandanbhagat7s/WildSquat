@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { signupForm } from "../redux/slices/authSlice";
 import { error, success, warning } from "../redux/slices/errorSlice";
+import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
+  const nevigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
@@ -45,7 +47,7 @@ const SignUpPage = () => {
 
     if (res?.payload?.data?.status == "success") {
       dispatch(success({ message: "Logged in successfully " }));
-      // nevigate("/home");
+      nevigate("/");
     } else {
       dispatch(error({ message: res?.payload?.data?.msg }));
     }

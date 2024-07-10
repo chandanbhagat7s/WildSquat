@@ -48,9 +48,11 @@ const EditProductForm = () => {
   async function bringProductInfo() {
     try {
       if (selectedProduct) {
+        console.log(selectedProduct);
         const res = await axios.get(
           `/api/v1/product/getProductByName/${selectedProduct}`
         );
+        console.log("res is", res);
         setEditedProduct({
           ...res?.data?.product,
         });

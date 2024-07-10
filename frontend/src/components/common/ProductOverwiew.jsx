@@ -10,13 +10,14 @@ import {
   FaTshirt,
 } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
-import { useDispatch } from "react-redux";
-import { error, info } from "../../redux/slices/errorSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { error, info, success } from "../../redux/slices/errorSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdLocalLaundryService } from "react-icons/md";
 import ReviewForm from "./CreateReview";
 import ReviewComponent from "./ReviewComponent";
 import BuyNowPopup from "../Payments/paymentDialog";
+import EachReview from "./EachReview";
 
 const ProductOverview = () => {
   const nevigate = useNavigate();
@@ -28,6 +29,7 @@ const ProductOverview = () => {
   const [product, setProduct] = useState({});
 
   const [showPopup, setShowPopup] = useState(false);
+  const auth = useSelector((state) => state.auth);
 
   const p = {
     name: "Example Product",
@@ -41,13 +43,24 @@ const ProductOverview = () => {
   // const [loading2, setLoading2] = useState(false);
 
   const handleStatus = async (data) => {
-    const res = await axios.post("/api/v1/payment/verifyPayment", {
-      ...data,
-      productid: product._id,
-      productName: product.name,
-    });
+    try {
+      const res = await axios.post("/api/v1/payment/verifyPayment", {
+        ...data,
+        productid: product._id,
+        productName: product.name,
+      });
 
-    console.log(res);
+      if (res.data?.status == "success") {
+        dispatch(success({ message: res.data?.msg }));
+      }
+    } catch (e) {
+      dispatch(
+        error({
+          message:
+            e?.response?.msg || e.response?.message || "something went wrong",
+        })
+      );
+    }
   };
 
   const handlePayment = async () => {
@@ -73,22 +86,27 @@ const ProductOverview = () => {
           // You should verify the payment signature on your server here
         },
         prefill: {
-          name: "Customer Name",
-          email: "customer@example.com",
-          contact: "9999999999",
+          name: auth?.data?.name || "name",
+          email: auth?.data?.email || "email",
+          contact: auth?.data?.mobile,
         },
         notes: {
-          address: "Customer Address",
+          address: auth?.data?.address || "address",
         },
         theme: {
-          color: "#3399cc",
+          color: "#9922ee",
         },
       };
 
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
-    } catch (error) {
-      console.error("Error creating Razorpay order:", error);
+    } catch (e) {
+      dispatch(
+        error({
+          message:
+            e?.response?.msg || e.response?.message || "Please try again",
+        })
+      );
     }
   };
 
@@ -151,7 +169,7 @@ const ProductOverview = () => {
           <>
             {showPopup && (
               <BuyNowPopup
-                product={p}
+                product={product}
                 onClose={() => setShowPopup(false)}
                 onPay={handlePayment}
               />
@@ -256,7 +274,6 @@ const ProductOverview = () => {
                 <h2 className="text-2xl font-semibold mb-6">
                   Additional Information
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Shipping Details */}
                   <div className="flex items-start">
@@ -307,7 +324,6 @@ const ProductOverview = () => {
                     </div>
                   </div>
                 </div>
-
                 {/* Care Instructions */}
                 <div className="mt-8">
                   <div className="flex items-center mb-4">
@@ -316,22 +332,18 @@ const ProductOverview = () => {
                   </div>
                   {product.careInstructions}
                 </div>
-
                 {/* logng desc */}
                 <p className="text-xl font-bold my-2">Description</p>
                 <p className="text-md text-gray-500 mb-4">
                   {product.longDescription}
                 </p>
-
                 {/* reviews */}
-
                 <p className="text-xl font-bold my-2">
                   Review for{" "}
                   <span className="text-indigo-700">{product.name}</span>
+                  <ReviewComponent pid={product._id} />
                 </p>
-                <ReviewComponent />
-                {/* <ReviewForm ofProduct={product._id} /> */}
-
+                {/* <ReviewComponent /> <ReviewForm ofProduct={product._id} /> */}
                 <div className="pb-32"></div>
               </div>
             </div>

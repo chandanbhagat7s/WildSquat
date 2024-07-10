@@ -7,6 +7,7 @@ import ProductSection2 from "../ProductSection2";
 import CreateProductForm from "../Admin/AddProduct";
 import AdminPanel from "../Admin/AdminDash";
 import ProductOverview from "../common/ProductOverwiew";
+import ProfileOut from "../common/ProfileOut";
 
 export default function AppRoutes() {
   return (
@@ -30,6 +31,16 @@ export default function AppRoutes() {
             <MainLayout>
               <div className="">
                 <ProductOverview />{" "}
+              </div>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <MainLayout>
+              <div className="">
+                <ProfileOut />
               </div>
             </MainLayout>
           }

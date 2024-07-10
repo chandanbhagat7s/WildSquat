@@ -61,7 +61,7 @@ exports.getProductByName = catchAsync(async (req, res, next) => {
 
     res.status(200).send({
         status: "success",
-        product: product[0]
+        product: product
 
     })
 })
@@ -135,8 +135,8 @@ exports.addToHeart = catchAsync(async (req, res, next) => {
     }
 
 
-    if (req?.user?.cart?.includes(id)) {
-        return next(new appError("Product Already added to cart 😊", 400))
+    if (req?.user?.heart?.includes(id)) {
+        return next(new appError("Product Already added to your Heart List 😊", 400))
     }
     const user = await User.findByIdAndUpdate(req?.user?._id, {
         $push: { heart: product?._id }

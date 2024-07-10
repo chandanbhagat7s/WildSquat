@@ -37,9 +37,12 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
     })
 })
 
-exports.getAllByFilterOut = (Model,filter) => catchAsync(async (req, res, next) => {
+exports.getAllByFilterOut = (Model) => catchAsync(async (req, res, next) => {
 
-    let features = new Apifeature(Model.find(filter), req.query).filter().sort().fields().pagination()
+    const ofProduct = req.params.reviewId;
+    let features = new Apifeature(Model.find({
+        ofProduct
+    }), req.query).filter().sort().fields().pagination()
 
     let doc = await features.query;
 

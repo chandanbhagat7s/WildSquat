@@ -4,7 +4,7 @@ import { FiShoppingCart, FiHeart } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import url from "../../public/url";
 import { useNavigate } from "react-router-dom";
-import { error } from "../redux/slices/errorSlice";
+import { error, info, warning } from "../redux/slices/errorSlice";
 
 const ProductListing = () => {
   const dispatch = useDispatch();
@@ -21,6 +21,43 @@ const ProductListing = () => {
       }
     } catch (e) {
       dispatch(error({ message: e?.response?.msg || "something went wrong" }));
+    }
+  }
+
+  async function addToCart(id) {
+    try {
+      console.log("CALLED");
+      const res = await axios.get(`/api/v1/product/addToCart/${id}`);
+
+      if (res.data?.status == "success") {
+        dispatch(info({ message: "product added to cart" }));
+      }
+    } catch (e) {
+      dispatch(
+        warning({
+          message:
+            e?.response?.data?.msg ||
+            "product not added to cart, please try again",
+        })
+      );
+    }
+  }
+  async function addToHeart(id) {
+    try {
+      console.log("CALLED");
+      const res = await axios.get(`/api/v1/product/addToHeart/${id}`);
+
+      if (res.data?.status == "success") {
+        dispatch(info({ message: "product added to favorates" }));
+      }
+    } catch (e) {
+      dispatch(
+        warning({
+          message:
+            e?.response?.data?.msg ||
+            "product not added to favrotes, please try again",
+        })
+      );
     }
   }
 
@@ -43,37 +80,45 @@ const ProductListing = () => {
         <div className="mt-10 grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
           {product.length > 0 &&
             product.map((p) => (
-              <div
-                key={p._id}
-                className="group relative shadow-lg rounded-xl p-2"
-                onClick={() =>
-                  nevigate("/productDetails", { state: { id: p._id } })
-                }
-              >
-                <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                  <img
-                    src={`${url}img/${p.coverImage}`}
-                    alt={p.name}
-                    className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {p.name}
-                    </h3>
+              <div key={p._id} className="flex flex-col">
+                <div
+                  key={p._id}
+                  className="group relative shadow-lg rounded-xl p-2 cursor-pointer"
+                  onClick={() =>
+                    nevigate("/productDetails", { state: { id: p._id } })
+                  }
+                >
+                  <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-75 lg:aspect-none">
+                    <img
+                      src={`${url}img/${p.coverImage}`}
+                      alt={p.name}
+                      className="w-full h-full object-center object-cover lg:w-full lg:h-full "
+                    />
                   </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    ${p.price}
-                  </p>
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <h3 className="text-sm text-gray-700">
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {p.name}
+                      </h3>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      ${p.price}
+                    </p>
+                  </div>
                 </div>
                 <div className="mt-4 flex justify-between items-center">
-                  <button className="text-indigo-600 hover:text-indigo-900 flex items-center">
+                  <button
+                    className="text-indigo-600 hover:text-indigo-900 flex items-center"
+                    onClick={() => addToCart(p._id)}
+                  >
                     <FiShoppingCart className="mr-2" />
                     Add to Cart
                   </button>
-                  <button className="text-gray-400 hover:text-red-500">
+                  <button
+                    className="text-gray-400 hover:text-red-500"
+                    onClick={() => addToHeart(p._id)}
+                  >
                     <FiHeart className="h-6 w-6" />
                   </button>
                 </div>

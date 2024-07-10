@@ -6,7 +6,7 @@ const giveAccess = require('../Middleware/giveAccessTo');
 
 
 
-reviewRouter.get("/getAllReview", getAllReview)
+reviewRouter.get("/getAllReview/:reviewId", getAllReview)
 reviewRouter.use(isLoggedIn, giveAccess("user"))
 reviewRouter.post("/", createReview)
 

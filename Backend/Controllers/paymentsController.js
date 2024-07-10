@@ -1,7 +1,9 @@
 const catchAsync = require("../utils/catchAsync");
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-const appError = require("./../utils/appError")
+const appError = require("./../utils/appError");
+const Booked = require("../Models/BookedProduct");
+const Product = require("../Models/Product");
 
 
 
@@ -40,7 +42,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
                     });
                 }
                 else {
-                    res.status(400).send({ success: false, msg: 'Something went wrong!' });
+                    return next(new appError("'Something went wrong!'", 400))
                 }
             }
         );
@@ -57,17 +59,34 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
 
     const { RAZORPAY_SECRET_KEY } = process.env;
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productid } = req.body;
+
 
     const generated_signature = crypto
         .createHmac('sha256', RAZORPAY_SECRET_KEY)
         .update(razorpay_order_id + '|' + razorpay_payment_id)
         .digest('hex');
 
-    console.log(req.body);
+    // console.log(req.body);
 
     if (generated_signature !== razorpay_signature) {
         return next(new appError("transaction failed please try again", 400))
+    }
+
+    const product = await Product.findById(productid)
+
+    if (!product) {
+        return next(new appError("sorry product not found", 400))
+    }
+    const Ordred = await Booked.create({
+        ofProduct: product._id,
+        byuser: req.user._id,
+        price: product.price
+    })
+
+    if (!Ordred) {
+        return next(new appError("sorry product not found", 400))
+
     }
 
 

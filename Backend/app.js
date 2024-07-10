@@ -1,6 +1,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const env = require("dotenv");
 
 const cookieParser = require('cookie-parser');
@@ -11,6 +12,8 @@ const path = require('path');
 const productRouter = require('./Routes/productRoute');
 const reviewRouter = require('./Routes/reviewRoute');
 const paymentRouter = require('./Routes/paymentsRoute');
+const userRouter = require('./Routes/authRoutes');
+const userrouter = require('./Routes/userRouter');
 
 const app = express()
 env.config({ path: "./config.env" })
@@ -20,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 const PORT = process.env.PORT || 3000;
 console.log(PORT);
 
+app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -43,6 +47,7 @@ app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/product', productRouter)
 app.use('/api/v1/review', reviewRouter)
 app.use('/api/v1/payment', paymentRouter)
+app.use('/api/v1/user', userrouter)
 
 app.all("*", (req, res) => {
     res.status(404).send({
