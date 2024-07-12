@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const appError = require("./../utils/appError");
 const Booked = require("../Models/BookedProduct");
 const Product = require("../Models/Product");
+const User = require("../Models/User");
 
 
 
@@ -59,7 +60,7 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
 
     const { RAZORPAY_SECRET_KEY } = process.env;
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productid } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productid, quantity } = req.body;
 
 
     const generated_signature = crypto
@@ -81,13 +82,24 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
     const Ordred = await Booked.create({
         ofProduct: product._id,
         byuser: req.user._id,
-        price: product.price
+        price: product.price,
+        quantity
     })
 
     if (!Ordred) {
-        return next(new appError("sorry product not found", 400))
+        return next(new appError("failed something went wrong", 400))
 
     }
+
+    const user = await User.findByIdAndUpdate(req.user._id, {
+        $push: { Ordred: product._id }
+    }, {
+        new: true
+    })
+
+
+
+
 
 
 

@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { error } from "../../redux/slices/errorSlice";
+import { error, info } from "../../redux/slices/errorSlice";
 import url from "../../../public/url";
 import { useNavigate } from "react-router-dom";
 
@@ -18,13 +18,34 @@ const ProfilePage = ({
   cartProducts,
   favoriteProducts,
   orderProducts,
+  load,
+  setLoad,
 }) => {
   const [activeTab, setActiveTab] = useState("cart");
 
   const nevigate = useNavigate();
   const { data } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  async function removeFromCart(pid) {
+    try {
+      const res = await axios.get(`/api/v1/product/removeFromCart/${pid}`);
+      console.log(res);
 
+      if (res.data?.status == "success") {
+        setLoad(!load);
+        dispatch(info({ message: "product removed from cart" }));
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(
+        error({
+          message:
+            e?.response?.data?.msg ||
+            "product not added to cart, please try again",
+        })
+      );
+    }
+  }
   const TabButton = ({ label, icon, isActive, onClick }) => (
     <button
       className={`flex items-center px-6 py-3 rounded-t-lg transition duration-300 ${
@@ -39,7 +60,38 @@ const ProfilePage = ({
     </button>
   );
 
-  const ProductCard = ({ product, onMoreInfo, onRemove, removeLabel }) => (
+  const ProductCard = ({ product, onMoreInfo, removeLabel }) => (
+    <div className="flex items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300">
+      <img
+        src={`${url}img/${product.name}-cover.jpeg`}
+        alt={product.name}
+        className="w-24 h-24 object-cover rounded-md mr-4"
+      />
+      <div className="flex-grow">
+        <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+        <p className="text-indigo-600 font-medium">
+          ${product.price.toFixed(2)}
+        </p>
+      </div>
+      <div className="flex space-x-2">
+        <button
+          onClick={() =>
+            nevigate("/productDetails", { state: { id: product._id } })
+          }
+          className="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-md hover:bg-indigo-200 transition duration-150"
+        >
+          <FaInfoCircle className="inline mr-2" /> More Info
+        </button>
+        <button
+          onClick={() => removeFromCart(product._id)}
+          className="px-4 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition duration-150"
+        >
+          <FaTrash className="inline mr-2" /> {removeLabel}
+        </button>
+      </div>
+    </div>
+  );
+  const OrderCard = ({ product, onMoreInfo, onRemove, removeLabel }) => (
     <div className="flex items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300">
       <img
         src={`${url}img/${product.name}-cover.jpeg`}
@@ -68,23 +120,6 @@ const ProfilePage = ({
           <FaTrash className="inline mr-2" /> {removeLabel}
         </button>
       </div>
-    </div>
-  );
-
-  const OrderCard = ({ order }) => (
-    <div className="bg-white rounded-lg shadow-md mb-4 p-4 hover:shadow-lg transition duration-300">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold text-gray-800">
-          Order #{order.id}
-        </h3>
-        <span className="text-indigo-600 font-medium">{order.date}</span>
-      </div>
-      <p className="text-gray-600 mb-2">
-        Status: <span className="font-semibold">{order.status}</span>
-      </p>
-      <p className="text-gray-600">
-        Total: <span className="font-semibold">${order.total.toFixed(2)}</span>
-      </p>
     </div>
   );
 
@@ -156,7 +191,7 @@ const ProfilePage = ({
                 key={product._id}
                 product={product}
                 onMoreInfo={(p) => console.log("More info:", p)}
-                onRemove={(p) => console.log("Remove from cart:", p)}
+                removeFromCart={() => removeFromCart()}
                 removeLabel="Remove from Cart"
               />
             ))}
@@ -179,8 +214,14 @@ const ProfilePage = ({
         {activeTab === "orders" && (
           <>
             <h2 className="text-2xl font-semibold mb-4">Your Orders</h2>
-            {orderProducts.map((order) => (
-              <OrderCard key={order.id} order={order} />
+            {orderProducts.map((product) => (
+              <OrderCard
+                key={product._id}
+                product={product}
+                onMoreInfo={(p) => console.log("More info:", p)}
+                onRemove={(p) => console.log("Remove from favorites:", p)}
+                removeLabel="Remove from Favorites"
+              />
             ))}
           </>
         )}

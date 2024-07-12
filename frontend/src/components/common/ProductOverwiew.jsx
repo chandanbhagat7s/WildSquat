@@ -27,18 +27,10 @@ const ProductOverview = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
 
   const [showPopup, setShowPopup] = useState(false);
   const auth = useSelector((state) => state.auth);
-
-  const p = {
-    name: "Example Product",
-    image: "https://example.com/product-image.jpg",
-    number: "7498608775",
-    MUID: "MUID" + Date.now(),
-    transactionId: "T" + Date.now(),
-    amount: 1,
-  };
 
   // const [loading2, setLoading2] = useState(false);
 
@@ -148,6 +140,26 @@ const ProductOverview = () => {
     }
   }
 
+  async function removeFromCart() {
+    try {
+      const res = await axios.get(
+        `/api/v1/product/removeFromCart/${product._id}`
+      );
+
+      if (res.data?.status == "success") {
+        dispatch(info({ message: "product removed from cart" }));
+      }
+    } catch (e) {
+      dispatch(
+        error({
+          message:
+            e?.response?.data?.msg ||
+            "product not added to cart, please try again",
+        })
+      );
+    }
+  }
+
   useEffect(() => {
     getData();
   }, []);
@@ -172,6 +184,8 @@ const ProductOverview = () => {
                 product={product}
                 onClose={() => setShowPopup(false)}
                 onPay={handlePayment}
+                quantity={quantity}
+                setQuantity={setQuantity}
               />
             )}
             {/* Left side - Image gallery */}

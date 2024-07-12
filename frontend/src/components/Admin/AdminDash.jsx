@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ProductActions from "./ProductsCRUD";
+import GetAllOrdersPending from "./GetAllOrdersPending";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -91,6 +92,7 @@ const AdminPanel = () => {
           ))} */}
 
           {activeTab == "products" && <ProductActions />}
+          {activeTab == "orders" && <GetAllOrdersPending />}
           {/* <ProductActions/> */}
         </div>
       </div>

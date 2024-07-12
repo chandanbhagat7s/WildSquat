@@ -3,6 +3,7 @@ const Product = require("../Models/Product");
 const catchAsync = require("../utils/catchAsync");
 const sharp = require("sharp");
 const appError = require("../utils/appError");
+const Booked = require("../Models/BookedProduct");
 
 
 
@@ -185,6 +186,48 @@ exports.hideProduct = catchAsync(async (req, res, next) => {
     })
 })
 
+
+exports.getAllOrdersForShipment = catchAsync(async (req, res, next) => {
+
+    const orders = await Booked.find({
+        ordredPlaces: false
+    }).populate("ofProduct")
+    console.log(orders);
+
+
+
+
+    res.status(200).send({
+        status: "success",
+        orders: orders,
+    })
+})
+
+
+exports.confirmShipemntForOrder = catchAsync(async (req, res, next) => {
+
+    const productId = req.params.productId;
+    const { message } = req.body;
+
+    if (productId) {
+        return next(new appError("Please pass id", 400))
+    }
+    if (!message) {
+        return next(new appError("Please pass message for user regarding shipment", 400))
+
+    }
+    const orders = await Booked.findByIdAndUpdate(productId, {
+        ordredPlaces: false,
+        orderMessage: message
+    })
+
+
+
+    res.status(200).send({
+        status: "success",
+        orders
+    })
+})
 
 
 

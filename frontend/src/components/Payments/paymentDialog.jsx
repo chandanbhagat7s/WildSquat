@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
-const BuyNowPopup = ({ product, onClose, onPay }) => {
-  const [quantity, setQuantity] = useState(1);
-
+const BuyNowPopup = ({ quantity, setQuantity, product, onClose, onPay }) => {
   const totalPrice = product.price * quantity;
 
   return (

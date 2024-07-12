@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { error } from "../../redux/slices/errorSlice";
 
 export default function ProfileOut() {
+  const [load, setLoad] = useState(false);
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.auth);
   console.log(data);
@@ -31,15 +32,18 @@ export default function ProfileOut() {
   }
   useEffect(() => {
     getData();
-  }, []);
+  }, [load]);
 
   return (
     <>
       <ProfilePage
+        key={load}
         user={data}
         cartProducts={product.cart}
         favoriteProducts={product.heart}
         orderProducts={product.orders}
+        load={load}
+        setLoad={setLoad}
       />
     </>
   );

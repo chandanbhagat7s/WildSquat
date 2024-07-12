@@ -16,6 +16,21 @@ const productSchema = new mongoose.Schema({
         type: Number,
 
     },
+    ordredPlaced: {
+        type: Boolean,
+        default: false,
+    },
+    orderMessage: {
+        type: String,
+        defalut: "Will be delivered within 2-3 days"
+    },
+    quantity: {
+        type: Number
+    },
+    charges: {
+        type: Number
+    }
+
 
 
 })
