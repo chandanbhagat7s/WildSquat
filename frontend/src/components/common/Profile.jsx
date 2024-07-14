@@ -61,7 +61,7 @@ const ProfilePage = ({
   );
 
   const ProductCard = ({ product, onMoreInfo, removeLabel }) => (
-    <div className="flex items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300">
+    <div className="flex lg:flex-row flex-col  items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300">
       <img
         src={`${url}img/${product.name}-cover.jpeg`}
         alt={product.name}
@@ -73,7 +73,7 @@ const ProfilePage = ({
           ${product.price.toFixed(2)}
         </p>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex lg:flex-row flex-col items-center  space-x-2">
         <button
           onClick={() =>
             nevigate("/productDetails", { state: { id: product._id } })
@@ -92,7 +92,7 @@ const ProfilePage = ({
     </div>
   );
   const OrderCard = ({ product, onMoreInfo, onRemove, removeLabel }) => (
-    <div className="flex items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300">
+    <div className="flex flex-col lg:flex-row items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300">
       <img
         src={`${url}img/${product.name}-cover.jpeg`}
         alt={product.name}
@@ -104,7 +104,7 @@ const ProfilePage = ({
           ${product.price.toFixed(2)}
         </p>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex flex-col items-center lg:flex-row  space-x-2">
         <button
           onClick={() =>
             nevigate("/productDetails", { state: { id: product._id } })

@@ -190,8 +190,8 @@ exports.hideProduct = catchAsync(async (req, res, next) => {
 exports.getAllOrdersForShipment = catchAsync(async (req, res, next) => {
 
     const orders = await Booked.find({
-        ordredPlaces: false
-    }).populate("ofProduct")
+        ordredPlaced: false
+    }).populate("ofProduct byuser")
     console.log(orders);
 
 

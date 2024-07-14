@@ -13,7 +13,7 @@ export default function EachReview({ r }) {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6 transition duration-300 ease-in-out hover:shadow-xl">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between flex-col lg:flex-row mb-4">
         <div className="flex items-center space-x-3">
           <CiUser className="h-10 w-10 text-gray-400" />
           <div>
