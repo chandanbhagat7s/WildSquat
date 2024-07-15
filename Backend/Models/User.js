@@ -1,6 +1,7 @@
 
 const mongoose = require("mongoose")
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 // creating schema
 const userSchema = new mongoose.Schema({
     name: {
@@ -69,9 +70,11 @@ const userSchema = new mongoose.Schema({
 
         type: [mongoose.mongo.ObjectId],
         ref: "Product"
-    }
+    },
 
-
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordExpires: Date
 
 
 })
@@ -121,6 +124,22 @@ userSchema.methods.changedPasswords = async function (jwttokentime) {
 }
 
 // now creating model out of schema 
+// setting password reset token inENC
+
+userSchema.methods.setPasswordRestToken = function () {
+    let tokenO = crypto.randomBytes(32).toString('hex')
+
+
+
+    let token = crypto.createHash('sha256').update(tokenO).digest('hex');
+
+    this.passwordResetToken = token;
+    this.passwordExpires = Date.now() + 10 * 60 * 60 * 1000;
+
+    return tokenO;
+
+
+}
 
 
 

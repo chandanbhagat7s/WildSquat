@@ -53,8 +53,6 @@ const productSchema = new mongoose.Schema({
         type: String, // Array of image URLs
         required: true
     },
-
-
     category: {
         type: [String],
         required: true,
@@ -65,7 +63,6 @@ const productSchema = new mongoose.Schema({
         required: true,
 
     },
-
     careInstructions: {
         type: String,
         required: true,
@@ -81,7 +78,6 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-
     status: {
         type: String,
         enum: ["in stock", "out of stock"],
@@ -91,7 +87,6 @@ const productSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-
     ratings: {
         type: Number,
         default: 0,
@@ -110,7 +105,6 @@ const productSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-
     hidden: {
         type: Boolean,
 
@@ -121,10 +115,15 @@ const productSchema = new mongoose.Schema({
     discount: {
         type: Number,
     },
-    hide: {
+    offer: {
+        type: Object,
+    },
+    isCombo: {
         type: Boolean,
-        default: false
-    }
+        required: [true, "Product is combo or not"]
+    },
+
+
 
 });
 
