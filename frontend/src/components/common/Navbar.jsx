@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiLogIn } from "react-icons/fi";
 import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { useSelector } from "react-redux";
@@ -14,53 +14,53 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
   return (
     <nav
-      className="bg-white shadow-lg  w-[100vw] fixed"
+      className={`fixed w-full transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/90 backdrop-blur-md shadow-lg"
+          : "bg-white/90 backdrop-blur-md shadow-lg"
+      }`}
       style={{ zIndex: 1000 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div className="flex  justify-between h-16">
+          <div className="flex lg:flex-row items-center">
             {/* Logo */}
-            <div className="flex-shrink-0 flex items-center">
+            <div className="flex-shrink-0 flex items-center lg:mr-10">
               <img
-                className="h-8 w-auto"
+                className="h-12 ml-3 w-auto "
                 src="https://wildsquat.com/wp-content/uploads/2023/05/wildsquat-png-pixel.png"
                 alt="Logo"
               />
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <a
-                href="#"
-                className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium"
-              >
-                Home
-              </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
-              >
-                Men
-              </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
-              >
-                Women
-              </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
-              >
-                Kids
-              </a>
+            <div className="hidden sm:flex sm:space-x-10">
+              {["Home", "Men", "Women", "Kids"].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className={`text-gray-800 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 ${
+                    item === "Home" ? "border-indigo-500" : "border-transparent"
+                  } text-sm uppercase font-bold tracking-wider transition-colors duration-200`}
+                >
+                  {item}
+                </a>
+              ))}
             </div>
           </div>
 
@@ -103,10 +103,10 @@ const Navbar = () => {
                 </Link>
               ) : (
                 <button
-                  className="bg-gray-300 text-black font-bold p-2 rounded-xl shadow-md hover:bg-gray-500 hover:text-white"
-                  onClick={() => nevigate("/auth")}
+                  className="bg-gray-200 text-black font-bold p-2 rounded-xl shadow-md hover:bg-gray-100 hover:text-gray-700"
+                  onClick={() => nevigate("/login")}
                 >
-                  <FiLogIn />
+                  Login <FiLogIn className="inline-block" />
                 </button>
               )}
             </button>

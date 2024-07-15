@@ -8,6 +8,8 @@ import CreateProductForm from "../Admin/AddProduct";
 import AdminPanel from "../Admin/AdminDash";
 import ProductOverview from "../common/ProductOverwiew";
 import ProfileOut from "../common/ProfileOut";
+import SignUpPage from "../Signup";
+import { Slider } from "../common/Slider";
 
 export default function AppRoutes() {
   return (
@@ -17,12 +19,14 @@ export default function AppRoutes() {
           path="/"
           element={
             <MainLayout>
+              <Slider />
               <ProductListing />
               <ProductSection2 />
             </MainLayout>
           }
         />
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/login" element={<Auth />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route path="/createProduct" element={<CreateProductForm />} />
         <Route path="/adminDash" element={<AdminPanel />} />
         <Route
