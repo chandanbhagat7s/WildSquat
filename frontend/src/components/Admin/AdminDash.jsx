@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ProductActions from "./ProductsCRUD";
 import GetAllOrdersPending from "./GetAllOrdersPending";
+import CreateCategory from "./CreateCatefory";
+import ManageTools from "./ManageTools";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -34,8 +36,13 @@ const AdminPanel = () => {
         "View detailed analytics and statistics about your site's performance.",
     },
     {
-      id: "settings",
-      label: "Settings",
+      id: "Tools",
+      label: "Tools",
+      content: "Adjust your site settings and configurations.",
+    },
+    {
+      id: "Manage tools",
+      label: "Manage tools",
       content: "Adjust your site settings and configurations.",
     },
     {
@@ -93,6 +100,8 @@ const AdminPanel = () => {
 
           {activeTab == "products" && <ProductActions />}
           {activeTab == "orders" && <GetAllOrdersPending />}
+          {activeTab == "Tools" && <CreateCategory />}
+          {activeTab == "Manage tools" && <ManageTools />}
           {/* <ProductActions/> */}
         </div>
       </div>

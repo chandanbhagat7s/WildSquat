@@ -1,4 +1,5 @@
 const Product = require("../Models/Product");
+const Tool = require("../Models/Tools");
 const User = require("../Models/User");
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
@@ -219,7 +220,45 @@ exports.removeFromHeart = catchAsync(async (req, res, next) => {
 })
 
 
+exports.getAllCategory = catchAsync(async (req, res, next) => {
 
+    const allCategory = await Tool.find({
+        name: "CATEGORY"
+    })
+
+    res.status(200).send({
+        status: "success",
+        allCategory
+    })
+})
+
+
+exports.homepageData = catchAsync(async (req, res, next) => {
+
+    // getting the crawsel
+    const crawsel = await Tool.aggregate([{
+        $match: {
+            name: { $ne: "CATEGORY" }
+        },
+    }])
+
+    res.status(200).send({
+        status: "success",
+        crawsel
+    })
+})
+
+
+exports.homePageClickData = catchAsync(async (req, res, next) => {
+
+    const { products } = req.body;
+
+    const productList = await Product.find({ _id: { $each: products } })
+    res.status(200).send({
+        status: "success",
+        productList
+    })
+})
 
 
 

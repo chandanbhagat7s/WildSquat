@@ -4,6 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const sharp = require("sharp");
 const appError = require("../utils/appError");
 const Booked = require("../Models/BookedProduct");
+const Tool = require("../Models/Tools");
 
 
 
@@ -43,6 +44,32 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 })
 
 
+
+exports.resizeToolImage = catchAsync(async (req, res, next) => {
+
+    if (!req.files.coverImage) {
+        return next(new appError("please upload a file", 400))
+    }
+
+    const label = req.body.label;
+    if (req.files.coverImage) {
+
+        req.body.coverImage = `${req.body.name}-${label}-cover-${Math.random(100)}.jpeg`
+        await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`public/Tools/${req.body.coverImage}`)
+        next()
+        return
+    }
+
+
+
+
+
+
+    next()
+
+
+})
+
 const uploads = multer(
     {
         storage: multerStorage,
@@ -54,6 +81,10 @@ exports.uploadImages = uploads.fields([
     { name: 'coverImage', maxCount: 1 },
     { name: 'images', maxCount: 10 }
 ])
+
+
+
+
 exports.createProduct = catchAsync(async (req, res, next) => {
 
     const {
@@ -230,6 +261,128 @@ exports.confirmShipemntForOrder = catchAsync(async (req, res, next) => {
 })
 
 
+exports.createCategory = catchAsync(async (req, res, next) => {
+    const { label, shortDescription, name } = req.body;
+
+    const category = await Tool.create({
+        name,
+        label,
+        coverImage: req.body.coverImage,
+        shortDescription
+    })
+
+
+    if (!category) {
+        return next(new appError("Try again , category not created", 400))
+    }
+
+    res.status(200).send({
+        status: "success",
+        msg: "category created succesfully"
+    })
+
+
+
+
+
+
+
+})
+
+
+exports.updateCategory = catchAsync(async (req, res, next) => {
+
+    const { ids, tag, name, id } = req.body;
+
+    if (tag !== "ADD" && tag !== "REMOVE") {
+        return next(new appError("please mention weather you want to add or remove products", 400))
+    }
+
+    if (name !== "CATEGORY") {
+        return next(new appError("please try to update only category", 400))
+    }
+
+    let updatedCategory;
+    if (tag == "ADD") {
+        updatedCategory = await Tool.findByIdAndUpdate(id, {
+            $push: { products: { $each: ids } }
+        })
+
+
+
+    } else {
+        updatedCategory = await Tool.findByIdAndUpdate(id, {
+            $pull: { products: { $each: ids } }
+        })
+
+
+    }
+
+
+    if (!updatedCategory) {
+        return next(new appError("please try again to add /remove the product into category", 400))
+    }
+
+    res.status(200).send({
+        status: "success",
+        msg: "category updated "
+    })
+})
+
+
+exports.updateSlider = catchAsync(async (req, res, next) => {
+
+
+    const { name, tag } = req.body;
+
+
+    if (tag !== "ADD" && tag !== "REMOVE") {
+        return next(new appError("please pass valid tag either to add or remove", 400))
+    }
+
+
+    let sliderUpdate;
+    if (tag == "ADD") {
+        sliderUpdate = await Tool.findOneAndUpdate({
+            name
+        }, {
+            $push: { images: { $each: req.body.images } }
+        })
+
+
+    } else {
+        sliderUpdate = await Tool.findOneAndUpdate({
+            name
+        }, {
+            $pull: { images: { $each: req.body.images } }
+        })
+    }
+    if (!sliderUpdate) {
+        return next(new appError("please try again to add the product into category", 400))
+    }
+
+    res.status(200).send({
+        status: "success",
+        msg: "slider updated "
+    })
+
+})
+
+
+exports.getAllMyTools = catchAsync(async (req, res, next) => {
+    const allToolsdata = await Tool.aggregate([
+        {
+            $match: {
+                name: { $ne: "HOTPRODUCTS" }
+            }
+        }
+    ])
+
+    res.status(200).send({
+        status: "success",
+        allToolsdata
+    })
+})
 
 
 

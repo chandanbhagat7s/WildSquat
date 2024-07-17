@@ -10,6 +10,7 @@ import ProductOverview from "../common/ProductOverwiew";
 import ProfileOut from "../common/ProfileOut";
 import SignUpPage from "../Signup";
 import { Slider } from "../common/Slider";
+import CategoryList from "../common/CategoryList";
 
 export default function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ export default function AppRoutes() {
             <MainLayout>
               <Slider />
               <ProductListing />
+              <CategoryList />
               <ProductSection2 />
             </MainLayout>
           }
