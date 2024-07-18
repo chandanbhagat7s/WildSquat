@@ -57,10 +57,42 @@ export const removeFromHeart = createAsyncThunk("/product/remove/heart", async (
 
 })
 
+export const getHompageData = createAsyncThunk("/product/homepage", async (data) => {
+    try {
+        const res = await axios.get("/api/v1/user/homepage")
+
+        console.log(res);
+        return res.data
+    } catch (error) {
+
+    }
+
+
+
+
+
+})
+
+
+export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async () => {
+    try {
+        const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id");
+        console.log(res);
+        return res.data
+    } catch (error) {
+        console.log("error");
+    }
+})
+
 
 const initialState = {
     cart: [],
     heart: [],
+    slider: [],
+    hotProducts: [],
+    category: [],
+    posters: [],
+    categoryName: []
 
 }
 
@@ -70,8 +102,27 @@ const productSlice = createSlice({
     reducers: {
 
     },
-    extraReducers: 
+    extraReducers: (builder) => {
+        builder.addCase(getHompageData.fulfilled, (state, action) => {
+            //         console.log("came", action);
+            //         if (action?.payload?.status == "success") {
+
+            //             action?.payload?.allTools.map((el) => {
+
+        }).addCase(getAllCateogyNames.fulfilled, (state, action) => {
+            if (action.payload.status == "success") {
+                state.categoryName = action.payload.data
+            }
+        })
+
+
+
+
+    }
 })
+
+
+export default productSlice.reducer;
 
 
 

@@ -2,6 +2,7 @@ const Product = require("../Models/Product");
 const Tool = require("../Models/Tools");
 const User = require("../Models/User");
 const appError = require("../utils/appError");
+const factory = require("../utils/factory");
 const catchAsync = require("../utils/catchAsync");
 
 
@@ -220,31 +221,17 @@ exports.removeFromHeart = catchAsync(async (req, res, next) => {
 })
 
 
-exports.getAllCategory = catchAsync(async (req, res, next) => {
-
-    const allCategory = await Tool.find({
-        name: "CATEGORY"
-    })
-
-    res.status(200).send({
-        status: "success",
-        allCategory
-    })
-})
+exports.getAllCategory = factory.getAll(Tool)
 
 
 exports.homepageData = catchAsync(async (req, res, next) => {
 
     // getting the crawsel
-    const crawsel = await Tool.aggregate([{
-        $match: {
-            name: { $ne: "CATEGORY" }
-        },
-    }])
+    const allTools = await Tool.find({})
 
     res.status(200).send({
         status: "success",
-        crawsel
+        allTools
     })
 })
 

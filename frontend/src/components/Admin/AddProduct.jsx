@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiUpload, FiX } from "react-icons/fi";
-import { MdColorLens } from "react-icons/md";
-import { BiCategory } from "react-icons/bi";
-import { GiClothes, GiRuleBook } from "react-icons/gi";
-import { TbTruckDelivery } from "react-icons/tb";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
+import { getAllCateogyNames } from "../../redux/slices/productSlice";
 
 const CreateProductForm = () => {
   const dispatch = useDispatch();
+  const { categoryName } = useSelector((state) => state.product);
   const [product, setProduct] = useState({
     name: "",
     price: 1000,
@@ -20,7 +18,7 @@ const CreateProductForm = () => {
     images: [],
     coverImage: null,
     features: ["", "", "", "", ""],
-    colors: ["", "", "", "", ""],
+    colors: [{ color: "", price: "", images: [], coverImage: null }],
     shippingDetails: "",
     returnDetails: "",
     category: "",
@@ -30,8 +28,14 @@ const CreateProductForm = () => {
     stock: 20,
   });
 
-  const sizeOptions = ["XS", "S", "M", "L", "XL", "XXL"];
-  const categoryOptions = ["Sport", "Casual", "Formal", "Outdoor", "Sleepwear"];
+  const sizeOptions = [
+    { size: "XS", price: 0 },
+    { size: "S", price: 0 },
+    { size: "M", price: 0 },
+    { size: "L", price: 0 },
+    { size: "XL", price: 0 },
+    { size: "XXL", price: 0 },
+  ];
   const colorCategoryOptions = [
     "Red",
     "Blue",
@@ -50,11 +54,22 @@ const CreateProductForm = () => {
     setProduct({ ...product, [name]: value });
   };
 
-  const handleSizeChange = (size) => {
-    const newSizes = product.sizes.includes(size)
-      ? product.sizes.filter((s) => s !== size)
-      : [...product.sizes, size];
-    setProduct({ ...product, sizes: newSizes });
+  const handleSizeChange = (size, price = 0) => {
+    if (!price) {
+      const newSizes = product.sizes.find((item) => item.size === size.size)
+        ? product.sizes.filter((item) => item.size !== size.size)
+        : [...product.sizes, size];
+      setProduct({ ...product, sizes: newSizes });
+    } else {
+      const newproduct = product.sizes.map((el) => {
+        if (el.size == size.size) {
+          el.price = price;
+        }
+        return el;
+      });
+
+      setProduct({ ...product, sizes: newproduct });
+    }
   };
 
   const handleFeatureChange = (index, value) => {
@@ -63,11 +78,11 @@ const CreateProductForm = () => {
     setProduct({ ...product, features: newFeatures });
   };
 
-  const handleColorChange = (index, color) => {
-    const newColors = [...product.colors];
-    newColors[index] = color;
-    setProduct({ ...product, colors: newColors });
-  };
+  // const handleColorChange = (index, color) => {
+  //   const newColors = [...product.colors];
+  //   newColors[index] = color;
+  //   setProduct({ ...product, colors: newColors });
+  // };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -83,6 +98,48 @@ const CreateProductForm = () => {
     const newImages = [...product.images];
     newImages.splice(index, 1);
     setProduct({ ...product, images: newImages });
+  };
+
+  const handleColorChange = (index, field, value) => {
+    const newColors = [...product.colors];
+    newColors[index] = { ...newColors[index], [field]: value };
+    setProduct({ ...product, colors: newColors });
+  };
+
+  const handleColorImageUpload = (colorIndex, e) => {
+    const files = Array.from(e.target.files);
+    const newColors = [...product.colors];
+    newColors[colorIndex].images = [...newColors[colorIndex].images, ...files];
+    setProduct({ ...product, colors: newColors });
+  };
+
+  const handleColorCoverImageUpload = (colorIndex, e) => {
+    const file = e.target.files[0];
+    const newColors = [...product.colors];
+    newColors[colorIndex].coverImage = file;
+    setProduct({ ...product, colors: newColors });
+  };
+
+  const removeColorImage = (colorIndex, imageIndex) => {
+    const newColors = [...product.colors];
+    newColors[colorIndex].images.splice(imageIndex, 1);
+    setProduct({ ...product, colors: newColors });
+  };
+
+  const addColor = () => {
+    setProduct({
+      ...product,
+      colors: [
+        ...product.colors,
+        { color: "", price: "", images: [], coverImage: null },
+      ],
+    });
+  };
+
+  const removeColor = (index) => {
+    const newColors = [...product.colors];
+    newColors.splice(index, 1);
+    setProduct({ ...product, colors: newColors });
   };
 
   const handleSubmit = async (e) => {
@@ -124,6 +181,13 @@ const CreateProductForm = () => {
       console.log(error);
     }
   };
+  async function getCategory() {
+    await dispatch(getAllCateogyNames());
+  }
+
+  useEffect(() => {
+    getCategory();
+  }, []);
 
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
@@ -210,19 +274,30 @@ const CreateProductForm = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Sizes
+              Sizes and Prices
             </label>
             <div className="mt-2 space-y-2">
               {sizeOptions.map((size) => (
-                <label key={size} className="inline-flex items-center mr-4">
+                <div key={size.size} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={product.sizes.includes(size)}
+                    checked={product.sizes.find(
+                      (item) => item.size === size.size
+                    )}
                     onChange={() => handleSizeChange(size)}
                     className="form-checkbox h-5 w-5 text-indigo-600"
                   />
-                  <span className="ml-2 text-gray-700">{size}</span>
-                </label>
+                  <span className="text-gray-700">{size.size}</span>
+
+                  {product.sizes.find((item) => item.size == size.size) && (
+                    <input
+                      type="number"
+                      placeholder={`Price for ${size.size}`}
+                      className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      onChange={(e) => handleSizeChange(size, e.target.value)}
+                    />
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -351,19 +426,104 @@ const CreateProductForm = () => {
             <label className="block text-sm font-medium text-gray-700">
               Colors
             </label>
-            <div className="mt-2 grid grid-cols-5 gap-4">
-              {product.colors.map((color, index) => (
-                <div key={index} className="flex items-center">
+            {product.colors.map((colorItem, index) => (
+              <div
+                key={index}
+                className="mt-4 p-4 border border-gray-200 rounded-md"
+              >
+                <div className="flex items-center space-x-4">
                   <input
                     type="color"
-                    value={color}
-                    onChange={(e) => handleColorChange(index, e.target.value)}
+                    value={colorItem.color}
+                    onChange={(e) =>
+                      handleColorChange(index, "color", e.target.value)
+                    }
                     className="h-8 w-8 rounded-full overflow-hidden"
                   />
-                  <MdColorLens className="ml-2 text-gray-400" />
+                  <input
+                    type="number"
+                    placeholder="Price"
+                    value={colorItem.price}
+                    onChange={(e) =>
+                      handleColorChange(index, "price", e.target.value)
+                    }
+                    className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeColor(index)}
+                    className="text-red-500"
+                  >
+                    Remove Color
+                  </button>
                 </div>
-              ))}
-            </div>
+
+                <div className="mt-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Images
+                  </label>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => handleColorImageUpload(index, e)}
+                    className="mt-1 block w-full text-sm text-gray-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-full file:border-0
+                      file:text-sm file:font-semibold
+                      file:bg-indigo-50 file:text-indigo-700
+                      hover:file:bg-indigo-100"
+                  />
+                  <div className="mt-2 grid grid-cols-3 gap-2">
+                    {colorItem.images.map((image, imgIndex) => (
+                      <div key={imgIndex} className="relative">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Color ${index} Image ${imgIndex}`}
+                          className="h-20 w-20 object-cover rounded-md"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeColorImage(index, imgIndex)}
+                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                        >
+                          <FiX className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Cover Image
+                  </label>
+                  <input
+                    type="file"
+                    onChange={(e) => handleColorCoverImageUpload(index, e)}
+                    className="mt-1 block w-full text-sm text-gray-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-full file:border-0
+                      file:text-sm file:font-semibold
+                      file:bg-indigo-50 file:text-indigo-700
+                      hover:file:bg-indigo-100"
+                  />
+                  {colorItem.coverImage && (
+                    <img
+                      src={URL.createObjectURL(colorItem.coverImage)}
+                      alt={`Color ${index} Cover`}
+                      className="mt-2 h-32 w-32 object-cover rounded-md"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addColor}
+              className="mt-2 text-indigo-600 hover:text-indigo-800"
+            >
+              Add Another Color
+            </button>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -410,22 +570,20 @@ const CreateProductForm = () => {
                 className="block text-sm font-medium text-gray-700"
                 placeholder="Pant , Track pant , jeans .. etc"
               >
-                Category
+                Add Into Category
               </label>
-              <select
-                id="category"
-                name="category"
-                value={product.category}
-                onChange={handleInputChange}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select a category</option>
-                {categoryOptions.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
+              <div className="flex flex-col">
+                {categoryName.map((category) => (
+                  <div className="flex  items-center" key={category.name}>
+                    <input
+                      type="checkbox"
+                      key={category._id}
+                      value={category.name}
+                    />
+                    {category.name}
+                  </div>
                 ))}
-              </select>
+              </div>
             </div>
             <div>
               <label

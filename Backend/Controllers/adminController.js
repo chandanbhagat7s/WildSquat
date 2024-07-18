@@ -290,7 +290,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
 })
 
 
-exports.updateCategory = catchAsync(async (req, res, next) => {
+exports.updateTools = catchAsync(async (req, res, next) => {
 
     const { ids, tag, name, id } = req.body;
 
@@ -298,9 +298,7 @@ exports.updateCategory = catchAsync(async (req, res, next) => {
         return next(new appError("please mention weather you want to add or remove products", 400))
     }
 
-    if (name !== "CATEGORY") {
-        return next(new appError("please try to update only category", 400))
-    }
+
 
     let updatedCategory;
     if (tag == "ADD") {
@@ -370,17 +368,20 @@ exports.updateSlider = catchAsync(async (req, res, next) => {
 
 
 exports.getAllMyTools = catchAsync(async (req, res, next) => {
-    const allToolsdata = await Tool.aggregate([
-        {
-            $match: {
-                name: { $ne: "HOTPRODUCTS" }
-            }
-        }
-    ])
+    const allToolsdata = await Tool.find({ name: { $ne: "HOTPRODUCTS" } })
 
     res.status(200).send({
         status: "success",
         allToolsdata
+    })
+})
+exports.getToolById = catchAsync(async (req, res, next) => {
+    const { toolId } = req.params;
+    const tooldata = await Tool.findById(toolId)
+
+    res.status(200).send({
+        status: "success",
+        tooldata
     })
 })
 

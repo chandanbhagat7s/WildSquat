@@ -11,6 +11,9 @@ import ProfileOut from "../common/ProfileOut";
 import SignUpPage from "../Signup";
 import { Slider } from "../common/Slider";
 import CategoryList from "../common/CategoryList";
+import ManageTools from "../Admin/ManageTools";
+import ToolProductAction from "../Admin/ToolProductAction";
+import Homepage from "../common/Homepage";
 
 export default function AppRoutes() {
   return (
@@ -20,10 +23,7 @@ export default function AppRoutes() {
           path="/"
           element={
             <MainLayout>
-              <Slider />
-              <ProductListing />
-              <CategoryList />
-              <ProductSection2 />
+              <Homepage />
             </MainLayout>
           }
         />
@@ -31,6 +31,7 @@ export default function AppRoutes() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/createProduct" element={<CreateProductForm />} />
         <Route path="/adminDash" element={<AdminPanel />} />
+
         <Route
           path="/productDetails"
           element={

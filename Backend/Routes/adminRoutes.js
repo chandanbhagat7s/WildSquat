@@ -1,5 +1,5 @@
 const express = require('express');
-const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools } = require('../Controllers/adminController');
+const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, getToolById } = require('../Controllers/adminController');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const giveAccess = require('../Middleware/giveAccessTo');
 const adminRouter = express.Router()
@@ -17,8 +17,7 @@ adminRouter.get("/confirmShipment/:productId", confirmShipemntForOrder)
 // for frontend 
 adminRouter.post("/createCategory", uploadImages, resizeToolImage, createCategory)
 adminRouter.get("/getAllMyTools", getAllMyTools)
-adminRouter.patch("/updateCategory", updateCategory)
-adminRouter.patch("/updateSlider", updateSlider)
+adminRouter.get("/getToolById/:toolId", getToolById)
 
 
 
