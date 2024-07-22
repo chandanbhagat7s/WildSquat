@@ -31,7 +31,8 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     colors: {
-        type: [Object],
+        type: [mongoose.mongo.ObjectId],
+        ref: "Product"
     },
     images: {
         type: [String], // Array of image URLs
@@ -54,7 +55,8 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: [String],
+        type: [mongoose.mongo.ObjectId],
+        ref: "Tool",
         required: true,
 
     },
@@ -118,10 +120,10 @@ const productSchema = new mongoose.Schema({
     offer: {
         type: Object,
     },
-    isCombo: {
-        type: Boolean,
-        required: [true, "Product is combo or not"]
-    },
+    // isCombo: {
+    //     type: Boolean,
+    //     required: [true, "Product is combo or not"]
+    // },
 
 
 

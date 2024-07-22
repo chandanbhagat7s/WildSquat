@@ -12,16 +12,17 @@ import {
 import { IoMdArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { error, info, success } from "../../redux/slices/errorSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { MdLocalLaundryService } from "react-icons/md";
 import ReviewForm from "./CreateReview";
 import ReviewComponent from "./ReviewComponent";
 import BuyNowPopup from "../Payments/paymentDialog";
 import EachReview from "./EachReview";
+import url from "../../../public/url";
 
 const ProductOverview = () => {
   const nevigate = useNavigate();
-  const { state } = useLocation();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [images, setImage] = useState([]);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -104,13 +105,11 @@ const ProductOverview = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(`/api/v1/product/getProduct/${state.id}`);
+      const res = await axios.get(`/api/v1/product/getProduct/${id}`);
       console.log(res);
       if (res?.data?.status == "success") {
         // Assuming we have two placeholder images
-        let i = res?.data?.product?.images.map(
-          (el) => `http://127.0.0.1:4000/img/${el}`
-        );
+        let i = res?.data?.product?.images.map((el) => `${url}img/${el}`);
         setImage([...i]);
         setProduct({ ...res?.data?.product });
         setLoading(false);
@@ -159,21 +158,38 @@ const ProductOverview = () => {
       );
     }
   }
+  function handleImageHover(e) {
+    const container = e.currentTarget;
+    const img = container.querySelector(".main-image");
+    const enlargedView = container.querySelector(".enlarged-view");
+
+    const containerRect = container.getBoundingClientRect();
+    const x = (e.clientX - containerRect.left) / containerRect.width;
+    const y = (e.clientY - containerRect.top) / containerRect.height;
+
+    enlargedView.style.backgroundImage = `url(${img.src})`;
+    enlargedView.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+  }
 
   useEffect(() => {
     getData();
+
+    setTimeout(() => {
+      const container = document?.querySelector(".image-container");
+      if (container) {
+        container.addEventListener("mousemove", handleImageHover);
+      }
+
+      return () => {
+        if (container) {
+          container.removeEventListener("mousemove", handleImageHover);
+        }
+      };
+    }, 3000);
   }, []);
 
   return (
-    <div className="container mx-auto px-4 pt-5 pb-8">
-      <div className=" mb-2  ">
-        <button
-          className="border border-1 border-double   rounded-full flex space-x-2 px-3 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
-          onClick={() => nevigate(-1)}
-        >
-          <IoMdArrowBack className="text-2xl font-bold " />
-        </button>
-      </div>
+    <div className="container mx-auto px-4 pt-5 pb-8 mt-10">
       <div className="flex flex-col md:flex-row -mx-4">
         {loading ? (
           <>loading</>
@@ -191,12 +207,15 @@ const ProductOverview = () => {
             {/* Left side - Image gallery */}
             <div className="md:w-2/5 px-4">
               <div className="sticky top-0 space-y-2 ">
-                <div className="mb-4">
-                  <img
-                    src={images[selectedImage]}
-                    alt={`Track Pant - Image ${selectedImage + 1}`}
-                    className="h-96 mx-auto rounded-lg"
-                  />
+                <div className="mb-1 flex flex-col relative">
+                  <div className="image-container">
+                    <img
+                      src={images[selectedImage]}
+                      alt={`Track Pant - Image ${selectedImage + 1}`}
+                      className="h-96 mx-auto rounded-lg main-image"
+                    />
+                    <div className="enlarged-view"></div>
+                  </div>
                 </div>
                 <div className="flex space-x-2 overflow-x-auto">
                   {images.map((img, index) => (
@@ -214,15 +233,15 @@ const ProductOverview = () => {
                   ))}
                 </div>
                 {/* Action Buttons */}
-                <div className="flex space-x-4 mb-6">
+                <div className="flex space-x-4 ">
                   <button
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-300 text-white shadow-lg  py-3 rounded-md"
+                    className="flex-1   text-indigo-600 shadow-lg  py-3 rounded-md ring-2 ring-indigo-500 ring-inset hover:bg-indigo-700 hover:text-indigo-100 hover:font-bold   hover:scale-105 hover:ring-blue-300"
                     onClick={addToCart}
                   >
                     ADD TO CART
                   </button>
                   <button
-                    className="flex-1 bg-gradient-to-r from-purple-800 to-indigo-600 text-white shadow-lg py-3 rounded-md"
+                    className="flex-1   text-indigo-800 shadow-lg py-3 rounded-md ring-2 ring-indigo-500 ring-inset hover:bg-indigo-700 hover:text-indigo-100 hover:font-bold   hover:scale-105 hover:ring-blue-300"
                     onClick={() => setShowPopup(true)}
                   >
                     BUY NOW
@@ -232,39 +251,51 @@ const ProductOverview = () => {
             </div>
 
             {/* Right side - Product information */}
-            <div className="md:w-3/5 px-4 mt-8 md:mt-0 max-h-screen overflow-y-scroll">
-              <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-              <p className="text-md text-gray-500 mb-4">
+            <div className="md:w-3/5 px-6 mt-8 md:mt-0 max-h-screen overflow-y-scroll">
+              <h1 className="text-3xl font-bold mb-3 text-gray-900">
+                {product.name}
+              </h1>
+              <p className="text-lg text-gray-600 mb-4">
                 {product.shortDescription}
               </p>
-              <div className="flex items-center mb-4">
-                <span className="text-3xl font-bold">₹{product.price}</span>
-                <span className="ml-2 text-green-500">Extra ₹4000 off</span>
+              <div className="flex items-center mb-6">
+                <span className="text-3xl font-bold text-indigo-800">
+                  ₹{product.price}
+                </span>
+                <span className="ml-3 text-lg text-green-500">
+                  Extra ₹4000 off
+                </span>
               </div>
 
               {/* Size Selection */}
-              <div className="mb-4">
-                <h2 className="font-semibold mb-2">Size</h2>
-                <div className="flex space-x-2">
+              <div className="mb-6">
+                <h2 className="font-semibold mb-3 text-gray-800">Size</h2>
+                <div className="flex space-x-3">
                   {product.sizes.map((size) => (
                     <button
-                      key={size}
-                      className="px-4 py-2 border rounded-md hover:border-blue-500"
+                      key={size.size}
+                      className="px-4 py-2 border rounded-md hover:border-indigo-500 transition duration-300"
                     >
-                      {size}
+                      <span className="text-lg font-semibold text-indigo-800">
+                        {size.size}
+                      </span>
+                      <span className="ml-2 text-gray-600">Rs.</span>
+                      <span className="text-lg text-indigo-700 font-bold">
+                        {size.price}
+                      </span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Color Selection */}
-              <div className="mb-4">
-                <h2 className="font-semibold mb-2">Color</h2>
-                <div className="flex space-x-2">
+              <div className="mb-6">
+                <h2 className="font-semibold mb-3 text-gray-800">Color</h2>
+                <div className="flex space-x-3">
                   {product.colors.map((color, index) => (
                     <button
                       key={index}
-                      className="w-8 h-8 rounded-full border-2 hover:border-blue-500"
+                      className="w-10 h-10 rounded-full border-2 hover:border-indigo-500 transition duration-300"
                       style={{ backgroundColor: color }}
                     ></button>
                   ))}
@@ -272,29 +303,29 @@ const ProductOverview = () => {
               </div>
 
               {/* Features */}
-              <div className="mb-6">
-                <h2 className="font-semibold mb-2">Features</h2>
-                <ul className="list-disc list-inside">
+              <div className="mb-8">
+                <h2 className="font-semibold mb-3 text-gray-800">Features</h2>
+                <ul className="list-disc list-inside text-gray-700">
                   {product.features.map((feature, index) => (
-                    <li key={index} className="text-gray-600">
-                      {feature}
-                    </li>
+                    <li key={index}>{feature}</li>
                   ))}
                 </ul>
               </div>
 
               {/* Additional Information */}
-              <div className="bg-white shadow-md rounded-lg p-6 mt-8">
-                <h2 className="text-2xl font-semibold mb-6">
+              <div className="bg-white shadow-md rounded-lg p-8 mt-10">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-900">
                   Additional Information
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Shipping Details */}
                   <div className="flex items-start">
                     <FaShippingFast className="text-2xl text-indigo-600 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Shipping</h3>
-                      <p className="text-gray-600">{product.shippingDetails}</p>
+                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                        Shipping
+                      </h3>
+                      <p className="text-gray-700">{product.shippingDetails}</p>
                     </div>
                   </div>
 
@@ -302,19 +333,10 @@ const ProductOverview = () => {
                   <div className="flex items-start">
                     <FaExchangeAlt className="text-2xl text-indigo-600 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Returns</h3>
-                      <p className="text-gray-600">{product.returnDetails}</p>
-                    </div>
-                  </div>
-
-                  {/* Category */}
-                  <div className="flex items-start">
-                    <FaTshirt className="text-2xl text-indigo-600 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-lg mb-2">Category</h3>
-                      <p className="text-gray-600">
-                        {product.category} - {product.colorCategory}
-                      </p>
+                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                        Returns
+                      </h3>
+                      <p className="text-gray-700">{product.returnDetails}</p>
                     </div>
                   </div>
 
@@ -322,8 +344,10 @@ const ProductOverview = () => {
                   <div className="flex items-start">
                     <FaGlobeAsia className="text-2xl text-indigo-600 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Origin</h3>
-                      <p className="text-gray-600">Made in {product.madeIn}</p>
+                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                        Origin
+                      </h3>
+                      <p className="text-gray-700">Made in {product.madeIn}</p>
                     </div>
                   </div>
 
@@ -331,35 +355,46 @@ const ProductOverview = () => {
                   <div className="flex items-start">
                     <FaBoxOpen className="text-2xl text-indigo-600 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">
+                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
                         Availability
                       </h3>
-                      <p className="text-gray-600">{product.stock} in stock</p>
+                      <p className="text-gray-700">{product.stock} in stock</p>
                     </div>
                   </div>
                 </div>
+
                 {/* Care Instructions */}
-                <div className="mt-8">
+                <div className="mt-10">
                   <div className="flex items-center mb-4">
                     <MdLocalLaundryService className="text-2xl text-indigo-600 mr-4" />
-                    <h3 className="font-semibold text-lg">Care Instructions</h3>
+                    <h3 className="font-semibold text-lg text-gray-800">
+                      Care Instructions
+                    </h3>
                   </div>
-                  {product.careInstructions}
+                  <p className="text-gray-700">{product.careInstructions}</p>
                 </div>
-                {/* logng desc */}
-                <p className="text-xl font-bold my-2">Description</p>
-                <p className="text-md text-gray-500 mb-4">
-                  {product.longDescription}
-                </p>
-                {/* reviews */}
-                <p className="text-xl font-bold my-2">
-                  Review for{" "}
-                  <span className="text-indigo-700">{product.name}</span>
+
+                {/* Long Description */}
+                <div className="mt-10">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Description
+                  </h3>
+                  <p className="text-lg text-gray-600">
+                    {product.longDescription}
+                  </p>
+                </div>
+
+                {/* Reviews */}
+                <div className="mt-10">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Reviews for{" "}
+                    <span className="text-indigo-700">{product.name}</span>
+                  </h3>
                   <ReviewComponent pid={product._id} />
-                </p>
-                {/* <ReviewComponent /> <ReviewForm ofProduct={product._id} /> */}
-                <div className="pb-32"></div>
+                </div>
               </div>
+
+              <div className="pb-32"></div>
             </div>
           </>
         )}

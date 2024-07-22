@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
+import url from "../../../public/url";
 
 const ToolProductAction = ({ docid }) => {
   const [selectedItem, setSelectedItem] = useState({});
@@ -9,7 +10,8 @@ const ToolProductAction = ({ docid }) => {
   async function getDataOfTool() {
     try {
       const res = await axios.get(`/api/v1/admin/getToolById/${docid}`);
-      setSelectedItem(res.data.tooldata);
+      console.log(res.data.tooldata);
+      setSelectedItem({ ...res.data.tooldata });
     } catch (e) {}
   }
   const toggleProductSelection = (productId) => {
@@ -98,14 +100,12 @@ const ToolProductAction = ({ docid }) => {
                     <td className="py-2 px-4 border-b">{product.name}</td>
                     <td className="py-2 px-4 border-b">
                       <img
-                        src={`/path/to/images/${product.image}`}
+                        src={`${url}/img/${product.coverImage}`}
                         alt={product.name}
                         className="h-12 w-12 object-cover rounded"
                       />
                     </td>
-                    <td className="py-2 px-4 border-b">
-                      ${product.price.toFixed(2)}
-                    </td>
+                    <td className="py-2 px-4 border-b">${product.price}</td>
                   </tr>
                 ))}
               </tbody>

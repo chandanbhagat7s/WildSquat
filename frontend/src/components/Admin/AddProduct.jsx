@@ -18,10 +18,9 @@ const CreateProductForm = () => {
     images: [],
     coverImage: null,
     features: ["", "", "", "", ""],
-    colors: [{ color: "", price: "", images: [], coverImage: null }],
     shippingDetails: "",
     returnDetails: "",
-    category: "",
+    category: [],
     colorCategory: "",
     careInstructions: "",
     madeIn: "India",
@@ -54,6 +53,12 @@ const CreateProductForm = () => {
     setProduct({ ...product, [name]: value });
   };
 
+  const handleCategoryChanges = (item) => {
+    let category = product.category.includes(item)
+      ? product.category.filter((el) => el != item)
+      : [...product.category, item];
+    setProduct({ ...product, category: category });
+  };
   const handleSizeChange = (size, price = 0) => {
     if (!price) {
       const newSizes = product.sizes.find((item) => item.size === size.size)
@@ -78,12 +83,6 @@ const CreateProductForm = () => {
     setProduct({ ...product, features: newFeatures });
   };
 
-  // const handleColorChange = (index, color) => {
-  //   const newColors = [...product.colors];
-  //   newColors[index] = color;
-  //   setProduct({ ...product, colors: newColors });
-  // };
-
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     setProduct({ ...product, images: [...product.images, ...files] });
@@ -100,48 +99,6 @@ const CreateProductForm = () => {
     setProduct({ ...product, images: newImages });
   };
 
-  const handleColorChange = (index, field, value) => {
-    const newColors = [...product.colors];
-    newColors[index] = { ...newColors[index], [field]: value };
-    setProduct({ ...product, colors: newColors });
-  };
-
-  const handleColorImageUpload = (colorIndex, e) => {
-    const files = Array.from(e.target.files);
-    const newColors = [...product.colors];
-    newColors[colorIndex].images = [...newColors[colorIndex].images, ...files];
-    setProduct({ ...product, colors: newColors });
-  };
-
-  const handleColorCoverImageUpload = (colorIndex, e) => {
-    const file = e.target.files[0];
-    const newColors = [...product.colors];
-    newColors[colorIndex].coverImage = file;
-    setProduct({ ...product, colors: newColors });
-  };
-
-  const removeColorImage = (colorIndex, imageIndex) => {
-    const newColors = [...product.colors];
-    newColors[colorIndex].images.splice(imageIndex, 1);
-    setProduct({ ...product, colors: newColors });
-  };
-
-  const addColor = () => {
-    setProduct({
-      ...product,
-      colors: [
-        ...product.colors,
-        { color: "", price: "", images: [], coverImage: null },
-      ],
-    });
-  };
-
-  const removeColor = (index) => {
-    const newColors = [...product.colors];
-    newColors.splice(index, 1);
-    setProduct({ ...product, colors: newColors });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -156,19 +113,16 @@ const CreateProductForm = () => {
           product.features.map((el) => {
             fd.append("features", el);
           });
-        } else if (key == "colors") {
-          product.colors.map((el) => {
-            fd.append("colors", el);
-          });
         } else if (key == "sizes") {
-          product.sizes.map((el) => {
-            fd.append("sizes", el);
-          });
+          fd.append("sizes", JSON.stringify(product.sizes));
+        } else if (key == "category") {
+          fd.append("category", JSON.stringify(product.category));
         } else {
           fd.append(`${key}`, product[key]);
         }
       }
 
+      console.log(fd.entries());
       const res = await axios.post("/api/v1/admin/create", fd);
       console.log(res);
       if (res.data.status == "success") {
@@ -176,9 +130,8 @@ const CreateProductForm = () => {
       } else {
         dispatch(error({ message: "something went wrong please try again" }));
       }
-    } catch (error) {
+    } catch (e) {
       dispatch(error({ message: "something went wrong please try again" }));
-      console.log(error);
     }
   };
   async function getCategory() {
@@ -422,110 +375,6 @@ const CreateProductForm = () => {
             ))}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Colors
-            </label>
-            {product.colors.map((colorItem, index) => (
-              <div
-                key={index}
-                className="mt-4 p-4 border border-gray-200 rounded-md"
-              >
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="color"
-                    value={colorItem.color}
-                    onChange={(e) =>
-                      handleColorChange(index, "color", e.target.value)
-                    }
-                    className="h-8 w-8 rounded-full overflow-hidden"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Price"
-                    value={colorItem.price}
-                    onChange={(e) =>
-                      handleColorChange(index, "price", e.target.value)
-                    }
-                    className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeColor(index)}
-                    className="text-red-500"
-                  >
-                    Remove Color
-                  </button>
-                </div>
-
-                <div className="mt-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Images
-                  </label>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={(e) => handleColorImageUpload(index, e)}
-                    className="mt-1 block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-full file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-indigo-50 file:text-indigo-700
-                      hover:file:bg-indigo-100"
-                  />
-                  <div className="mt-2 grid grid-cols-3 gap-2">
-                    {colorItem.images.map((image, imgIndex) => (
-                      <div key={imgIndex} className="relative">
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={`Color ${index} Image ${imgIndex}`}
-                          className="h-20 w-20 object-cover rounded-md"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeColorImage(index, imgIndex)}
-                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-                        >
-                          <FiX className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Cover Image
-                  </label>
-                  <input
-                    type="file"
-                    onChange={(e) => handleColorCoverImageUpload(index, e)}
-                    className="mt-1 block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-full file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-indigo-50 file:text-indigo-700
-                      hover:file:bg-indigo-100"
-                  />
-                  {colorItem.coverImage && (
-                    <img
-                      src={URL.createObjectURL(colorItem.coverImage)}
-                      alt={`Color ${index} Cover`}
-                      className="mt-2 h-32 w-32 object-cover rounded-md"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addColor}
-              className="mt-2 text-indigo-600 hover:text-indigo-800"
-            >
-              Add Another Color
-            </button>
-          </div>
-
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <label
@@ -578,9 +427,10 @@ const CreateProductForm = () => {
                     <input
                       type="checkbox"
                       key={category._id}
-                      value={category.name}
+                      value={category.label}
+                      onClick={() => handleCategoryChanges(category._id)}
                     />
-                    {category.name}
+                    {category.label}
                   </div>
                 ))}
               </div>

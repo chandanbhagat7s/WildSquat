@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const toolSchema = new mongoose.Schema(({
     name: {
         type: String,
-        enum: ["CATEGORY", "POSTER", "CARDS", "SLIDER", "HOTPRODUCTS"],
+
         required: [true, "must provide type of tool you are creating"]
     },
     products: {

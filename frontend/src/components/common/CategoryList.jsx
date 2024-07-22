@@ -1,55 +1,118 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
+import { FaTag, FaStar, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import TypeWriter from "../Utils/TypeWriter";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import url from "../../../public/url";
 
-const Card = ({ imageUrl, title }) => {
+const Card = ({ id, image, title, total }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex-shrink-0 w-72 bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105">
-      <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
-      <div className="p-5">
-        <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
-        <button className="flex items-center justify-center w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300">
-          Explore More
-          <FaArrowRight className="ml-2" />
-        </button>
+    <motion.div
+      className="flex-shrink-0 w-[300px] h-[300px] relative overflow-hidden rounded-full shadow-2xl cursor-pointer group"
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.3 }}
+      onClick={() =>
+        navigate(`/toolsDetails/${id}`, { state: { tool: "CATEGORY" } })
+      }
+    >
+      <img
+        src={`${url}Tools/${image}`}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end items-center p-6 text-white z-20">
+        <h5 className="text-2xl font-bold mb-2 flex items-center">
+          <FaStar className="text-yellow-400 mr-2" />
+          {title}
+        </h5>
+        <p className="text-lg flex items-center">
+          <FaTag className="mr-2" />
+          <span className="font-bold">{total}</span> items
+        </p>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 const CategoryList = () => {
-  const scrollRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { category } = useSelector((state) => state.product);
+  const containerRef = useRef(null);
 
-  const cards = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1em_Q4Axmw0COspJ02OkY1zam8iijTJ_Mew&s`,
-    title: `Card ${i + 1}`,
-  }));
+  const handleScroll = (direction) => {
+    const container = containerRef.current;
+    if (container) {
+      const scrollAmount = direction === "left" ? -320 : 320;
+      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
-    const scrollInterval = setInterval(() => {
-      if (scrollRef.current) {
-        const nextIndex = (currentIndex + 1) % cards.length;
-        setCurrentIndex(nextIndex);
-        scrollRef.current.scrollTo({
-          left: nextIndex * 288, // 72px card width + 24px gap (space-x-6)
-          behavior: "smooth",
-        });
-      }
-    }, 3000); // Scroll every 3 seconds
+    const autoScroll = setInterval(() => {
+      handleScroll("right");
+    }, 5000);
 
-    return () => clearInterval(scrollInterval);
-  }, [currentIndex, cards.length]);
+    return () => clearInterval(autoScroll);
+  }, []);
 
   return (
-    <div className="container mx-auto p-8">
-      <div
-        ref={scrollRef}
-        className="flex overflow-x-hidden space-x-6 pb-8 scrollbar-hide"
+    <div className="py-20 lg:py-32 px-6 bg-gradient-to-b from-gray-100 to-white">
+      <motion.div
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
       >
-        {cards.map((card) => (
-          <Card key={card.id} imageUrl={card.imageUrl} title={card.title} />
-        ))}
+        <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4">
+          <TypeWriter
+            content={["Variations", 1000, "Patterns", 1500, "What You Need"]}
+          />
+          <span className="text-indigo-600"> We Have</span>
+        </h2>
+        <p className="mt-4 text-xl text-gray-700 font-medium max-w-2xl mx-auto">
+          Elevate your performance with our premium sports gear
+        </p>
+      </motion.div>
+
+      <div className="relative mt-20">
+        <motion.div
+          ref={containerRef}
+          className="flex overflow-x-auto space-x-8 py-8 px-4 snap-x snap-mandatory scrollbar-hide"
+          style={{ scrollBehavior: "smooth" }}
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          {category.map((card, index) => (
+            <div key={index} className="snap-start">
+              <Card
+                id={card._id}
+                image={card.coverImage}
+                title={card.label}
+                total={card.products.length}
+              />
+            </div>
+          ))}
+        </motion.div>
+
+        <motion.button
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white p-4 rounded-full shadow-lg hover:bg-indigo-100 transition-colors"
+          onClick={() => handleScroll("left")}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <FaArrowLeft className="text-indigo-600 text-xl" />
+        </motion.button>
+
+        <motion.button
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white p-4 rounded-full shadow-lg hover:bg-indigo-100 transition-colors"
+          onClick={() => handleScroll("right")}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <FaArrowRight className="text-indigo-600 text-xl" />
+        </motion.button>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ const reviewRouter = require('./Routes/reviewRoute');
 const paymentRouter = require('./Routes/paymentsRoute');
 const userRouter = require('./Routes/authRoutes');
 const userrouter = require('./Routes/userRouter');
+const toolRouter = require('./Routes/toolsRouter');
 
 const app = express()
 env.config({ path: "./config.env" })
@@ -42,6 +43,7 @@ mongoose.connect(process.env.DATABASE_URL, {
 
 
 
+app.use('/api/v1/tools', toolRouter)
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/product', productRouter)

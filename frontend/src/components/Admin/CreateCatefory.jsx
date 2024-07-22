@@ -8,6 +8,7 @@ const CreateCategory = () => {
   const [coverImage, setCoverImage] = useState(null);
   const dispatch = useDispatch();
   const [label, setLabel] = useState("");
+  const [custom, setCustom] = useState("");
   const [image, setImage] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
@@ -24,7 +25,7 @@ const CreateCategory = () => {
     try {
       const fd = new FormData();
       fd.append("coverImage", image);
-      fd.append("name", selectedValue);
+      fd.append("name", custom ? custom : selectedValue);
       fd.append("label", label);
       fd.append("shortDescription", shortDescription);
       const data = await axios.post("/api/v1/admin/createCategory", fd);
@@ -67,11 +68,37 @@ const CreateCategory = () => {
             <option value="POSTER">POSTER</option>
             <option value="CARDS">CARDS</option>
             <option value="SLIDER">SLIDER</option>
+            <option value="custom">Custom </option>
           </select>
           <p className="mt-2 text-sm text-gray-500">
             Selected: {selectedValue}
           </p>
         </div>
+
+        {selectedValue == "custom" && (
+          <div>
+            <label
+              htmlFor="custom"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Custom Name
+            </label>
+            <div className="mt-1 relative rounded-md shadow-sm">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiType className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                name="custom"
+                id="custom"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                placeholder="Some name"
+                value={custom}
+                onChange={(e) => setCustom(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">

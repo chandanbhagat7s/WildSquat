@@ -76,7 +76,7 @@ export const getHompageData = createAsyncThunk("/product/homepage", async (data)
 
 export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async () => {
     try {
-        const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id");
+        const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id,label");
         console.log(res);
         return res.data
     } catch (error) {
@@ -104,10 +104,22 @@ const productSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getHompageData.fulfilled, (state, action) => {
-            //         console.log("came", action);
-            //         if (action?.payload?.status == "success") {
+            console.log("came", action);
+            if (action?.payload?.status == "success") {
+                let category = []
+                let slider = []
+                action?.payload?.allTools.map((el) => {
+                    if (el.name == "CATEGORY") {
+                        category.push(el)
+                    } else if (el.name == "SLIDER") {
+                        slider.push(el)
 
-            //             action?.payload?.allTools.map((el) => {
+                    }
+
+                })
+                state.category = category
+                state.slider = slider
+            }
 
         }).addCase(getAllCateogyNames.fulfilled, (state, action) => {
             if (action.payload.status == "success") {

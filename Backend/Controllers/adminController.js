@@ -79,7 +79,8 @@ const uploads = multer(
 
 exports.uploadImages = uploads.fields([
     { name: 'coverImage', maxCount: 1 },
-    { name: 'images', maxCount: 10 }
+    { name: 'images', maxCount: 10 },
+    { name: "color", maxCount: 10 }
 ])
 
 
@@ -107,13 +108,15 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         brand,
         madeIn,
     } = req.body;
+    let c = JSON.parse(category);
+    // adding into the category
 
     const product = await Product.create({
         name,
         price,
         shortDescription,
         longDescription,
-        sizes,
+        sizes: JSON.parse(sizes),
         material,
         images: Images,
         coverImage,
@@ -121,7 +124,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         colors,
         shippingDetails,
         returnDetails,
-        category,
+        category: c,
         colorCategory,
         careInstructions,
         stock,
@@ -131,6 +134,19 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     if (!product) {
         return next(new appError("Product not created plese try again", 500))
     }
+
+    let filter = { _id: { $in: c } }
+
+    let update = {
+        $push: {
+            products: product._id
+        }
+    }
+
+    const tool = await Tool.updateMany(filter, update)
+    console.log(tool);
+
+
     res.status(200).send({
         status: "success",
         msg: "Product created successfully"
@@ -377,7 +393,7 @@ exports.getAllMyTools = catchAsync(async (req, res, next) => {
 })
 exports.getToolById = catchAsync(async (req, res, next) => {
     const { toolId } = req.params;
-    const tooldata = await Tool.findById(toolId)
+    const tooldata = await Tool.findById(toolId).populate("products")
 
     res.status(200).send({
         status: "success",

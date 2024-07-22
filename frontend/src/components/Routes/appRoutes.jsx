@@ -14,6 +14,7 @@ import CategoryList from "../common/CategoryList";
 import ManageTools from "../Admin/ManageTools";
 import ToolProductAction from "../Admin/ToolProductAction";
 import Homepage from "../common/Homepage";
+import ClickProducts from "../common/ClickProducts";
 
 export default function AppRoutes() {
   return (
@@ -33,11 +34,21 @@ export default function AppRoutes() {
         <Route path="/adminDash" element={<AdminPanel />} />
 
         <Route
-          path="/productDetails"
+          path="/productDetails/:id"
           element={
             <MainLayout>
               <div className="">
                 <ProductOverview />{" "}
+              </div>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/toolsDetails/:toolId"
+          element={
+            <MainLayout>
+              <div className="">
+                <ClickProducts />{" "}
               </div>
             </MainLayout>
           }

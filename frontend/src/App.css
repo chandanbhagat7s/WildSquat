@@ -29,3 +29,34 @@ html {
 *::-webkit-scrollbar {
   display: none;
 }
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.main-image {
+  transition: opacity 0.3s ease;
+}
+
+.enlarged-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 200%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.image-container:hover .main-image {
+  opacity: 0.5;
+}
+
+.image-container:hover .enlarged-view {
+  opacity: 1;
+}

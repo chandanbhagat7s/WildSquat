@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import url from "../../public/url";
 import { useNavigate } from "react-router-dom";
 import { error, info, warning } from "../redux/slices/errorSlice";
+import TypeWriter from "./Utils/TypeWriter";
 
 const ProductListing = () => {
   const dispatch = useDispatch();
@@ -68,9 +69,17 @@ const ProductListing = () => {
   return (
     <div className="bg-gray-100 py-16 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
-        <div className="text-center ">
-          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Sports Collection
+        <div className="text-center py-16">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <TypeWriter
+              content={[
+                "Sports Collection : ",
+                1000,
+                "What You need it's hear 😊   ,",
+                1500,
+                `   ,`,
+              ]}
+            />
           </h2>
           <p className="mt-4 text-xl text-gray-500">
             Elevate your performance with our premium sports gear
@@ -84,26 +93,27 @@ const ProductListing = () => {
                 <div
                   key={p._id}
                   className="group relative shadow-lg rounded-xl p-2 cursor-pointer"
-                  onClick={() =>
-                    nevigate("/productDetails", { state: { id: p._id } })
-                  }
+                  onClick={() => nevigate(`/productDetails/${p._id}`)}
                 >
                   <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-75 lg:aspect-none">
                     <img
                       src={`${url}img/${p.coverImage}`}
                       alt={p.name}
-                      className="w-full h-full object-center object-cover lg:w-full lg:h-full "
+                      className="w-full h-64 object-cover"
                     />
                   </div>
-                  <div className="mt-4 flex justify-between">
+                  <div className="mt-4 flex flex-col items-center space-y-2">
                     <div>
                       <h3 className="text-sm text-gray-700">
-                        <span aria-hidden="true" className="absolute inset-0" />
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-0 font-bold text-lg"
+                        />
                         {p.name}
                       </h3>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">
-                      ${p.price}
+                    <p className="text-xl font-medium text-gray-900">
+                      Rs. {p.price}
                     </p>
                   </div>
                 </div>
