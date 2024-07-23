@@ -50,7 +50,7 @@ const EditProductForm = () => {
       if (selectedProduct) {
         console.log(selectedProduct);
         const res = await axios.get(
-          `/api/v1/product/getProductByName/${selectedProduct}`
+          `/api/v1/product/getProduct/${selectedProduct}`
         );
         console.log("res is", res);
         setEditedProduct({

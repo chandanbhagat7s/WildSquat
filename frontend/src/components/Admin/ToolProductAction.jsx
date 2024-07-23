@@ -2,11 +2,21 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import url from "../../../public/url";
+import { useDispatch } from "react-redux";
+import { error, success } from "../../redux/slices/errorSlice";
+import ProductSearch from "./SearchProduct";
 
 const ToolProductAction = ({ docid }) => {
   const [selectedItem, setSelectedItem] = useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const dispatch = useDispatch();
 
+  const [searchedProduct, setsearchedProduct] = useState([]);
+
+  function setsearchedProductOnClick(id) {
+    ![...searchedProduct].includes(id) &&
+      setsearchedProduct([...searchedProduct, id]);
+  }
   async function getDataOfTool() {
     try {
       const res = await axios.get(`/api/v1/admin/getToolById/${docid}`);
@@ -22,6 +32,26 @@ const ToolProductAction = ({ docid }) => {
     );
   };
 
+  async function addProductsToTool() {
+    try {
+      const res = await axios.patch("/api/v1/admin/actionOnTool", {
+        action: "ADD",
+        toolId: selectedItem._id,
+        ids: searchedProduct,
+      });
+
+      if (res?.data?.status == "success") {
+        dispatch(success({ message: res?.data?.msg || "products added " }));
+      }
+    } catch (e) {
+      dispatch(
+        error({
+          message: e?.responce?.msg || "Something went wrong please try again ",
+        })
+      );
+    }
+  }
+
   const selectAllProducts = () => {
     setSelectedProducts(selectedItem.products.map((product) => product._id));
   };
@@ -30,9 +60,21 @@ const ToolProductAction = ({ docid }) => {
     setSelectedProducts([]);
   };
 
-  const removeSelectedProducts = () => {
+  const removeSelectedProducts = async () => {
     // Implement the logic to remove selected products
     console.log("Removing products:", selectedProducts);
+    try {
+      const res = await axios.patch("/api/v1/admin/actionOnTool", {
+        toolId: selectedItem._id,
+        ids: selectedProducts,
+        action: "REMOVE",
+      });
+      if (res?.data?.status == "success") {
+        dispatch(success({ message: res?.data?.msg }));
+      }
+    } catch (e) {
+      dispatch(error({ message: e?.responce?.msg || "something went wrong" }));
+    }
     // After removing, you might want to update the selectedItem state in the parent component
     // and clear the selections
     setSelectedProducts([]);
@@ -44,14 +86,31 @@ const ToolProductAction = ({ docid }) => {
 
   return (
     <>
+      {console.log(searchedProduct)}
       {selectedItem?.name && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-4">{selectedItem.name}</h2>
           <p className="text-gray-600 mb-6">{selectedItem.shortDescription}</p>
+          <div className="mb-10">
+            <ProductSearch setSelectedProduct={setsearchedProductOnClick} />
+          </div>
+          <div className="p-2">
+            {searchedProduct.length > 0 && (
+              <>
+                {`Add ${searchedProduct.length} products `}{" "}
+                <button
+                  className="p-2 rounded bg-blue-400 text-black"
+                  onClick={addProductsToTool}
+                >
+                  Add Product
+                </button>
+              </>
+            )}
+          </div>
 
-          <div className="mb-4 flex justify-between items-center">
+          <div className="mb-4 flex md:flex-row flex-col justify-between items-center space-y-2">
             <h3 className="text-xl font-semibold">Products</h3>
-            <div>
+            <div className="flex md:flex-row flex-col space-y-2">
               <button
                 onClick={selectAllProducts}
                 className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600 transition-colors"
@@ -63,13 +122,6 @@ const ToolProductAction = ({ docid }) => {
                 className="bg-gray-500 text-white px-4 py-2 rounded mr-2 hover:bg-gray-600 transition-colors"
               >
                 Deselect All
-              </button>
-              <button
-                onClick={removeSelectedProducts}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                disabled={selectedProducts.length === 0}
-              >
-                Remove Selected
               </button>
             </div>
           </div>

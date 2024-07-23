@@ -46,7 +46,11 @@ const ProductCard = ({ _id, name, price, image }) => {
       onClick={() => navigate(`/productDetails/${_id}`)}
     >
       <div className="relative">
-        <img src={image} alt={name} className="w-full h-64 object-cover" />
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-64 object-contain hover:object-cover"
+        />
         <div className="absolute top-0 right-0 m-4">
           <FaHeart className="text-2xl text-white opacity-70 hover:text-red-500 hover:opacity-100 transition duration-300" />
         </div>
@@ -132,14 +136,14 @@ const ClickProducts = () => {
           </h1>
 
           {state?.tool == "CATEGORY" ? (
-            <div className="flex flex-col my-8 lg:flex-row space-x-6 bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="flex flex-col my-8 lg:flex-row space-x-6 bg-white rounded-xl shadow-lg ">
               <img
                 src={`${url}Tools/${data.image}`}
                 alt="Luxury banner"
-                className="w-full lg:w-1/3 h-64 object-cover"
+                className="w-full lg:w-1/3 h-64 object-contain"
               />
               <div className="p-6 flex items-center">
-                <p className="text-gray-700 text-lg leading-relaxed">
+                <p className="text-gray-700 text-sm lg:text-lg leading-relaxed">
                   {data.description}
                 </p>
               </div>

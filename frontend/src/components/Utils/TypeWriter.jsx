@@ -9,11 +9,7 @@ export default function TypeWriter({ content }) {
         wrapper="span"
         cursor={true}
         repeat={Infinity}
-        style={{
-          fontSize: "1em",
-          display: "inline-block",
-          color: "black",
-        }}
+        className="text-3xl"
       />
     </>
   );

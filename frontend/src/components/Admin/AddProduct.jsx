@@ -431,6 +431,7 @@ const CreateProductForm = () => {
                       onClick={() => handleCategoryChanges(category._id)}
                     />
                     {category.label}
+                    <span className="ml-3 font-bold">({category.name})</span>
                   </div>
                 ))}
               </div>

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, getToolById } = require('../Controllers/adminController');
+const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, getToolById, actionOnTool, deletTool } = require('../Controllers/adminController');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const giveAccess = require('../Middleware/giveAccessTo');
 const adminRouter = express.Router()
@@ -11,6 +11,10 @@ adminRouter.get("/hide/:productId", hideProduct)
 
 adminRouter.get("/getAllOrdersForShipment", getAllOrdersForShipment)
 adminRouter.get("/confirmShipment/:productId", confirmShipemntForOrder)
+
+// add and remove of pproduct from the category
+adminRouter.patch("/actionOnTool", actionOnTool)
+adminRouter.delete("/actionOnTool/:toolId", deletTool)
 
 
 

@@ -14,11 +14,12 @@ const ProductListing = () => {
 
   async function getAllProductDetails() {
     try {
-      const res = await axios.get("/api/v1/product/getAllMiniCardProduct");
+      const res = await axios.get("/api/v1/product/getAllTrendingProducts");
 
       console.log(res);
-      if (res?.data?.product?.length > 0) {
-        setProduct([...res?.data?.product]);
+      console.log(res?.data?.products[0].products);
+      if (res.data.status == "success") {
+        setProduct([...res?.data?.products[0].products]);
       }
     } catch (e) {
       dispatch(error({ message: e?.response?.msg || "something went wrong" }));

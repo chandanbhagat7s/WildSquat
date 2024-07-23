@@ -235,6 +235,20 @@ exports.homepageData = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.getAlltrendingProducts = catchAsync(async (req, res, next) => {
+
+    // getting the crawsel
+    const products = await Tool.find({ name: "Trending" }).select("products _id").populate({
+        path: "products",
+        select: "name price _id coverImage"
+    })
+
+    res.status(200).send({
+        status: "success",
+        products
+    })
+})
+
 
 exports.homePageClickData = catchAsync(async (req, res, next) => {
 

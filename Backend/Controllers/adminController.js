@@ -51,10 +51,9 @@ exports.resizeToolImage = catchAsync(async (req, res, next) => {
         return next(new appError("please upload a file", 400))
     }
 
-    const label = req.body.label;
     if (req.files.coverImage) {
 
-        req.body.coverImage = `${req.body.name}-${label}-cover-${Math.random(100)}.jpeg`
+        req.body.coverImage = `toolCover-${Date.now()}.jpeg`
         await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`public/Tools/${req.body.coverImage}`)
         next()
         return
@@ -402,6 +401,81 @@ exports.getToolById = catchAsync(async (req, res, next) => {
 })
 
 
+
+exports.actionOnTool = catchAsync(async (req, res, next) => {
+
+    let { action, ids, toolId } = req.body;
+    if (!action || ids?.length == 0 || !toolId) {
+        return next(new appError("please provide all the fields too perform an action ", 400))
+
+    }
+    if (action !== "ADD" && action !== "REMOVE") {
+        return next(new appError("please perform valid action on product ", 400))
+
+    }
+
+    let updatedTool;
+    const existingTool = await Tool.findById(toolId);
+    if (action == "ADD") {
+
+        ids = ids.map((el) => {
+            if (existingTool.products.includes(el)) {
+                //
+            } else {
+                return el
+            }
+        })
+        console.log(ids);
+        if (ids.length == 0) {
+            return next(new appError("selected product was already added ", 400))
+        }
+
+        updatedTool = await Tool.findByIdAndUpdate(toolId, {
+            $push: { products: { $each: ids } }
+        }, {
+            new: true
+        })
+    } else {
+
+        if (existingTool?.products?.length == 0) {
+            return next(new appError("nothing found in list", 400))
+
+        }
+
+
+        updatedTool = await Tool.findByIdAndUpdate(toolId, {
+            $pull: { products: { $in: ids } }
+        }, {
+            new: true
+        })
+    }
+
+    if (!updatedTool) {
+        return next("operation not performed , Please try again", 500)
+    }
+
+
+    res.status(200).send({
+        status: "success",
+        msg: "operation performed successfully"
+    })
+})
+
+exports.deletTool = catchAsync(async (req, res, next) => {
+
+    const toolId = req.params?.toolId;
+    if (!toolId) {
+        return next(new appError("please pass an id to perform action", 400))
+    }
+
+    await Tool.findByIdAndDelete(toolId)
+
+
+    res.status(204).send({
+        status: "success",
+        msg: "operation performed successfully, delete tool "
+    })
+})
 
 
 

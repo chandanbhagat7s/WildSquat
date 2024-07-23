@@ -66,7 +66,7 @@ const ProductSearch = ({ setSelectedProduct }) => {
                 <li
                   key={i}
                   className="py-4 px-2 hover:bg-gray-50 transition duration-150 ease-in-out"
-                  onClick={() => setSelectedProduct(product.name)}
+                  onClick={() => setSelectedProduct(product._id)}
                 >
                   {product.name}
                 </li>

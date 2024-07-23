@@ -6,7 +6,7 @@ import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { FiTag, FiFileText } from "react-icons/fi";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { error } from "../../redux/slices/errorSlice";
+import { error, success } from "../../redux/slices/errorSlice";
 import url from "../../../public/url";
 import { useNavigate } from "react-router-dom";
 import FullScreenDialog from "../common/FullScreenDialog";
@@ -27,7 +27,8 @@ export default function ManageTools() {
       let sliders = [],
         category = [],
         posters = [],
-        cards = [];
+        cards = [],
+        custom = [];
 
       data.map((el) => {
         if (el.name == "SLIDER") {
@@ -38,6 +39,8 @@ export default function ManageTools() {
           cards.push(el);
         } else if (el.name == "POSTER") {
           posters.push(el);
+        } else {
+          custom.push(el);
         }
       });
 
@@ -46,6 +49,7 @@ export default function ManageTools() {
         category: [...category],
         posters: [...posters],
         cards: [...cards],
+        custom: [...custom],
       });
     } catch (e) {
       console.log(e);
@@ -109,12 +113,23 @@ const ContentDisplay = ({ tools }) => {
 };
 
 const ContentCard = ({ item, openDialog, setBtn }) => {
+  const dispatch = useDispatch();
+  async function deleteThisTool(toolid) {
+    try {
+      const res = await axios.delete(`/api/v1/admin/actionOnTool/${toolid}`);
+      if (res.status == 204) {
+        dispatch(success({ message: "tool deleted successfully" }));
+      }
+    } catch (e) {
+      dispatch(success({ message: "Please try again" }));
+    }
+  }
   return (
     <div className="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
       <div className="relative pb-48 overflow-hidden">
         <img
           className="absolute inset-0 h-full w-full object-cover transform hover:scale-105 transition-transform duration-300"
-          src={`${url}/tools/${item.coverImage}`}
+          src={`${url}tools/${item.coverImage}`}
           alt={item.name}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-indigo-900 to-transparent opacity-60"></div>
@@ -145,7 +160,15 @@ const ContentCard = ({ item, openDialog, setBtn }) => {
             <MdOutlinePublishedWithChanges className="mr-2" />
             <span>Make changes</span>
           </button>
-          <button className="flex-1 bg-red-600 text-white rounded-lg py-2 px-4 flex items-center justify-center hover:bg-red-700 transition-colors duration-300 shadow-md hover:shadow-lg">
+          <button
+            className="flex-1 bg-red-600 text-white rounded-lg py-2 px-4 flex items-center justify-center hover:bg-red-700 transition-colors duration-300 shadow-md hover:shadow-lg"
+            onClick={() => {
+              const res = confirm("Do you want to delete this category");
+              if (res) {
+                deleteThisTool(item._id);
+              }
+            }}
+          >
             <MdDelete className="mr-2" />
             <span>Delete</span>
           </button>
