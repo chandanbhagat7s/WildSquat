@@ -31,8 +31,7 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     colors: {
-        type: [mongoose.mongo.ObjectId],
-        ref: "Product"
+        type: [Object]
     },
     images: {
         type: [String], // Array of image URLs

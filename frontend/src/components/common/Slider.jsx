@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
 
-import url from "../../../public/url";
+import url from "../../assets/url";
 
 export function Slider() {
   const { slider } = useSelector((state) => state.product);
@@ -42,12 +42,11 @@ export function Slider() {
           key={currentIndex}
           src={`${url}Tools/${slider[currentIndex]?.coverImage}`}
           alt={`Slide ${currentIndex + 1}`}
-          className="absolute w-full h-full object-cover"
+          className="absolute w-full h-full object-cover cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          onClick={() => navigate(`/toolsDetails/${slider[currentIndex]?._id}`)}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src =
@@ -57,7 +56,7 @@ export function Slider() {
       </AnimatePresence>
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-90" />
 
       {/* Navigation Arrows */}
       <button
@@ -93,10 +92,14 @@ export function Slider() {
         </h2>
         <p className="text-lg mb-4">{slider[currentIndex]?.shortDescription}</p>
         <button
-          onClick={() => navigate(`/toolsDetails/${slider[currentIndex]?._id}`)}
-          className="bg-white text-black px-6 py-2 rounded-full hover:bg-opacity-80 transition-colors"
+          onClick={() =>
+            navigate(`/toolsDetails/${slider[currentIndex]?._id}`, {
+              state: { tool: "SLIDER" },
+            })
+          }
+          className="bg-white text-black px-6 py-2 rounded-full hover:bg-opacity-80 transition-colors "
         >
-          Learn More
+          Explore More
         </button>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import url from "../../../public/url";
+import url from "../../assets/url";
 import { useDispatch } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
 import ProductSearch from "./SearchProduct";

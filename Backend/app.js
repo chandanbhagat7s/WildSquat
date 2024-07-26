@@ -16,10 +16,12 @@ const userRouter = require('./Routes/authRoutes');
 const userrouter = require('./Routes/userRouter');
 const toolRouter = require('./Routes/toolsRouter');
 
+
+
 const app = express()
 env.config({ path: "./config.env" })
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'Public')))
 
 const PORT = process.env.PORT || 3000;
 console.log(PORT);
@@ -64,5 +66,17 @@ app.use(globalErrorHandler)
 app.listen(PORT, () => {
     console.log("server started at port ", PORT);
 })
+
+
+
+
+
+
+
+
+
+
+
+
 
 

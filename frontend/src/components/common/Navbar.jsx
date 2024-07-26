@@ -3,11 +3,13 @@ import { FiLogIn } from "react-icons/fi";
 import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import SearchCategoryProductAndItem from "./SearchCategoryProduct";
 
 const Navbar = () => {
   const nevigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState("");
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   const toggleMenu = () => {
@@ -26,6 +28,11 @@ const Navbar = () => {
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
+
+  useEffect(() => {
+    console.log(selectedProduct);
+    selectedProduct && nevigate(`/productDetails/${selectedProduct}`);
+  }, [selectedProduct]);
 
   return (
     <nav
@@ -50,16 +57,16 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden sm:flex sm:space-x-10">
-              {["Home", "Men", "Women", "Kids"].map((item) => (
-                <a
+              {["Home", "About"].map((item, i) => (
+                <Link
                   key={item}
-                  href="#"
+                  to={i == 1 ? "/about" : "/"}
                   className={`text-gray-800 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 ${
                     item === "Home" ? "border-indigo-500" : "border-transparent"
                   } text-sm uppercase font-bold tracking-wider transition-colors duration-200`}
                 >
                   {item}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -74,13 +81,13 @@ const Navbar = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FiSearch className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
-                  id="search"
-                  name="search"
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Search"
-                  type="search"
-                />
+                <div className="flex items-center">
+                  <div className="w-64">
+                    <SearchCategoryProductAndItem
+                      setSelectedProduct={setSelectedProduct}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -169,16 +176,13 @@ const Navbar = () => {
       {isSearchOpen && (
         <div className="sm:hidden px-2 pt-2 pb-3">
           <div className="mt-1 relative rounded-md shadow-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiSearch className="h-5 w-5 text-gray-400" />
+            <div className="flex justify-center">
+              <div className="">
+                <SearchCategoryProductAndItem
+                  setSelectedProduct={setSelectedProduct}
+                />
+              </div>
             </div>
-            <input
-              type="search"
-              name="search"
-              id="mobile-search"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Search"
-            />
           </div>
         </div>
       )}

@@ -18,10 +18,10 @@ import ReviewForm from "./CreateReview";
 import ReviewComponent from "./ReviewComponent";
 import BuyNowPopup from "../Payments/paymentDialog";
 import EachReview from "./EachReview";
-import url from "../../../public/url";
+import url from "../../assets/url";
+import LoadingSpinner from "./Spinner";
 
 const ProductOverview = () => {
-  const nevigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
   const [images, setImage] = useState([]);
@@ -186,13 +186,21 @@ const ProductOverview = () => {
         }
       };
     }, 3000);
-  }, []);
+  }, [id]);
 
   return (
     <div className="container mx-auto px-4 pt-5 pb-8 mt-10">
       <div className="flex flex-col md:flex-row -mx-4">
         {loading ? (
-          <>loading</>
+          <>
+            <div className="min-h-screen flex justify-center items-center">
+              <LoadingSpinner
+                imageUrl={
+                  "https://img.freepik.com/free-vector/bird-colorful-logo-gradient-vector_343694-1365.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1721865600&semt=sph"
+                }
+              />
+            </div>
+          </>
         ) : (
           <>
             {showPopup && (

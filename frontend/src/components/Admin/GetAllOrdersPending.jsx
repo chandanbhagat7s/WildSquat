@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaInfoCircle, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import url from "../../../public/url";
+import url from "../../assets/url";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { error } from "../../redux/slices/errorSlice";

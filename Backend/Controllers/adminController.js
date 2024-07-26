@@ -207,6 +207,54 @@ exports.editProduct = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.addOtherSimillarColorProduct = catchAsync(async (req, res, next) => {
+
+    const ids = req.body.ids;
+    if (ids?.length == 0 || ids?.length < 1) {
+        return next(new appError("please select atleast two product"))
+    }
+
+    const products = await Product.find({ _id: { $each: ids } }).select("_id coverImage")
+    const filter = {
+        _id: { $each: ids }
+    }
+    const update = {
+        $push: { colors: { $each: products } }
+    }
+    const product = await Product.updateMany(filter, update)
+    if (product.matchedCount !== product.upsertedCount) {
+        return next(new appError("failed to update simillar product ", 500))
+    }
+
+
+    res.status(200).send({
+        status: "success",
+        msg: "Product added to simillar colors product"
+    })
+})
+
+exports.removeOtherSimillarColorProduct = catchAsync(async (req, res, next) => {
+
+    let { ids, productId } = req.body;
+
+    const product = await Product.findByIdAndUpdate(productId, {
+        $pull: { $in: ids }
+    }, {
+        new: true
+    })
+
+    if (!product) {
+        return next(new appError("Operation not performed please try again", 500))
+    }
+
+
+
+    res.status(200).send({
+        status: "success",
+        msg: "Product added to simillar colors product"
+    })
+})
+
 
 
 exports.hideProduct = catchAsync(async (req, res, next) => {

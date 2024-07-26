@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { error, info } from "../../redux/slices/errorSlice";
-import url from "../../../public/url";
+import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage = ({

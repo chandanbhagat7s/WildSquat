@@ -7,7 +7,7 @@ import { FiTag, FiFileText } from "react-icons/fi";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
-import url from "../../../public/url";
+import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
 import FullScreenDialog from "../common/FullScreenDialog";
 import ToolProductAction from "./ToolProductAction";

@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   FaSearch,
   FaStar,
@@ -8,14 +8,12 @@ import {
   FaSort,
   FaHeart,
 } from "react-icons/fa";
-import { IoMdPricetag } from "react-icons/io";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import url from "../../../public/url";
-import { TypeAnimation } from "react-type-animation";
+import { useNavigate, useParams } from "react-router-dom";
+import url from "../../assets/url";
 import TypeWriter from "../Utils/TypeWriter";
 
 const PriceFilter = ({ minPrice, maxPrice, onPriceChange }) => (
-  <div className="w-full px-6 py-8 bg-white rounded-xl shadow-lg">
+  <div className="w-full bg-white rounded-xl shadow-lg p-6 mb-6">
     <div className="flex justify-between items-center mb-4">
       <span className="text-xl font-semibold text-gray-800">Price Range</span>
       <span className="text-lg font-bold text-indigo-600">
@@ -42,32 +40,56 @@ const ProductCard = ({ _id, name, price, image }) => {
 
   return (
     <div
-      className="bg-white rounded-xl shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 cursor-pointer group"
+      className="bg-white rounded-2xl shadow-2xl overflow-hidden transform transition duration-500 hover:scale-105 cursor-pointer group"
       onClick={() => navigate(`/productDetails/${_id}`)}
     >
       <div className="relative">
         <img
           src={image}
           alt={name}
-          className="w-full h-64 object-contain hover:object-cover"
+          className="w-full h-80 object-cover transition duration-300 group-hover:opacity-90"
         />
-        <div className="absolute top-0 right-0 m-4">
-          <FaHeart className="text-2xl text-white opacity-70 hover:text-red-500 hover:opacity-100 transition duration-300" />
+        <div className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md transition duration-300 transform hover:scale-110">
+          <FaHeart className="text-2xl text-gray-400 group-hover:text-red-500" />
         </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">{name}</h3>
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-2xl font-bold text-indigo-600">${price}</span>
-          <div className="flex items-center">
-            <FaStar className="text-yellow-400 mr-1" />
-            <span className="text-sm text-gray-600">4.5 (120)</span>
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
+          <h3 className="text-2xl font-bold text-white mb-2 truncate">
+            {name}
+          </h3>
+          <div className="flex justify-between items-center">
+            <span className="text-3xl font-extrabold text-white">${price}</span>
+            <div className="flex items-center bg-yellow-400 px-3 py-1 rounded-full">
+              <FaStar className="text-white mr-1" />
+              <span className="text-sm font-semibold text-white">
+                4.5 (120)
+              </span>
+            </div>
           </div>
         </div>
-        <button className="w-full bg-indigo-600 text-white py-3 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition duration-300 group-hover:bg-indigo-500">
-          <FaShoppingCart className="mr-2" />
-          Add to Cart
-        </button>
+      </div>
+      <div className="p-6 space-y-4">
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-500">Premium Collection</span>
+          <div className="flex space-x-2">
+            {["S", "M", "L", "XL"].map((size) => (
+              <span
+                key={size}
+                className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center text-xs font-medium text-gray-600 hover:bg-gray-100"
+              >
+                {size}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="flex space-x-2">
+          <button className="flex-1 bg-indigo-600 text-white py-3 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition duration-300 group-hover:bg-indigo-500 font-semibold text-sm">
+            <FaShoppingCart className="mr-2" />
+            Add to Cart
+          </button>
+          <button className="flex-1 bg-gray-800 text-white py-3 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-300 group-hover:bg-gray-600 font-semibold text-sm">
+            Explore
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -84,8 +106,6 @@ const ClickProducts = () => {
   const [sortBy, setSortBy] = useState("popular");
 
   const { toolId } = useParams();
-  const location = useLocation();
-  const state = location.state;
 
   async function getData() {
     try {
@@ -120,94 +140,57 @@ const ClickProducts = () => {
     });
 
   return (
-    <>
-      {data.image && (
-        <div className="container mx-auto px-4 mt-10 pb-32">
-          <h1 className="text-5xl font-bold text-center text-gray-800 mb-12">
-            <TypeWriter
-              content={[
-                "Discover Luxury: ",
-                1000,
-                `${data.title}`,
-                1500,
-                "Elevate Your Style",
-              ]}
-            />
-          </h1>
-
-          {state?.tool == "CATEGORY" ? (
-            <div className="flex flex-col my-8 lg:flex-row space-x-6 bg-white rounded-xl shadow-lg ">
-              <img
-                src={`${url}Tools/${data.image}`}
-                alt="Luxury banner"
-                className="w-full lg:w-1/3 h-64 object-contain"
-              />
-              <div className="p-6 flex items-center">
-                <p className="text-gray-700 text-sm lg:text-lg leading-relaxed">
-                  {data.description}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="relative mb-16">
-              <img
-                src={`${url}Tools/${data.image}`}
-                alt="Luxury banner"
-                className="w-full h-96 object-cover rounded-xl shadow-2xl"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-xl">
-                <h2 className="text-4xl font-bold text-white text-center px-4 tracking-wide">
-                  Discover Our Premium Collection
-                </h2>
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-col lg:flex-row gap-8 mb-12">
-            <div className="lg:w-1/4">
-              <PriceFilter
-                minPrice={0}
-                maxPrice={maxPrice}
-                onPriceChange={setMaxPrice}
-              />
-            </div>
-            <div className="lg:w-3/4">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center">
-                  <FaFilter className="text-indigo-600 mr-2" />
-                  <span className="text-lg font-semibold text-gray-700">
-                    Filters
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <FaSort className="text-indigo-600 mr-2" />
-                  <select
-                    className="border-none bg-transparent text-gray-700 font-medium focus:outline-none"
-                    onChange={(e) => setSortBy(e.target.value)}
-                    value={sortBy}
-                  >
-                    <option value="popular">Most Popular</option>
-                    <option value="priceLowToHigh">Price: Low to High</option>
-                    <option value="priceHighToLow">Price: High to Low</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {sortedProducts.map((product) => (
-                  <ProductCard
-                    _id={product._id}
-                    key={product._id}
-                    name={product.name}
-                    price={product.price}
-                    image={`${url}img/${product.coverImage}`}
-                  />
-                ))}
-              </div>
-            </div>
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
+      {/* Left Sidebar */}
+      <div className="lg:w-1/4 bg-white p-6 lg:fixed lg:h-screen lg:overflow-y-auto">
+        <h1 className="text-4xl font-bold text-gray-800 mb-8">
+          <TypeWriter
+            content={[
+              "Discover Luxury: ",
+              1000,
+              `${data.title}`,
+              1500,
+              "Elevate Your Style",
+            ]}
+          />
+        </h1>
+        <PriceFilter
+          minPrice={0}
+          maxPrice={maxPrice}
+          onPriceChange={setMaxPrice}
+        />
+        <div className="mb-6">
+          <div className="flex items-center mb-4">
+            <FaSort className="text-indigo-600 mr-2" />
+            <span className="text-lg font-semibold text-gray-700">Sort By</span>
           </div>
+          <select
+            className="w-full border border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onChange={(e) => setSortBy(e.target.value)}
+            value={sortBy}
+          >
+            <option value="popular">Most Popular</option>
+            <option value="priceLowToHigh">Price: Low to High</option>
+            <option value="priceHighToLow">Price: High to Low</option>
+          </select>
         </div>
-      )}
-    </>
+      </div>
+
+      {/* Right Content Area */}
+      <div className="lg:w-3/4 lg:ml-[25%] p-6 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedProducts.map((product) => (
+            <ProductCard
+              _id={product._id}
+              key={product._id}
+              name={product.name}
+              price={product.price}
+              image={`${url}img/${product.coverImage}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

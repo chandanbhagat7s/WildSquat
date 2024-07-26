@@ -108,17 +108,22 @@ const productSlice = createSlice({
             if (action?.payload?.status == "success") {
                 let category = []
                 let slider = []
+                let poster = []
                 action?.payload?.allTools.map((el) => {
                     if (el.name == "CATEGORY") {
                         category.push(el)
                     } else if (el.name == "SLIDER") {
                         slider.push(el)
 
+                    } else if (el.name == "POSTER") {
+                        poster.push(el)
+
                     }
 
                 })
-                state.category = category
-                state.slider = slider
+                state.category = category;
+                state.posters = poster;
+                state.slider = slider;
             }
 
         }).addCase(getAllCateogyNames.fulfilled, (state, action) => {

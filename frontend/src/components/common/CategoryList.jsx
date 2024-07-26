@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import TypeWriter from "../Utils/TypeWriter";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import url from "../../../public/url";
+import url from "../../assets/url";
 
 const Card = ({ id, image, title, total }) => {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ const CategoryList = () => {
   }, []);
 
   return (
-    <div className="py-20 lg:py-32 px-6 bg-gradient-to-b from-gray-100 to-white">
+    <div className="py-20 lg:py-24  px-6 bg-gray-100">
       <motion.div
         className="text-center mb-16"
         initial={{ opacity: 0, y: 50 }}
@@ -65,10 +65,13 @@ const CategoryList = () => {
         transition={{ duration: 0.8 }}
       >
         <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl  ">
-          <TypeWriter
-            content={["Variations", 1000, "Patterns", 1500, "What You Need"]}
-          />
-          {/* <span className="text-indigo-600 text-xl"> We Have</span> */}
+          <span className="">
+            {" "}
+            Discover <span className="text-6xl text-indigo-400">Our </span>{" "}
+            <span className="text-4xl text-indigo-700 animate-pulse">
+              Variation's{" "}
+            </span>{" "}
+          </span>
         </h2>
         <p className="mt-4 text-xl text-gray-700 font-medium max-w-2xl mx-auto">
           Elevate your performance with our premium sports gear
@@ -86,7 +89,7 @@ const CategoryList = () => {
         </button>
         <motion.div
           ref={containerRef}
-          className="flex overflow-x-auto space-x-8 py-8 px-4 snap-x snap-mandatory scrollbar-hide"
+          className="flex overflow-x-auto space-x-8 py-20 px-4 snap-x snap-mandatory scrollbar-hide"
           style={{ scrollBehavior: "smooth" }}
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}

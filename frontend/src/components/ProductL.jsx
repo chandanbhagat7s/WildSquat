@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FiShoppingCart, FiHeart } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import url from "../../public/url";
+import url from "../assets/url";
 import { useNavigate } from "react-router-dom";
 import { error, info, warning } from "../redux/slices/errorSlice";
 import TypeWriter from "./Utils/TypeWriter";
@@ -90,10 +90,10 @@ const ProductListing = () => {
         <div className="mt-10 grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
           {product.length > 0 &&
             product.map((p) => (
-              <div key={p._id} className="flex flex-col">
+              <div key={p._id} className="flex flex-col ">
                 <div
                   key={p._id}
-                  className="group relative shadow-lg rounded-xl p-2 cursor-pointer"
+                  className="group relative shadow-lg rounded-xl p-2 cursor-pointer hover:bg-gray-300 hover:scale-110"
                   onClick={() => nevigate(`/productDetails/${p._id}`)}
                 >
                   <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-75 lg:aspect-none">
@@ -108,7 +108,7 @@ const ProductListing = () => {
                       <h3 className="text-sm text-gray-700">
                         <span
                           aria-hidden="true"
-                          className="absolute inset-0 font-bold text-lg"
+                          className="absolute inset-0 font-extrabold "
                         />
                         {p.name}
                       </h3>

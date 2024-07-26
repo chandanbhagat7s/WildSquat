@@ -84,9 +84,17 @@ exports.getSearchedProduct = catchAsync(async (req, res, next) => {
         ]
     })
 
+    const category = await Tool.find({
+        $or: [
+            { label: { $regex: search, $options: 'i' } },
+            { shortDescription: { $regex: search, $options: 'i' } }
+        ]
+    })
+
     res.status(200).send({
         status: "success",
-        products
+        products,
+        category
 
     })
 })
@@ -239,6 +247,19 @@ exports.getAlltrendingProducts = catchAsync(async (req, res, next) => {
 
     // getting the crawsel
     const products = await Tool.find({ name: "Trending" }).select("products _id").populate({
+        path: "products",
+        select: "name price _id coverImage"
+    })
+
+    res.status(200).send({
+        status: "success",
+        products
+    })
+})
+exports.getAllPosters = catchAsync(async (req, res, next) => {
+
+    // getting the crawsel
+    const products = await Tool.find({ name: "POSTER" }).select("products _id").populate({
         path: "products",
         select: "name price _id coverImage"
     })
