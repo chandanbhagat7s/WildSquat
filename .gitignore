@@ -1,5 +1,4 @@
 node_modules
-/backend/config.env
-/backend/Public
+/backend/config.env 
 
 
