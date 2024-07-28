@@ -70,3 +70,94 @@ html {
   /* WebKit browsers */
   display: none;
 }
+.carousel-container {
+  width: 100%;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 250px;
+  height: 350px;
+  transition: all 0.5s ease;
+  opacity: 0.7;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.carousel-item.active {
+  width: 300px;
+  height: 400px;
+  opacity: 1;
+  z-index: 2;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 60%;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.carousel-item-content {
+  padding: 20px;
+}
+
+.carousel-item h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.carousel-item p {
+  margin: 10px 0;
+  color: #4a5568;
+}
+
+.carousel-item-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.carousel-item-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.add-to-cart {
+  background-color: #4299e1;
+  color: white;
+}
+
+.add-to-cart:hover {
+  background-color: #3182ce;
+}
+
+.add-to-favorites {
+  background-color: #f56565;
+  color: white;
+}
+
+.add-to-favorites:hover {
+  background-color: #e53e3e;
+}

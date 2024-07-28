@@ -9,55 +9,53 @@ import TypeWriter from "./Utils/TypeWriter";
 
 const ProductListing = () => {
   const dispatch = useDispatch();
-  const [product, setProduct] = useState([]);
-  const nevigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
 
   async function getAllProductDetails() {
     try {
       const res = await axios.get("/api/v1/product/getAllTrendingProducts");
-
-      console.log(res);
-      console.log(res?.data?.products[0].products);
-      if (res.data.status == "success") {
-        setProduct([...res?.data?.products[0].products]);
+      if (res.data.status === "success") {
+        setProducts([
+          ...res?.data?.products[0].products,
+          ...res?.data?.products[0].products,
+        ]);
       }
     } catch (e) {
-      dispatch(error({ message: e?.response?.msg || "something went wrong" }));
+      dispatch(error({ message: e?.response?.msg || "Something went wrong" }));
     }
   }
 
   async function addToCart(id) {
     try {
-      console.log("CALLED");
       const res = await axios.get(`/api/v1/product/addToCart/${id}`);
-
-      if (res.data?.status == "success") {
-        dispatch(info({ message: "product added to cart" }));
+      if (res.data?.status === "success") {
+        dispatch(info({ message: "Product added to cart" }));
       }
     } catch (e) {
       dispatch(
         warning({
           message:
             e?.response?.data?.msg ||
-            "product not added to cart, please try again",
+            "Product not added to cart, please try again",
         })
       );
     }
   }
+
   async function addToHeart(id) {
     try {
-      console.log("CALLED");
       const res = await axios.get(`/api/v1/product/addToHeart/${id}`);
-
-      if (res.data?.status == "success") {
-        dispatch(info({ message: "product added to favorates" }));
+      if (res.data?.status === "success") {
+        dispatch(info({ message: "Product added to favorites" }));
       }
     } catch (e) {
       dispatch(
         warning({
           message:
             e?.response?.data?.msg ||
-            "product not added to favrotes, please try again",
+            "Product not added to favorites, please try again",
         })
       );
     }
@@ -67,18 +65,32 @@ const ProductListing = () => {
     getAllProductDetails();
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % products.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [products]);
+
+  const getPosition = (index) => {
+    const diff = index - activeIndex;
+    if (diff < 0) return `translateX(${diff * 120 - 60}%) scale(0.8)`;
+    if (diff > 0) return `translateX(${diff * 120 + 60}%) scale(0.8)`;
+    return "translateX(0) scale(1)";
+  };
+
   return (
-    <div className="bg-gray-100 py-16 ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+    <div className="bg-gray-100 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center py-16">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
             <TypeWriter
               content={[
                 "Sports Collection : ",
                 1000,
-                "What You need it's hear 😊   ,",
+                "What You need is here 😊",
                 1500,
-                `   ,`,
+                "",
               ]}
             />
           </h2>
@@ -87,59 +99,40 @@ const ProductListing = () => {
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
-          {product.length > 0 &&
-            product.map((p) => (
-              <div key={p._id} className="flex flex-col ">
-                <div
-                  key={p._id}
-                  className="group relative shadow-lg rounded-xl p-2 cursor-pointer hover:bg-gray-300 hover:scale-110"
-                  onClick={() => nevigate(`/productDetails/${p._id}`)}
-                >
-                  <div className="w-full   bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-75 lg:aspect-none">
-                    <img
-                      src={`${url}img/${p.coverImage}`}
-                      alt={p.name}
-                      className="w-full h-64 object-cover"
-                    />
-                  </div>
-                  <div className="mt-4 flex flex-col items-center space-y-2">
-                    <div>
-                      <h3 className="text-sm text-gray-700">
-                        <span
-                          aria-hidden="true"
-                          className="absolute inset-0 font-extrabold "
-                        />
-                        {p.name}
-                      </h3>
-                    </div>
-                    <p className="text-xl font-medium text-gray-900">
-                      Rs. {p.price}
-                    </p>
-                  </div>
+        <div className="carousel-container">
+          <div className="carousel">
+            {products.map((p, index) => (
+              <div
+                key={p._id}
+                className={`carousel-item ${
+                  index === activeIndex ? "active" : ""
+                }`}
+                style={{
+                  transform: getPosition(index),
+                }}
+                onClick={() => navigate(`/productDetails/${p._id}`)}
+              >
+                <div className="w-full cursor-pointer">
+                  <img
+                    src={`${url}img/${p.coverImage}`}
+                    alt={p.name}
+                    className="w-full h-96 object-cover"
+                  />
                 </div>
-                <div className="mt-4 flex justify-between items-center">
-                  <button
-                    className="text-indigo-600 hover:text-indigo-900 flex items-center"
-                    onClick={() => addToCart(p._id)}
-                  >
-                    <FiShoppingCart className="mr-2" />
-                    Add to Cart
-                  </button>
-                  <button
-                    className="text-gray-400 hover:text-red-500"
-                    onClick={() => addToHeart(p._id)}
-                  >
-                    <FiHeart className="h-6 w-6" />
-                  </button>
+                <div className="mt-4 flex flex-col items-center space-y-2">
+                  <h3 className="text-sm text-gray-700 font-bold">{p.name}</h3>
+                  <p className="text-xl font-medium text-gray-900">
+                    Rs. {p.price}
+                  </p>
                 </div>
               </div>
             ))}
+          </div>
         </div>
 
         <div className="mt-16 text-center">
-          <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            More Products
+          <button className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-semibold rounded-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+            Explore More Products
           </button>
         </div>
       </div>
