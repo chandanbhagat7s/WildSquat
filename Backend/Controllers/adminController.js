@@ -5,6 +5,7 @@ const sharp = require("sharp");
 const appError = require("../utils/appError");
 const Booked = require("../Models/BookedProduct");
 const Tool = require("../Models/Tools");
+const SimilarPrduct = require("../Models/SimilarProduct");
 
 
 
@@ -214,16 +215,30 @@ exports.addOtherSimillarColorProduct = catchAsync(async (req, res, next) => {
         return next(new appError("please select atleast two product"))
     }
 
-    const products = await Product.find({ _id: { $each: ids } }).select("_id coverImage")
+
+    let products = await Product.find({ _id: { $in: ids } }).select("_id coverImage")
+
+    const sp = await SimilarPrduct.create({
+        simillarProducts: products
+    })
+
+    if (!sp) {
+        return next(new appError("Failed to add into simillar product", 500))
+    }
+
+
     const filter = {
-        _id: { $each: ids }
+        _id: { $in: ids }
     }
     const update = {
-        $push: { colors: { $each: products } }
+        $set: { colors: sp._id }
     }
     const product = await Product.updateMany(filter, update)
-    if (product.matchedCount !== product.upsertedCount) {
-        return next(new appError("failed to update simillar product ", 500))
+
+
+    if (product.matchedCount !== product.matchedCount) {
+        await SimilarPrduct.findByIdAndDelete(sp._id)
+        return next(new appError("failed to update simillar product or it was already added ", 500))
     }
 
 
@@ -233,12 +248,27 @@ exports.addOtherSimillarColorProduct = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.removeOtherSimillarColorProduct = catchAsync(async (req, res, next) => {
+exports.removeThisProductFromSimillarColor = catchAsync(async (req, res, next) => {
 
-    let { ids, productId } = req.body;
+    let { productId } = req.params;
+    if (!productId) {
+        return next(new appError("please pass the product id", 400))
+    }
 
-    const product = await Product.findByIdAndUpdate(productId, {
-        $pull: { $in: ids }
+    const product = await Product.findById(productId)
+    if (!product) {
+        return next(new appError("Product not found please try again", 400))
+    }
+
+    if (!product?.colors) {
+
+        return next(new appError("Product not have simillar colors collection", 400))
+    }
+
+
+
+    const removed = await SimilarPrduct.findByIdAndUpdate(product?.colors, {
+        // TODO:
     }, {
         new: true
     })

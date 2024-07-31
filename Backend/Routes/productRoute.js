@@ -9,6 +9,9 @@ productRouter.get("/getAllProducts", getAllProduct)
 productRouter.get("/getAllMiniCardProduct", getAllProductForMiniCard)
 productRouter.get("/getProduct/:productId", getProductById)
 productRouter.get("/getProductByName/:productName", getProductByName)
+productRouter.get("/getAllSimmilarProducts/:productName", getProductByName)
+
+
 
 
 

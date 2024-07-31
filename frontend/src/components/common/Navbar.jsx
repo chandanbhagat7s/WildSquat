@@ -9,7 +9,11 @@ const Navbar = () => {
   const nevigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState({
+    id: "",
+    name: "",
+    coverImage: "",
+  });
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   const toggleMenu = () => {
@@ -31,7 +35,7 @@ const Navbar = () => {
 
   useEffect(() => {
     console.log(selectedProduct);
-    selectedProduct && nevigate(`/productDetails/${selectedProduct}`);
+    selectedProduct?.id && nevigate(`/productDetails/${selectedProduct.id}`);
   }, [selectedProduct]);
 
   return (

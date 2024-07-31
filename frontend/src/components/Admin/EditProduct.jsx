@@ -5,6 +5,8 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 
 import { useDispatch } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
+import AddSimillar from "./AddSimillar";
+import SimilarColorProducts from "./SimilarColorProduct";
 const EditProductForm = () => {
   const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -12,6 +14,8 @@ const EditProductForm = () => {
   const [editedProduct, setEditedProduct] = useState({
     name: "",
   });
+
+  const [similarProducts, setSimilarProducts] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +36,7 @@ const EditProductForm = () => {
         editedProduct
       );
 
+      console.log(res);
       if (res.data?.status == "success") {
         dispatch(success({ message: "product updated successfully" }));
       }
@@ -56,9 +61,15 @@ const EditProductForm = () => {
         setEditedProduct({
           ...res?.data?.product,
         });
+        res?.data?.product?.colors?.simillarProducts?.length > 0 &&
+          setSimilarProducts([...res?.data?.product?.colors?.simillarProducts]);
         console.log("product", res?.data?.product);
       }
-    } catch (error) {}
+    } catch (e) {
+      dispatch(
+        error({ message: e?.response?.data?.msg || "something went wrong" })
+      );
+    }
   }
 
   const addArrayItem = (field) => {
@@ -80,8 +91,9 @@ const EditProductForm = () => {
   }, [selectedProduct]);
 
   return (
-    <>
-      <div className="mb-10">
+    <div className="mb-60">
+      <div className="mb-20">
+        <div className=" mx-2 my-3 font-bold text-2xl ">Edit Product</div>
         <ProductSearch setSelectedProduct={setSelectedProduct} />
       </div>
       {editedProduct?.name && (
@@ -203,30 +215,12 @@ const EditProductForm = () => {
                 <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Colors
                 </label>
-                {editedProduct.colors.map((color, index) => (
-                  <div key={index} className="flex items-center mb-2">
-                    <input
-                      type="text"
-                      value={color}
-                      onChange={(e) => handleArrayChange(e, index, "colors")}
-                      className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeArrayItem("colors", index)}
-                      className="ml-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    >
-                      <FaMinus />
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem("colors")}
-                  className="mt-2 flex items-center justify-center w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  <FaPlus className="mr-2" /> Add Color
-                </button>
+                <div className="container mx-auto p-8">
+                  <SimilarColorProducts
+                    similarProducts={similarProducts}
+                    setSimilarProducts={setSimilarProducts}
+                  />
+                </div>
               </div>
 
               {/* Features */}
@@ -400,7 +394,10 @@ const EditProductForm = () => {
           </form>
         </>
       )}
-    </>
+      <div className=" mx-2 my-3 font-bold text-2xl ">Add Same Color's</div>
+
+      <AddSimillar />
+    </div>
   );
 };
 

@@ -65,8 +65,13 @@ const ProductSearch = ({ setSelectedProduct }) => {
               products.map((product, i) => (
                 <li
                   key={i}
-                  className="py-4 px-2 hover:bg-gray-50 transition duration-150 ease-in-out"
-                  onClick={() => setSelectedProduct(product._id)}
+                  className="py-4 px-2 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-400 rounded-lg text-center hover:text-white hover:font-bold"
+                  onClick={() =>
+                    setSelectedProduct(product._id, {
+                      name: product?.name,
+                      coverImage: product.coverImage,
+                    })
+                  }
                 >
                   {product.name}
                 </li>

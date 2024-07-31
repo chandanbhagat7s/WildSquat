@@ -38,7 +38,7 @@ exports.getProductById = catchAsync(async (req, res, next) => {
     }
 
 
-    const product = await Product.findById(productId)
+    const product = await Product.findById(productId).populate("colors")
 
 
     res.status(200).send({
@@ -64,6 +64,19 @@ exports.getProductByName = catchAsync(async (req, res, next) => {
     res.status(200).send({
         status: "success",
         product: product
+
+    })
+})
+
+
+exports.getAllSimmilarProductOFCategory = catchAsync(async (req, res, next) => {
+
+    const products = await Tool.find({
+        name: ""
+    })
+
+    res.status(200).send({
+        status: "success",
 
     })
 })

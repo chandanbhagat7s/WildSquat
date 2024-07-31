@@ -74,7 +74,13 @@ const SearchCategoryProduct = ({ setSelectedProduct }) => {
                   <li
                     key={i}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                    onClick={() => handleProductSelect(product._id)}
+                    onClick={() =>
+                      handleProductSelect({
+                        id: product._id,
+                        name: product.name,
+                        cover: product.coverImage,
+                      })
+                    }
                   >
                     {product.name}
                   </li>

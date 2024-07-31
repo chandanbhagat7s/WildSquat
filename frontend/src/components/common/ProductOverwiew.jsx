@@ -300,13 +300,13 @@ const ProductOverview = () => {
               <div className="mb-6">
                 <h2 className="font-semibold mb-3 text-gray-800">Color</h2>
                 <div className="flex space-x-3">
-                  {product.colors.map((color, index) => (
+                  {/* {product.colors.map((color, index) => (
                     <button
                       key={index}
                       className="w-10 h-10 rounded-full border-2 hover:border-indigo-500 transition duration-300"
                       style={{ backgroundColor: color }}
                     ></button>
-                  ))}
+                  ))} */}
                 </div>
               </div>
 
