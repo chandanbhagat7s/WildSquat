@@ -3,20 +3,57 @@ import ProductSearch from "./SearchProduct";
 import axios from "axios";
 import { FaMinus, FaPlus } from "react-icons/fa";
 
-import { useDispatch } from "react-redux";
-import { error, success } from "../../redux/slices/errorSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { error, message, success } from "../../redux/slices/errorSlice";
 import AddSimillar from "./AddSimillar";
 import SimilarColorProducts from "./SimilarColorProduct";
 const EditProductForm = () => {
   const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState("");
 
+  const { categoryName } = useSelector((state) => state.product);
   const [editedProduct, setEditedProduct] = useState({
     name: "",
   });
 
   const [similarProducts, setSimilarProducts] = useState([]);
 
+  const sizeOptions = [
+    { size: "XS", price: 0 },
+    { size: "S", price: 0 },
+    { size: "M", price: 0 },
+    { size: "L", price: 0 },
+    { size: "XL", price: 0 },
+    { size: "XXL", price: 0 },
+  ];
+
+  const handleSizeChange = (size, price = 0) => {
+    if (!price) {
+      const newSizes = editedProduct.sizes.find(
+        (item) => item.size === size.size
+      )
+        ? editedProduct.sizes.filter((item) => item.size !== size.size)
+        : [...editedProduct.sizes, size];
+      setEditedProduct({ ...editedProduct, sizes: newSizes });
+    } else {
+      const newproduct = editedProduct.sizes.map((el) => {
+        if (el.size == size.size) {
+          el.price = price;
+        }
+        return el;
+      });
+
+      setEditedProduct({ ...editedProduct, sizes: newproduct });
+    }
+  };
+
+  const handleCategoryChanges = (item) => {
+    console.log(editedProduct.category, item);
+    let category = editedProduct.category.includes(item)
+      ? editedProduct.category.filter((el) => el != item)
+      : [...editedProduct.category, item];
+    setEditedProduct({ ...editedProduct, category: category });
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedProduct((prev) => ({ ...prev, [name]: value }));
@@ -31,15 +68,38 @@ const EditProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.patch(
-        `/api/v1/admin/edit/${editedProduct._id}`,
-        editedProduct
-      );
+      let res;
+      console.log(editedProduct);
 
-      console.log(res);
-      if (res.data?.status == "success") {
+      if (
+        editedProduct.colors?.simillarProducts?.length !==
+        similarProducts.length
+      ) {
+        let colors = {
+          _id: editedProduct?.colors._id,
+          simillarProducts: similarProducts,
+        };
+
+        res = await axios.patch(`/api/v1/admin/edit/${editedProduct._id}`, {
+          ...editedProduct,
+          colorUpdate: true,
+          colors,
+        });
+      } else {
+        res = await axios.patch(`/api/v1/admin/edit/${editedProduct._id}`, {
+          ...editedProduct,
+          colorUpdate: false,
+        });
+      }
+
+      if (res?.data?.status == "success") {
         dispatch(success({ message: "product updated successfully" }));
       }
+
+      // console.log(res);
+      // if (res.data?.status == "success") {
+      //   dispatch(success({ message: "product updated successfully" }));
+      // }
     } catch (e) {
       dispatch(
         error({
@@ -175,39 +235,28 @@ const EditProductForm = () => {
                 </div>
               </div>
 
-              {/* Category */}
+              {/* Color Category */}
               <div>
                 <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Category
                 </label>
-                <input
-                  type="text"
-                  name="category"
-                  value={editedProduct.category.join(", ")}
-                  onChange={(e) =>
-                    setEditedProduct((prev) => ({
-                      ...prev,
-                      category: e.target.value
-                        .split(",")
-                        .map((item) => item.trim()),
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                />
-              </div>
-
-              {/* Color Category */}
-              <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
-                  Color Category
-                </label>
-                <input
-                  type="text"
-                  name="colorCategory"
-                  value={editedProduct.colorCategory}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                />
+                <div className="flex flex-col">
+                  {categoryName.map((category) => (
+                    <div className="flex  items-center" key={category._id}>
+                      <input
+                        type="checkbox"
+                        checked={editedProduct.category.find(
+                          (el) => el == category._id
+                        )}
+                        key={category._id}
+                        value={category.label}
+                        onChange={() => handleCategoryChanges(category._id)}
+                      />
+                      {category.label}
+                      <span className="ml-3 font-bold">({category.name})</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Colors */}
@@ -216,10 +265,14 @@ const EditProductForm = () => {
                   Colors
                 </label>
                 <div className="container mx-auto p-8">
-                  <SimilarColorProducts
-                    similarProducts={similarProducts}
-                    setSimilarProducts={setSimilarProducts}
-                  />
+                  {editedProduct?.colors ? (
+                    <SimilarColorProducts
+                      similarProducts={similarProducts}
+                      setSimilarProducts={setSimilarProducts}
+                    />
+                  ) : (
+                    "first combine and add the products from below section "
+                  )}
                 </div>
               </div>
 
@@ -291,23 +344,46 @@ const EditProductForm = () => {
 
               {/* Sizes */}
               <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
-                  Sizes
+                <label className="block text-sm font-medium text-gray-700">
+                  Sizes and Prices
                 </label>
-                <input
-                  type="text"
-                  name="sizes"
-                  value={editedProduct.sizes.join(", ")}
-                  onChange={(e) =>
-                    setEditedProduct((prev) => ({
-                      ...prev,
-                      sizes: e.target.value
-                        .split(",")
-                        .map((item) => item.trim()),
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                />
+                <div className="mt-2 space-y-2">
+                  {sizeOptions.map((size, i) => (
+                    <div
+                      key={size.size}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={editedProduct.sizes.find(
+                          (item) => item.size === size.size
+                        )}
+                        onChange={() => handleSizeChange(size)}
+                        className="form-checkbox h-5 w-5 text-indigo-600"
+                      />
+                      <span className="text-gray-700">{size.size}</span>
+                      {console.log(size)}
+                      {editedProduct.sizes.find(
+                        (item) => item.size == size.size
+                      ) && (
+                        <input
+                          type="number"
+                          placeholder={`Price for ${size.size}`}
+                          value={(function getPriceBySize(size) {
+                            const item = editedProduct.sizes.find(
+                              (item) => item.size === size
+                            );
+                            return item ? item.price : 0;
+                          })(size.size)}
+                          className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          onChange={(e) =>
+                            handleSizeChange(size, e.target.value)
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Stock */}

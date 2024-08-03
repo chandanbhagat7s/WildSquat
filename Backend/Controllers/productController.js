@@ -38,7 +38,9 @@ exports.getProductById = catchAsync(async (req, res, next) => {
     }
 
 
-    const product = await Product.findById(productId).populate("colors")
+    const product = await Product.findById(productId).populate([{
+        path: "colors"
+    }])
 
 
     res.status(200).send({
@@ -269,6 +271,23 @@ exports.getAlltrendingProducts = catchAsync(async (req, res, next) => {
         products
     })
 })
+
+exports.getAllCardProducts = catchAsync(async (req, res, next) => {
+
+    // getting the crawsel
+    const products = await Tool.find({ name: "CARDS" }).select("products _id").populate({
+        path: "products",
+        select: " "
+    })
+
+    res.status(200).send({
+        status: "success",
+        products: products[0]
+    })
+})
+
+
+
 exports.getAllPosters = catchAsync(async (req, res, next) => {
 
     // getting the crawsel

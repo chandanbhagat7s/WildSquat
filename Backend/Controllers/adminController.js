@@ -174,8 +174,67 @@ exports.editProduct = catchAsync(async (req, res, next) => {
         stock,
         brand,
         madeIn,
+        colorUpdate
     } = req.body;
     console.log(req.body, id);
+    if (colorUpdate) {
+
+        await SimilarPrduct.findByIdAndUpdate(colors._id, {
+            simillarProducts: colors.simillarProducts
+        })
+
+
+
+    }
+    const pro = await Product.findById(id)
+    if (!pro) {
+        return next(new appError("product not found ", 400))
+    }
+
+    // we need to find the category is removed or added 
+    let removedtool = []
+    let addedTool = []
+
+    category.map((el) => {
+        if (!pro.category.includes(el)) {
+            addedTool.push(el)
+        }
+    })
+
+    pro.category.map((el) => {
+        if (!category.includes(el)) {
+            removedtool.push(el)
+        }
+    })
+
+    if (addedTool.length > 0) {
+        let filter = { _id: { $in: addedTool } }
+
+        let update = {
+            $push: {
+                products: pro._id
+            }
+        }
+
+        await Tool.updateMany(filter, update)
+
+    }
+    if (removedtool.length > 0) {
+        let filter = { _id: { $in: removedtool } }
+
+        let update = {
+            $pull: {
+                products: pro._id
+            }
+        }
+
+        await Tool.updateMany(filter, update)
+    }
+
+
+
+
+
     const product = await Product.findByIdAndUpdate(id, {
         name,
         price,
@@ -201,6 +260,9 @@ exports.editProduct = catchAsync(async (req, res, next) => {
     if (!product) {
         return next(new appError("Please try again ", 500))
     }
+
+
+
 
     res.status(200).send({
         status: "success",

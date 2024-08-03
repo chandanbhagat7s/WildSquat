@@ -7,6 +7,7 @@ import CategoryList from "./CategoryList";
 import ProductSection2 from "../ProductSection2";
 import ProductSection3 from "../ProductSection3";
 import ProductSection4 from "../ProductSection4";
+import ProductCardsOverview from "./ProductCardsOverview";
 
 export default function Homepage() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function Homepage() {
     <>
       <Slider />
       <ProductListing />
+      <ProductCardsOverview />
       {/* <ProductInCrawsel /> */}
       <CategoryList />
       {/* <ProductSection2 /> */}

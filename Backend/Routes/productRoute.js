@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllProduct, getAllProductForMiniCard, getProductById, getSearchedProduct, getProductByName, getAllCategory, getAlltrendingProducts, getAllPosters } = require('../Controllers/productController');
+const { getAllProduct, getAllProductForMiniCard, getProductById, getSearchedProduct, getProductByName, getAllCategory, getAlltrendingProducts, getAllPosters, getAllCardProducts } = require('../Controllers/productController');
 // const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const productRouter = express.Router()
 
@@ -18,6 +18,7 @@ productRouter.get("/getAllSimmilarProducts/:productName", getProductByName)
 productRouter.get("/getAllCategory", getAllCategory)
 productRouter.get("/getAllPosters", getAllPosters)
 productRouter.get("/getAllTrendingProducts", getAlltrendingProducts)
+productRouter.get("/getAllCardProducts", getAllCardProducts)
 
 
 

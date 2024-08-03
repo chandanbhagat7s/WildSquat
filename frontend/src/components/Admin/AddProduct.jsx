@@ -428,7 +428,7 @@ const CreateProductForm = () => {
                       type="checkbox"
                       key={category._id}
                       value={category.label}
-                      onClick={() => handleCategoryChanges(category._id)}
+                      onChange={() => handleCategoryChanges(category._id)}
                     />
                     {category.label}
                     <span className="ml-3 font-bold">({category.name})</span>

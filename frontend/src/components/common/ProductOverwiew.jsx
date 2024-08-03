@@ -20,11 +20,13 @@ import BuyNowPopup from "../Payments/paymentDialog";
 import EachReview from "./EachReview";
 import url from "../../assets/url";
 import LoadingSpinner from "./Spinner";
+import { addToCart } from "../../redux/slices/productSlice";
 
 const ProductOverview = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [images, setImage] = useState([]);
+  const { msg } = useSelector((state) => state.product);
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
@@ -121,19 +123,19 @@ const ProductOverview = () => {
     }
   };
 
-  async function addToCart() {
+  async function ATC() {
     try {
-      const res = await axios.get(`/api/v1/product/addToCart/${product._id}`);
-
-      if (res.data?.status == "success") {
+      const res = await dispatch(addToCart(product._id));
+      console.log(res);
+      if (addToCart.fulfilled.match(res)) {
         dispatch(info({ message: "product added to cart" }));
+      } else {
+        dispatch(error({ message: msg || "failed to add " }));
       }
     } catch (e) {
       dispatch(
         error({
-          message:
-            e?.response?.data?.msg ||
-            "product not added to cart, please try again",
+          message: "product not added to cart, please try again",
         })
       );
     }
@@ -244,7 +246,7 @@ const ProductOverview = () => {
                 <div className="flex space-x-4 ">
                   <button
                     className="flex-1   text-indigo-600 shadow-lg  py-3 rounded-md ring-2 ring-indigo-500 ring-inset hover:bg-indigo-700 hover:text-indigo-100 hover:font-bold   hover:scale-105 hover:ring-blue-300"
-                    onClick={addToCart}
+                    onClick={ATC}
                   >
                     ADD TO CART
                   </button>

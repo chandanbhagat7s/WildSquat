@@ -1,50 +1,58 @@
 import React, { useState } from "react";
-import { FaShoppingCart, FaHeart, FaStar } from "react-icons/fa";
+import { FaShoppingBag, FaRegHeart, FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import url from "../assets/url";
 
-const ProductSection3 = () => {
+const LuxuryProductShowcase = () => {
   const { posters } = useSelector((state) => state.product);
 
   return (
     <motion.section
-      className="bg-gradient-to-br from-gray-100 to-indigo-50 py-20"
+      className="bg-white py-32"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 1 }}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-8">
         <motion.h2
-          className="text-5xl font-bold text-center mb-5"
+          className="text-7xl font-thin text-center mb-4"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-800 animate-pulse">
-            Featured{" "}
-            <span className="text-6xl  font-extrabold ">Collection</span>
-          </span>
+          <span className="text-gray-800">Curated Elegance</span>
         </motion.h2>
+        <motion.div
+          className="w-24 h-1 bg-gold-500 mx-auto mb-12"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        />
         <motion.p
-          className="mt-4 text-xl text-gray-600 font-medium max-w-3xl text-center mb-20 mx-auto"
+          className="text-xl text-gray-600 font-light max-w-3xl text-center mb-24 mx-auto"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
-          Discover our Featured Collection: a curated selection of trendy,
-          high-quality apparel designed to elevate your style.
+          Immerse yourself in our meticulously curated collection of exquisite
+          pieces, crafted to perfection and designed for the discerning
+          connoisseur.
         </motion.p>
 
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 1, delay: 0.8 }}
         >
           {posters.map((product, index) => (
-            <ProductCard key={product._id} product={product} index={index} />
+            <LuxuryProductCard
+              key={product._id}
+              product={product}
+              index={index}
+            />
           ))}
         </motion.div>
       </div>
@@ -52,78 +60,79 @@ const ProductSection3 = () => {
   );
 };
 
-const ProductCard = ({ product, index }) => {
+const LuxuryProductCard = ({ product, index }) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
-      className="relative overflow-hidden rounded-lg shadow-2xl cursor-pointer bg-white"
-      onClick={() => navigate(`/toolsDetails/${product._id}`)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="group"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -10 }}
+      transition={{ duration: 0.8, delay: index * 0.1 }}
     >
-      <div className="h-64 overflow-hidden">
-        <motion.img
-          src={`${url}Tools/${product.coverImage}`}
-          alt={product.name}
-          className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.1 : 1 }}
-          transition={{ duration: 0.3 }}
-        />
-      </div>
-      <div className="py-2">
-        <h3 className="text-xl text-center  font-bold text-gray-800 mb-2">
-          {product.label}
-        </h3>
-      </div>
+      <div
+        className="relative overflow-hidden cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={() => navigate(`/toolsDetails/${product._id}`)}
+      >
+        <motion.div
+          className="aspect-[3/4] overflow-hidden"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.4 }}
+        >
+          <img
+            src={`${url}Tools/${product.coverImage}`}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </motion.div>
 
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            className="absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="text-white text-center">
-              <h3 className="text-2xl font-bold mb-2">{product.label}</h3>
-              <div className="flex justify-center items-center mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-yellow-400 mr-1" />
-                ))}
-                <span className="text-sm ml-2">
-                  ({product?.reviews || 10} reviews)
-                </span>
-              </div>
-              <p className="mb-4">{product.shortDescription}</p>
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               <motion.button
-                className="bg-white text-gray-900 py-2 px-4 rounded-full text-lg font-semibold hover:bg-indigo-600 hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto"
+                className="bg-white text-gray-900 py-3 px-6 rounded-none text-sm uppercase tracking-wider font-medium hover:bg-gold-500 hover:text-black transition-colors duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <FaShoppingCart className="mr-2" />
-                Explore More
+                Discover
               </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-      <motion.div
-        className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <FaHeart className="text-red-500 text-xl" />
-      </motion.div>
+      <div className="mt-6 text-center">
+        <h3 className="text-xl font-light text-gray-800 mb-2">
+          {product.label}
+        </h3>
+        <div className="flex justify-center items-center mb-3">
+          {[...Array(5)].map((_, i) => (
+            <FaStar key={i} className="text-gold-500 w-4 h-4 mx-0.5" />
+          ))}
+        </div>
+        <p className="text-sm text-gray-500 mb-4 line-clamp-2">
+          {product.shortDescription}
+        </p>
+        <div className="flex justify-center items-center space-x-4">
+          <button className="text-gray-600 hover:text-gold-500 transition-colors duration-300">
+            <FaShoppingBag className="w-5 h-5" />
+          </button>
+          <button className="text-gray-600 hover:text-gold-500 transition-colors duration-300">
+            <FaRegHeart className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 };
 
-export default ProductSection3;
+export default LuxuryProductShowcase;

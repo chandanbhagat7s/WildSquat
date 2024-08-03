@@ -5,15 +5,16 @@ import axios from "axios";
 
 
 
-export const addToCart = createAsyncThunk("/product/add/cart", async (data) => {
+export const addToCart = createAsyncThunk("/product/add/cart", async (data, { rejectWithValue }) => {
 
     try {
-        const res = await axios.get(`/api/v1/product/addToCart/${data._id}`);
+        const res = await axios.get(`/api/v1/user/addToCart/${data}`);
 
         return res.data
 
     } catch (e) {
-        return e.response;
+        console.log(e);
+        return rejectWithValue(e?.response?.data?.msg || "Please check Your internet connection");
     }
 
 })
@@ -21,7 +22,7 @@ export const addToCart = createAsyncThunk("/product/add/cart", async (data) => {
 export const addToHeart = createAsyncThunk("/product/add/cart", async (data) => {
 
     try {
-        const res = await axios.get(`/api/v1/product/addToHeart/${data._id}`);
+        const res = await axios.get(`/api/v1/user/addToHeart/${data._id}`);
 
         return res.data
 
@@ -34,7 +35,7 @@ export const addToHeart = createAsyncThunk("/product/add/cart", async (data) => 
 export const removeFromCart = createAsyncThunk("/product/remove/cart", async (data) => {
 
     try {
-        const res = await axios.get(`/api/v1/product/removeFromCart/${data._id}`);
+        const res = await axios.get(`/api/v1/user/removeFromCart/${data._id}`);
 
         return res.data
 
@@ -47,7 +48,7 @@ export const removeFromCart = createAsyncThunk("/product/remove/cart", async (da
 export const removeFromHeart = createAsyncThunk("/product/remove/heart", async (data) => {
 
     try {
-        const res = await axios.get(`/api/v1/product/removeFromHeart/${data._id}`);
+        const res = await axios.get(`/api/v1/user/removeFromHeart/${data._id}`);
 
         return res.data
 
@@ -63,8 +64,8 @@ export const getHompageData = createAsyncThunk("/product/homepage", async (data)
 
         console.log(res);
         return res.data
-    } catch (error) {
-
+    } catch (e) {
+        return e.response;
     }
 
 
@@ -76,7 +77,7 @@ export const getHompageData = createAsyncThunk("/product/homepage", async (data)
 
 export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async () => {
     try {
-        const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id,label");
+        const res = await axios.get("/api/v1/user/getAllCategory?fields=name,_id,label");
         console.log(res);
         return res.data
     } catch (error) {
@@ -92,7 +93,9 @@ const initialState = {
     hotProducts: [],
     category: [],
     posters: [],
-    categoryName: []
+    categoryName: [],
+    msg: "",
+    cards: []
 
 }
 
@@ -109,6 +112,7 @@ const productSlice = createSlice({
                 let category = []
                 let slider = []
                 let poster = []
+                let card = []
                 action?.payload?.allTools.map((el) => {
                     if (el.name == "CATEGORY") {
                         category.push(el)
@@ -118,19 +122,27 @@ const productSlice = createSlice({
                     } else if (el.name == "POSTER") {
                         poster.push(el)
 
+                    } else if (el.name == "CARDS") {
+                        card.push(el)
+
                     }
 
                 })
                 state.category = category;
                 state.posters = poster;
                 state.slider = slider;
+                state.cards = card;
             }
 
         }).addCase(getAllCateogyNames.fulfilled, (state, action) => {
             if (action.payload.status == "success") {
                 state.categoryName = action.payload.data
             }
-        })
+        }).addCase(addToCart.rejected, (state, action) => {
+            console.log(action);
+
+            state.msg = action.payload;
+        });
 
 
 

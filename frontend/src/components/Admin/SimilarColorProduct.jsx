@@ -20,12 +20,12 @@ const SimilarColorProducts = ({ similarProducts, setSimilarProducts }) => {
 
     setSimilarProducts([
       ...similarProducts,
-      { id, name: obj.name, coverImage: obj.coverImage },
+      { _id, name: obj.name, coverImage: obj.coverImage },
     ]);
   }
 
   function onRemove(id) {
-    setSimilarProducts([...[...similarProducts].filter((el) => el.id != id)]);
+    setSimilarProducts([...[...similarProducts].filter((el) => el._id != id)]);
   }
 
   return (
@@ -56,7 +56,7 @@ const SimilarColorProducts = ({ similarProducts, setSimilarProducts }) => {
                   />
                   <div
                     className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    onClick={() => onRemove(product.id)}
+                    onClick={() => onRemove(product._id)}
                   >
                     <FaTimes />
                   </div>
