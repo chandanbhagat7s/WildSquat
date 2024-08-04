@@ -77,11 +77,11 @@ export const getHompageData = createAsyncThunk("/product/homepage", async (data)
 
 export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async () => {
     try {
-        const res = await axios.get("/api/v1/user/getAllCategory?fields=name,_id,label");
+        const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id,label");
         console.log(res);
         return res.data
     } catch (error) {
-        console.log("error");
+        console.log(error);
     }
 })
 

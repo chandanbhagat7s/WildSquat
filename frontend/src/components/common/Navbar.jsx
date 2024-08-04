@@ -53,8 +53,8 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center lg:mr-10">
               <img
-                className="h-12 ml-3 w-auto "
-                src="https://wildsquat.com/wp-content/uploads/2023/05/wildsquat-png-pixel.png"
+                className="h-20 ml-3 w-auto "
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCpgTlAyoPE18kvCRoq30TFvY79liTg-vp_A&s"
                 alt="Logo"
               />
             </div>
@@ -120,10 +120,6 @@ const Navbar = () => {
                   Login <FiLogIn className="inline-block" />
                 </button>
               )}
-            </button>
-            <button className="ml-4 p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              <span className="sr-only">View cart</span>
-              <FiShoppingCart className="h-6 w-6" />
             </button>
           </div>
 

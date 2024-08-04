@@ -4,7 +4,7 @@ const User = require("../Models/User");
 const appError = require("../utils/appError");
 const factory = require("../utils/factory");
 const catchAsync = require("../utils/catchAsync");
-
+const redisClient = require('../Redis/redisClient');
 
 exports.getAllProduct = catchAsync(async (req, res, next) => {
     const product = await Product.find({
@@ -41,7 +41,11 @@ exports.getProductById = catchAsync(async (req, res, next) => {
     const product = await Product.findById(productId).populate([{
         path: "colors"
     }])
-
+    redisClient.incr(`product:${productId}:viewCount`, (err, reply) => {
+        if (err) {
+            console.error('Error incrementing view count:', err);
+        }
+    });
 
     res.status(200).send({
         status: "success",

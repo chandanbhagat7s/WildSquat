@@ -12,10 +12,10 @@ const path = require('path');
 const productRouter = require('./Routes/productRoute');
 const reviewRouter = require('./Routes/reviewRoute');
 const paymentRouter = require('./Routes/paymentsRoute');
-const userRouter = require('./Routes/authRoutes');
 const userrouter = require('./Routes/userRouter');
 const toolRouter = require('./Routes/toolsRouter');
-
+const redis = require('redis');
+const syncViewCounts = require('./Redis/syncViewCounts');
 
 
 const app = express()
@@ -31,6 +31,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(cookieParser())
+// const redisClient = redis.createClient();
 
 mongoose.connect(process.env.DATABASE_URL, {
 
@@ -42,6 +43,7 @@ mongoose.connect(process.env.DATABASE_URL, {
     })
 
 
+// redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
 
 
@@ -53,6 +55,11 @@ app.use('/api/v1/review', reviewRouter)
 app.use('/api/v1/payment', paymentRouter)
 app.use('/api/v1/user', userrouter)
 
+
+
+
+
+
 app.all("*", (req, res) => {
     res.status(404).send({
         status: "error",
@@ -63,10 +70,13 @@ app.all("*", (req, res) => {
 app.use(globalErrorHandler)
 
 
+
 app.listen(PORT, () => {
     console.log("server started at port ", PORT);
 })
+console.log("CAME");
 
+syncViewCounts();
 
 
 

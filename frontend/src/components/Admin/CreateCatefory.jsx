@@ -32,7 +32,16 @@ const CreateCategory = () => {
       console.log(data);
       dispatch(success({ message: data.data.msg || "something went wrong" }));
     } catch (e) {
-      dispatch(error({ message: e?.responce?.msg || "something went wrong" }));
+      console.log(e);
+
+      dispatch(
+        error({
+          message:
+            e?.response?.data?.msg ||
+            e?.response?.data?.message ||
+            "something went wrong",
+        })
+      );
     }
   };
 

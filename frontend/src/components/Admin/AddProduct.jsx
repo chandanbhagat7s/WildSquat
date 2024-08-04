@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
 import { getAllCateogyNames } from "../../redux/slices/productSlice";
+import ProductSearch from "./SearchProduct";
 
 const CreateProductForm = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,43 @@ const CreateProductForm = () => {
     "Brown",
     "Gray",
   ];
+
+  function handleClickSelectedProduct(id) {
+    bringProductInfo(id);
+  }
+
+  async function bringProductInfo(id) {
+    try {
+      if (id) {
+        console.log(id);
+        const res = await axios.get(`/api/v1/product/getProduct/${id}`);
+        console.log("res is", res);
+        const p = res?.data?.product;
+        setProduct({
+          name: p.name,
+          price: 1000,
+          shortDescription: p.shortDescription,
+          longDescription: p.longDescription,
+          sizes: [],
+          material: p.material,
+          images: [],
+          coverImage: null,
+          features: p.features,
+          shippingDetails: p.shippingDetails,
+          returnDetails: p.returnDetails,
+          category: [],
+          colorCategory: "",
+          careInstructions: p.careInstructions,
+          madeIn: "India",
+          stock: 20,
+        });
+      }
+    } catch (e) {
+      dispatch(
+        error({ message: e?.response?.data?.msg || "something went wrong" })
+      );
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -131,7 +169,16 @@ const CreateProductForm = () => {
         dispatch(error({ message: "something went wrong please try again" }));
       }
     } catch (e) {
-      dispatch(error({ message: "something went wrong please try again" }));
+      console.log(e);
+
+      dispatch(
+        error({
+          message:
+            e?.response?.data?.msg ||
+            e?.response?.data?.message ||
+            "something went wrong please try again",
+        })
+      );
     }
   };
   async function getCategory() {
@@ -149,6 +196,12 @@ const CreateProductForm = () => {
           <h1 className="text-3xl font-bold text-white">Create New Product</h1>
         </div>
         <form onSubmit={handleSubmit} className="py-8 px-8 space-y-6">
+          <div className="mb-20">
+            <div className=" mx-2 my-3 font-bold text-2xl ">
+              Auto Fill Product
+            </div>
+            <ProductSearch setSelectedProduct={handleClickSelectedProduct} />
+          </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <label
@@ -234,7 +287,7 @@ const CreateProductForm = () => {
                 <div key={size.size} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={product.sizes.find(
+                    checked={product?.sizes.find(
                       (item) => item.size === size.size
                     )}
                     onChange={() => handleSizeChange(size)}
@@ -353,7 +406,7 @@ const CreateProductForm = () => {
                 <img
                   src={URL.createObjectURL(product.coverImage)}
                   alt="Cover"
-                  className="h-40 w-full object-cover rounded-md"
+                  className="h-64 w-full object-contain rounded-md"
                 />
               </div>
             )}

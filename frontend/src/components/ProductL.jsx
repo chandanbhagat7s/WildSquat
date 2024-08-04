@@ -116,7 +116,7 @@ const ProductListing = () => {
             {products.map((product, index) => (
               <motion.div
                 key={product._id}
-                className="w-2/2 flex-shrink-0 px-4"
+                className=" flex-shrink-0 px-4"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -129,7 +129,7 @@ const ProductListing = () => {
                     <img
                       src={`${url}img/${product.coverImage}`}
                       alt={product.name}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-64 object-cover"
                     />
                     <div className="absolute top-2 right-2 flex space-x-2">
                       <motion.button

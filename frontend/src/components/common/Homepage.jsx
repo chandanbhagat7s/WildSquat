@@ -26,7 +26,7 @@ export default function Homepage() {
       <ProductCardsOverview />
       {/* <ProductInCrawsel /> */}
       <CategoryList />
-      {/* <ProductSection2 /> */}
+
       <ProductSection3 />
       {/* <ProductSection4 /> */}
     </>

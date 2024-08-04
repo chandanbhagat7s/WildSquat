@@ -124,7 +124,7 @@ const productSchema = new mongoose.Schema({
     //     type: Boolean,
     //     required: [true, "Product is combo or not"]
     // },
-
+    viewCount: { type: Number, default: 0 }
 
 
 });

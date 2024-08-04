@@ -8,6 +8,7 @@ import {
   FaSort,
   FaHeart,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import url from "../../assets/url";
 import TypeWriter from "../Utils/TypeWriter";
@@ -39,59 +40,33 @@ const ProductCard = ({ _id, name, price, image }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      className="bg-white rounded-2xl shadow-2xl overflow-hidden transform transition duration-500 hover:scale-105 cursor-pointer group"
+    <motion.div
+      className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer group"
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
       onClick={() => navigate(`/productDetails/${_id}`)}
     >
-      <div className="relative">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-80 object-cover transition duration-300 group-hover:opacity-90"
-        />
-        <div className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md transition duration-300 transform hover:scale-110">
-          <FaHeart className="text-2xl text-gray-400 group-hover:text-red-500" />
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
-          <h3 className="text-2xl font-bold text-white mb-2 truncate">
-            {name}
-          </h3>
-          <div className="flex justify-between items-center">
-            <span className="text-3xl font-extrabold text-white">${price}</span>
-            <div className="flex items-center bg-yellow-400 px-3 py-1 rounded-full">
-              <FaStar className="text-white mr-1" />
-              <span className="text-sm font-semibold text-white">
-                4.5 (120)
-              </span>
-            </div>
-          </div>
+      <div className="relative ">
+        <img src={image} alt={name} className="w-full h-64  object-contain" />
+        <div className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-sm">
+          <FaHeart className="text-sm text-gray-400 group-hover:text-red-500" />
         </div>
       </div>
-      <div className="p-6 space-y-4">
+      <div className="p-4">
+        <h3 className="text-sm font-semibold text-gray-800 mb-1 truncate">
+          {name}
+        </h3>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">Premium Collection</span>
-          <div className="flex space-x-2">
-            {["S", "M", "L", "XL"].map((size) => (
-              <span
-                key={size}
-                className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center text-xs font-medium text-gray-600 hover:bg-gray-100"
-              >
-                {size}
-              </span>
-            ))}
+          <span className="text-lg font-bold text-indigo-600">${price}</span>
+          <div className="flex items-center">
+            <FaStar className="text-yellow-400 mr-1 text-xs" />
+            <span className="text-xs text-gray-600">4.5</span>
           </div>
         </div>
-        <div className="flex space-x-2">
-          <button className="flex-1 bg-indigo-600 text-white py-3 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition duration-300 group-hover:bg-indigo-500 font-semibold text-sm">
-            <FaShoppingCart className="mr-2" />
-            Add to Cart
-          </button>
-          <button className="flex-1 bg-gray-800 text-white py-3 rounded-lg flex items-center justify-center hover:bg-gray-700 transition duration-300 group-hover:bg-gray-600 font-semibold text-sm">
-            Explore
-          </button>
-        </div>
+        <button className="mt-3 w-full bg-indigo-600 text-white text-sm py-2 rounded-md hover:bg-indigo-700 transition duration-300">
+          Add to Bag
+        </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -178,7 +153,7 @@ const ClickProducts = () => {
 
       {/* Right Content Area */}
       <div className="lg:w-3/4 lg:ml-[25%] p-6 mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {sortedProducts.map((product) => (
             <ProductCard
               _id={product._id}
