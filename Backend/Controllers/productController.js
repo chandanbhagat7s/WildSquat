@@ -19,6 +19,9 @@ exports.getAllProduct = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.getAllProductByFilter = factory.getAll(Product)
+
+
 exports.getAllProductForMiniCard = catchAsync(async (req, res, next) => {
     const product = await Product.find({}).select("_id name price coverImage")
 

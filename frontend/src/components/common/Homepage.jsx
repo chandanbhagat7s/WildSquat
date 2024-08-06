@@ -11,9 +11,15 @@ import ProductCardsOverview from "./ProductCardsOverview";
 
 export default function Homepage() {
   const dispatch = useDispatch();
+  const [load, setLoad] = useState(true);
   // first get the data
   async function getAllDetails() {
-    await dispatch(getHompageData());
+    let res = await dispatch(getHompageData());
+    console.log(res);
+
+    if (res?.payload?.status == "success") {
+      setLoad(false);
+    }
   }
   useEffect(() => {
     getAllDetails();
@@ -21,14 +27,18 @@ export default function Homepage() {
 
   return (
     <>
-      <Slider />
-      <ProductListing />
-      <ProductCardsOverview />
-      {/* <ProductInCrawsel /> */}
-      <CategoryList />
-
-      <ProductSection3 />
-      {/* <ProductSection4 /> */}
+      {!load && (
+        <>
+          {" "}
+          <Slider />
+          <ProductListing />
+          <ProductCardsOverview />
+          {/* <ProductInCrawsel /> */}
+          <CategoryList />
+          <ProductSection3 />
+          {/* <ProductSection4 /> */}
+        </>
+      )}
     </>
   );
 }

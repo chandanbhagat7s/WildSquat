@@ -1,109 +1,154 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProductActions from "./ProductsCRUD";
 import GetAllOrdersPending from "./GetAllOrdersPending";
-import CreateCategory from "./CreateCatefory";
 import ManageTools from "./ManageTools";
+import CreateCategory from "./CreateCatefory";
+import ProductData from "./ProductData";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isSticky, setIsSticky] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const tabs = [
-    {
-      id: "dashboard",
-      label: "Dashboard",
-      content:
-        "Welcome to your admin dashboard. Here you can see an overview of your site's performance.",
-    },
-    {
-      id: "users",
-      label: "Users",
-      content: "Manage your users, their roles, and permissions here.",
-    },
-    {
-      id: "products",
-      label: "Products",
-      content: "Add, edit, or remove products from your inventory.",
-    },
-    {
-      id: "orders",
-      label: "Orders",
-      content: "View and manage customer orders here.",
-    },
-    {
-      id: "analytics",
-      label: "Analytics",
-      content:
-        "View detailed analytics and statistics about your site's performance.",
-    },
-    {
-      id: "Tools",
-      label: "Tools",
-      content: "Adjust your site settings and configurations.",
-    },
-    {
-      id: "Manage tools",
-      label: "Manage tools",
-      content: "Adjust your site settings and configurations.",
-    },
-    {
-      id: "reports",
-      label: "Reports",
-      content: "Generate and view various reports about your site's activity.",
-    },
-    {
-      id: "help",
-      label: "Help",
-      content: "Find answers to common questions and get support here.",
-    },
+    { id: "dashboard", label: "Dashboard", icon: "📊" },
+    { id: "users", label: "Users", icon: "👥" },
+    { id: "products", label: "Products", icon: "🛍️" },
+    { id: "orders", label: "Orders", icon: "📦" },
+    { id: "analytics", label: "Analytics", icon: "📈" },
+    { id: "tools", label: "Tools", icon: "🔧" },
+    { id: "manage-tools", label: "Manage Tools", icon: "⚙️" },
+    { id: "reports", label: "Reports", icon: "📊" },
+    { id: "help", label: "Help", icon: "❓" },
   ];
 
-  return (
-    <div className="bg-gray-100">
-      <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Admin Panel</h1>
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "products":
+        return <ProductActions />;
+      case "dashboard":
+        return <ProductData />;
+      case "orders":
+        return <GetAllOrdersPending />;
+      case "tools":
+        return <CreateCategory />;
+      case "manage-tools":
+        return <ManageTools />;
+      default:
+        return <p className="text-gray-600">Content for {activeTab}</p>;
+    }
+  };
 
-        <div className="mb-4 border-b border-gray-200">
-          <ul className="flex flex-wrap -mb-px" role="tablist">
-            {tabs.map((tab) => (
-              <li key={tab.id} className="mr-2" role="presentation">
+  return (
+    <div className="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
+      <nav
+        className={`bg-white shadow-lg transition-all duration-300 ${
+          isSticky ? "fixed top-0 left-0 right-0 z-50" : ""
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-gray-800">Admin Panel</h1>
+            </div>
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                      activeTab === tab.id
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-600 hover:bg-blue-100 hover:text-blue-600"
+                    }`}
+                    onClick={() => setActiveTab(tab.id)}
+                  >
+                    <span className="mr-2">{tab.icon}</span>
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="-mr-2 flex md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+              >
+                <span className="sr-only">Open main menu</span>
+                {!isMobileMenuOpen ? (
+                  <svg
+                    className="block h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="block h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {isMobileMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              {tabs.map((tab) => (
                 <button
-                  className={`inline-block p-4 border-b-2 rounded-t-lg ${
+                  key={tab.id}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
                     activeTab === tab.id
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent hover:text-gray-600 hover:border-gray-300"
-                  }`}
-                  onClick={() => setActiveTab(tab.id)}
-                  role="tab"
-                  aria-controls={tab.id}
-                  aria-selected={activeTab === tab.id}
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-600 hover:bg-blue-100 hover:text-blue-600"
+                  } w-full text-left`}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
+                  <span className="mr-2">{tab.icon}</span>
                   {tab.label}
                 </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          {/* {tabs.map((tab) => (
-            <div
-              key={tab.id}
-              className={`p-4 rounded-lg bg-white ${
-                activeTab === tab.id ? "" : "hidden"
-              }`}
-              role="tabpanel"
-              aria-labelledby={`${tab.id}-tab`}
-            >
-             
+              ))}
             </div>
-          ))} */}
+          </div>
+        )}
+      </nav>
 
-          {activeTab == "products" && <ProductActions />}
-          {activeTab == "orders" && <GetAllOrdersPending />}
-          {activeTab == "Tools" && <CreateCategory />}
-          {activeTab == "Manage tools" && <ManageTools />}
-          {/* <ProductActions/> */}
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-gray-50  rounded-lg">{renderTabContent()}</div>
       </div>
     </div>
   );

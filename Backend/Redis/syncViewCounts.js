@@ -16,6 +16,6 @@ const syncViewCounts = async () => {
 };
 
 // Sync every hour
-setInterval(syncViewCounts, 5 * 60 * 1000);
+setInterval(syncViewCounts, 5 * 60 * 60 * 1000);
 
 module.exports = syncViewCounts;

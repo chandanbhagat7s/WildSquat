@@ -30,7 +30,7 @@ const ProductCardsOverview = () => {
 
   return (
     <div className="mt-10 h-screen overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-      {products.length > 0 && (
+      {products?.length > 0 && products.length > 0 && (
         <div className="flex flex-col space-y-6">
           <ProductList
             products={products}

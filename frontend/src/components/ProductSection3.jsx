@@ -47,13 +47,14 @@ const LuxuryProductShowcase = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
-          {posters.map((product, index) => (
-            <LuxuryProductCard
-              key={product._id}
-              product={product}
-              index={index}
-            />
-          ))}
+          {posters?.length > 0 &&
+            posters.map((product, index) => (
+              <LuxuryProductCard
+                key={product._id}
+                product={product}
+                index={index}
+              />
+            ))}
         </motion.div>
       </div>
     </motion.section>

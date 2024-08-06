@@ -113,54 +113,55 @@ const ProductListing = () => {
             className="flex absolute transition-transform duration-500 ease-out"
             style={{ transform: `translateX(-${activeIndex * (100 / 3)}%)` }}
           >
-            {products.map((product, index) => (
-              <motion.div
-                key={product._id}
-                className=" flex-shrink-0 px-4"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <div
-                  className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate(`/productDetails/${product._id}`)}
+            {products.length > 0 &&
+              products.map((product, index) => (
+                <motion.div
+                  key={product._id}
+                  className=" flex-shrink-0 px-4"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="relative">
-                    <img
-                      src={`${url}img/${product.coverImage}`}
-                      alt={product.name}
-                      className="w-full h-64 object-cover"
-                    />
-                    <div className="absolute top-2 right-2 flex space-x-2">
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-2 bg-white rounded-full shadow-md text-indigo-600"
-                        onClick={(e) => addToCart(product._id, e)}
-                      >
-                        <FiShoppingCart size={18} />
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-2 bg-white rounded-full shadow-md text-red-500"
-                        onClick={(e) => addToHeart(product._id, e)}
-                      >
-                        <FiHeart size={18} />
-                      </motion.button>
+                  <div
+                    className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105"
+                    onClick={() => navigate(`/productDetails/${product._id}`)}
+                  >
+                    <div className="relative">
+                      <img
+                        src={`${url}img/${product.coverImage}`}
+                        alt={product.name}
+                        className="w-full h-64 object-cover"
+                      />
+                      <div className="absolute top-2 right-2 flex space-x-2">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="p-2 bg-white rounded-full shadow-md text-indigo-600"
+                          onClick={(e) => addToCart(product._id, e)}
+                        >
+                          <FiShoppingCart size={18} />
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="p-2 bg-white rounded-full shadow-md text-red-500"
+                          onClick={(e) => addToHeart(product._id, e)}
+                        >
+                          <FiHeart size={18} />
+                        </motion.button>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                        {product.name}
+                      </h3>
+                      <p className="text-xl font-bold text-indigo-600">
+                        ₹{product.price}
+                      </p>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                      {product.name}
-                    </h3>
-                    <p className="text-xl font-bold text-indigo-600">
-                      ₹{product.price}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
           </div>
         </motion.div>
 

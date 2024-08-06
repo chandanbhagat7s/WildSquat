@@ -74,7 +74,6 @@ app.use(globalErrorHandler)
 app.listen(PORT, () => {
     console.log("server started at port ", PORT);
 })
-console.log("CAME");
 
 syncViewCounts();
 

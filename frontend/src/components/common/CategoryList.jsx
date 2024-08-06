@@ -68,15 +68,16 @@ const CategoryList = () => {
       </motion.h2>
 
       <motion.div className="flex" animate={controls}>
-        {[...category, ...category].map((card, index) => (
-          <Card
-            key={`${card._id}-${index}`}
-            id={card._id}
-            image={card.coverImage}
-            title={card.label}
-            total={card.products.length}
-          />
-        ))}
+        {category?.length > 0 &&
+          [...category, ...category].map((card, index) => (
+            <Card
+              key={`${card._id}-${index}`}
+              id={card._id}
+              image={card.coverImage}
+              title={card.label}
+              total={card.products.length}
+            />
+          ))}
       </motion.div>
     </div>
   );
