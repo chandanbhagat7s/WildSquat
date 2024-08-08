@@ -117,7 +117,7 @@ const Navbar = () => {
                   className="bg-gray-200 text-black font-bold p-2 rounded-xl shadow-md hover:bg-gray-100 hover:text-gray-700"
                   onClick={() => nevigate("/login")}
                 >
-                  Login <FiLogIn className="inline-block" />
+                  Get In <FiLogIn className="inline-block" />
                 </button>
               )}
             </button>

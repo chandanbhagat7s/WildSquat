@@ -42,7 +42,7 @@ const LuxuryProductShowcase = () => {
         </motion.p>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}

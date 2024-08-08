@@ -161,3 +161,16 @@ html {
 .add-to-favorites:hover {
   background-color: #e53e3e;
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-300px * 5));
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}

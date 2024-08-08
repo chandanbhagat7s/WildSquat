@@ -80,8 +80,8 @@ export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async
         const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id,label");
         console.log(res);
         return res.data
-    } catch (error) {
-        console.log(error);
+    } catch (e) {
+        console.log(e);
     }
 })
 

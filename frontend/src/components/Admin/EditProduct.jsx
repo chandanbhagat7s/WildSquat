@@ -70,11 +70,17 @@ const EditProductForm = () => {
     try {
       let res;
       console.log(editedProduct);
+      console.log(
+        editedProduct?.colors?.simillarProducts?.length,
+        similarProducts?.length
+      );
 
       if (
-        editedProduct.colors?.simillarProducts?.length !==
-        similarProducts.length
+        editedProduct?.colors?.simillarProducts?.length &&
+        editedProduct?.colors?.simillarProducts?.length !==
+          similarProducts?.length
       ) {
+        console.log("is", editedProduct._id);
         let colors = {
           _id: editedProduct?.colors._id,
           simillarProducts: similarProducts,
@@ -86,6 +92,8 @@ const EditProductForm = () => {
           colors,
         });
       } else {
+        console.log("is", editedProduct._id);
+
         res = await axios.patch(`/api/v1/admin/edit/${editedProduct._id}`, {
           ...editedProduct,
           colorUpdate: false,
@@ -101,10 +109,13 @@ const EditProductForm = () => {
       //   dispatch(success({ message: "product updated successfully" }));
       // }
     } catch (e) {
+      console.log(e);
+
       dispatch(
         error({
           message:
-            e?.response?.data?.msg || "something went wrong please try again ",
+            e?.response?.data?.msg ||
+            "something went wrong please try again later ",
         })
       );
     }

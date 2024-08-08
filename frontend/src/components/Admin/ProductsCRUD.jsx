@@ -30,7 +30,7 @@ const ProductActions = () => {
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 ">
         {buttons.map((button) => (
           <motion.button
             key={button.action}

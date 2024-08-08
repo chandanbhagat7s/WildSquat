@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaTag, FaStar } from "react-icons/fa";
 import url from "../../assets/url";
+import { FiArrowRight } from "react-icons/fi";
 
 const Card = ({ id, image, title, total }) => {
   const navigate = useNavigate();
 
   return (
     <motion.div
-      className="w-72 h-96 bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer mx-4"
+      className="w-72 h-96 bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer flex-shrink-0 mx-4"
       whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
       onClick={() =>
         navigate(`/toolsDetails/${id}`, { state: { tool: "CATEGORY" } })
@@ -39,22 +40,9 @@ const Card = ({ id, image, title, total }) => {
 
 const CategoryList = () => {
   const { category } = useSelector((state) => state.product);
-  const controls = useAnimation();
-
-  useEffect(() => {
-    const animate = async () => {
-      await controls.start({
-        x: [0, -100 * category.length],
-        transition: { duration: category.length * 5, ease: "linear" },
-      });
-      controls.set({ x: 0 });
-      animate();
-    };
-    animate();
-  }, [controls, category]);
 
   return (
-    <div className="min-h-screen py-20 px-6 bg-gradient-to-br from-white to-gray-100 flex flex-col justify-center items-center overflow-hidden">
+    <div className="min-h-screen py-20 px-6 bg-gradient-to-br from-gray-100 to-white flex flex-col justify-center items-center overflow-hidden">
       <motion.h2
         className="text-5xl font-bold text-gray-800 mb-12"
         initial={{ y: -50, opacity: 0 }}
@@ -63,21 +51,39 @@ const CategoryList = () => {
       >
         Discover Our{" "}
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
-          Premium Collections
+          Premium Variety
         </span>
       </motion.h2>
 
-      <motion.div className="flex" animate={controls}>
-        {category?.length > 0 &&
-          [...category, ...category].map((card, index) => (
-            <Card
-              key={`${card._id}-${index}`}
-              id={card._id}
-              image={card.coverImage}
-              title={card.label}
-              total={card.products.length}
-            />
-          ))}
+      <div className="w-full overflow-hidden">
+        <div className="flex animate-scroll">
+          {category?.length > 0 &&
+            [...category, ...category].map((card, index) => (
+              <Card
+                key={`${card._id}-${index}`}
+                id={card._id}
+                image={card.coverImage}
+                title={card.label}
+                total={card.products.length}
+              />
+            ))}
+        </div>
+      </div>
+
+      <motion.div
+        className="mt-20 text-center"
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.8 }}
+      >
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300"
+          // onClick={() => navigate("/products")}
+        >
+          View All variety <FiArrowRight className="ml-3" size={24} />
+        </motion.button>
       </motion.div>
     </div>
   );
