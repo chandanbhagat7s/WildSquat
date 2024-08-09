@@ -9,6 +9,7 @@ import SignUpPage from "../Signup";
 import Homepage from "../common/Homepage";
 import ClickProducts from "../common/ClickProducts";
 import About from "../common/About";
+import AllCategoryView from "../common/AllCategoryView";
 
 export default function AppRoutes() {
   return (
@@ -51,6 +52,16 @@ export default function AppRoutes() {
             <MainLayout>
               <div className="">
                 <ClickProducts />{" "}
+              </div>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/categoryLists"
+          element={
+            <MainLayout>
+              <div className="">
+                <AllCategoryView />
               </div>
             </MainLayout>
           }

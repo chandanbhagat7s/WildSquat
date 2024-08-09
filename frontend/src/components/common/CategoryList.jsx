@@ -39,6 +39,7 @@ const Card = ({ id, image, title, total }) => {
 };
 
 const CategoryList = () => {
+  const navigate = useNavigate();
   const { category } = useSelector((state) => state.product);
 
   return (
@@ -80,7 +81,7 @@ const CategoryList = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300"
-          // onClick={() => navigate("/products")}
+          onClick={() => navigate("/categoryLists")}
         >
           View All variety <FiArrowRight className="ml-3" size={24} />
         </motion.button>
