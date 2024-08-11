@@ -33,9 +33,9 @@ export default function Homepage() {
           {" "}
           <Slider />
           <ProductListing />
+          <CategoryList />
           <ProductCardsOverview />
           {/* <ProductInCrawsel /> */}
-          <CategoryList />
           <ProductSection3 />
           {/* <ProductSection4 /> */}
         </>

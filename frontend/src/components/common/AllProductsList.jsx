@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import { BsCollection } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
-import { FaStar } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { FiHeart } from "react-icons/fi";
+import {
+  FaRegEye,
+  FaShoppingBag,
+  FaShoppingCart,
+  FaStar,
+} from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { error } from "../../redux/slices/errorSlice";
 
 const LuxuryProductCard = ({ product, index }) => {
   const navigate = useNavigate();
@@ -13,7 +18,7 @@ const LuxuryProductCard = ({ product, index }) => {
 
   return (
     <motion.div
-      className="group "
+      className="group"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: index * 0.1 }}
@@ -30,7 +35,7 @@ const LuxuryProductCard = ({ product, index }) => {
           transition={{ duration: 0.4 }}
         >
           <img
-            src={`${url}Tools/${product.coverImage}`}
+            src={`${url}img/${product.coverImage}`}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -57,26 +62,13 @@ const LuxuryProductCard = ({ product, index }) => {
         </AnimatePresence>
       </div>
 
-      <div className="mt-6 text-center ">
-        <h3 className="flex items-center justify-center font-bold text-gray-800 mb-2">
-          {product.label}
-          <BsCollection className="mx-1" />
-        </h3>
+      <div className="mt-6 text-center">
+        <h3 className="  text-gray-800 mb-2">{product.name}</h3>
 
-        <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-          {product.shortDescription}
-        </p>
-        <div className=" flex justify-center items-center ">
-          <button className="text-gray-600 hover:text-gold-500 transition-colors duration-300">
-            {/* <FaShoppingBag className="w-5 h-5" /> */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="flex  items-center space-x-2 p-3 bg-white rounded-full shadow-md text-red-500 hover:bg-red-100 transition-colors duration-200"
-              // onClick={(e) => addToHeart(product._id, e)}
-            >
-              Add to <FiHeart size={20} className="mx-1" />
-            </motion.button>
+        <div className="flex flex-col space-y-1">
+          <button className=" flex justify-center hover:scale-105 items-center px-5 py-3  border border-1 border-indigo-200 rounded-lg">
+            Add to
+            <FaShoppingCart />
           </button>
         </div>
       </div>
@@ -84,8 +76,31 @@ const LuxuryProductCard = ({ product, index }) => {
   );
 };
 
-export default function AllCategoryView() {
-  const { category } = useSelector((state) => state.product);
+export default function AllProductList() {
+  let showOf = useParams();
+  const dispatch = useDispatch();
+
+  const [products, setProducts] = useState([]);
+  async function getAllProductDetails() {
+    try {
+      const res = await axios.get("/api/v1/product/getAllTrendingProducts");
+      if (res.data.status === "success") {
+        console.log(res?.data?.products[0].products);
+
+        setProducts(res?.data?.products[0].products);
+      }
+    } catch (e) {
+      dispatch(error({ message: e?.response?.msg || "Something went wrong" }));
+    }
+  }
+
+  useEffect(() => {
+    if (showOf.id == "trending") {
+      getAllProductDetails();
+    } else {
+      getAllProductDetails();
+    }
+  }, []);
 
   return (
     <>
@@ -111,13 +126,13 @@ export default function AllCategoryView() {
         </p>
       </motion.div>
       <motion.div
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-10"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16 px-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.8 }}
       >
-        {category?.length > 0 &&
-          category.map((product, index) => (
+        {products?.length > 0 &&
+          products.map((product, index) => (
             <LuxuryProductCard
               key={product._id}
               product={product}

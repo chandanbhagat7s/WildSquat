@@ -10,6 +10,7 @@ import Homepage from "../common/Homepage";
 import ClickProducts from "../common/ClickProducts";
 import About from "../common/About";
 import AllCategoryView from "../common/AllCategoryView";
+import AllProductList from "../common/AllProductsList";
 
 export default function AppRoutes() {
   return (
@@ -62,6 +63,16 @@ export default function AppRoutes() {
             <MainLayout>
               <div className="">
                 <AllCategoryView />
+              </div>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/productList/:id"
+          element={
+            <MainLayout>
+              <div className="">
+                <AllProductList />
               </div>
             </MainLayout>
           }

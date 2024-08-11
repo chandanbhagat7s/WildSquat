@@ -58,9 +58,6 @@ const ProductCard = ({ product, addToCart }) => {
             View Details
           </button>
         </div>
-        <div className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md">
-          <FaHeart className="text-gray-400 hover:text-red-500 transition-colors duration-300" />
-        </div>
       </div>
       <div className="p-6">
         <h3 className="text-sm lg:text-lg text-center font-bold text-gray-800 mb-2">

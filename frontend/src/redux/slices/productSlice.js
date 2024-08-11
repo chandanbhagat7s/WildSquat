@@ -91,6 +91,7 @@ const initialState = {
     heart: [],
     slider: [],
     hotProducts: [],
+    trending: [],
     category: [],
     posters: [],
     categoryName: [],
@@ -113,6 +114,7 @@ const productSlice = createSlice({
                 let slider = []
                 let poster = []
                 let card = []
+                let trend = []
                 action?.payload?.allTools.map((el) => {
                     if (el.name == "CATEGORY") {
                         category.push(el)
@@ -125,6 +127,9 @@ const productSlice = createSlice({
                     } else if (el.name == "CARDS") {
                         card.push(el)
 
+                    } else if (el.name == "Trending") {
+                        trend.push(el)
+
                     }
 
                 })
@@ -132,6 +137,7 @@ const productSlice = createSlice({
                 state.posters = poster;
                 state.slider = slider;
                 state.cards = card;
+                state.trending = trend;
             }
 
         }).addCase(getAllCateogyNames.fulfilled, (state, action) => {
