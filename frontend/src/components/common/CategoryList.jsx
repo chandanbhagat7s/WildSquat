@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BiCategory } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaTag, FaStar } from "react-icons/fa";
-import { FiArrowRight, FiHeart } from "react-icons/fi";
+import { FaTag } from "react-icons/fa";
+import { FiArrowRight } from "react-icons/fi";
 import url from "../../assets/url";
 
 const Card = ({ id, image, title, total }) => {

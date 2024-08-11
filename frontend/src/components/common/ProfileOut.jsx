@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProfilePage from "./Profile";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";

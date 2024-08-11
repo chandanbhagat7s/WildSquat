@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ProductActions from "./ProductsCRUD";
 import GetAllOrdersPending from "./GetAllOrdersPending";
 import ManageTools from "./ManageTools";

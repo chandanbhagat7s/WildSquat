@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FaSearch,
-  FaFilter,
-  FaStar,
-  FaHeart,
-  FaShoppingCart,
-} from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import url from "../../assets/url";
 

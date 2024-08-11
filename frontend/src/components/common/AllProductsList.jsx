@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
-import {
-  FaRegEye,
-  FaShoppingBag,
-  FaShoppingCart,
-  FaStar,
-} from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { FaShoppingCart } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { error } from "../../redux/slices/errorSlice";
 

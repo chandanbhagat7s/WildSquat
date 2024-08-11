@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BsCollection } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
-import { FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { FiHeart } from "react-icons/fi";
 

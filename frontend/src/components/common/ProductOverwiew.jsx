@@ -1,18 +1,14 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaBoxOpen,
   FaExchangeAlt,
   FaGlobeAsia,
-  FaHeart,
-  FaShare,
   FaShippingFast,
-  FaTshirt,
 } from "react-icons/fa";
-import { IoMdArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { error, info, success } from "../../redux/slices/errorSlice";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MdLocalLaundryService } from "react-icons/md";
 import ReviewForm from "./CreateReview";
 import ReviewComponent from "./ReviewComponent";

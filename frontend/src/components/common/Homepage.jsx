@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getHompageData } from "../../redux/slices/productSlice";
 import { Slider } from "./Slider";
 import ProductListing from "../ProductL";
 import CategoryList from "./CategoryList";
-import ProductSection2 from "../ProductSection2";
 import ProductSection3 from "../ProductSection3";
-import ProductSection4 from "../ProductSection4";
 import ProductCardsOverview from "./ProductCardsOverview";
-import AllCategoryView from "./AllCategoryView";
 
 export default function Homepage() {
   const dispatch = useDispatch();
