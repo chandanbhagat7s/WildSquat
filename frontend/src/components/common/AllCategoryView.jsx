@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsCollection } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
 import { useSelector } from "react-redux";
@@ -84,7 +84,18 @@ const LuxuryProductCard = ({ product, index }) => {
 };
 
 export default function AllCategoryView() {
-  const { category } = useSelector((state) => state.product);
+  let { category } = useSelector((state) => state.product);
+  let { multiple } = useSelector((state) => state.product);
+  let locations = useLocation();
+  console.log(locations);
+  let displayOther = locations?.state?.displayOther == "MULTIPLE";
+
+  console.log("display other", displayOther, multiple);
+
+  let display = displayOther ? multiple : category;
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top when component mounts
+  }, []);
 
   return (
     <>
@@ -115,8 +126,8 @@ export default function AllCategoryView() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.8 }}
       >
-        {category?.length > 0 &&
-          category.map((product, index) => (
+        {display?.length > 0 &&
+          display.map((product, index) => (
             <LuxuryProductCard
               key={product._id}
               product={product}

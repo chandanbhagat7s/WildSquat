@@ -13,7 +13,12 @@ const ProductListing = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [step, setStep] = useState({
+    start: 0,
+    end: 4,
+  });
 
+  // Fetch all product details
   async function getAllProductDetails() {
     try {
       const res = await axios.get("/api/v1/product/getAllTrendingProducts");
@@ -25,6 +30,7 @@ const ProductListing = () => {
     }
   }
 
+  // Add product to cart
   async function addToCart(id, e) {
     e.stopPropagation();
     try {
@@ -43,6 +49,7 @@ const ProductListing = () => {
     }
   }
 
+  // Add product to favorites
   async function addToHeart(id, e) {
     e.stopPropagation();
     try {
@@ -61,28 +68,41 @@ const ProductListing = () => {
     }
   }
 
+  // Update the displayed products every 6 seconds
+  let updateDisplayedProducts = () => {
+    const totalProducts = products.length;
+    if (totalProducts === 0) return;
+
+    const newDisplayedProducts = products.slice(step.start, step.end);
+
+    setDisplayedProducts(newDisplayedProducts);
+
+    // Update the step, resetting if we reach the end of the product list
+    const newStart = step.end;
+    const newEnd = step.end + 4 > totalProducts ? 4 : step.end + 4;
+    setStep({
+      start: newStart >= totalProducts ? 0 : newStart,
+      end: newEnd,
+    });
+  };
+
   useEffect(() => {
     getAllProductDetails();
   }, []);
 
-  useEffect(() => {
-    if (products.length > 0) {
-      const updateDisplayedProducts = () => {
-        const shuffled = [...products].slice(0, 4);
-        setDisplayedProducts(shuffled);
-      };
+  // Set up an interval to update the displayed products every 6 seconds
+  // useEffect(() => {
+  //   let clear = setInterval(() => {
+  //     updateDisplayedProducts();
+  //   }, 6000);
 
-      updateDisplayedProducts();
-      const interval = setInterval(updateDisplayedProducts, 6000);
-
-      return () => clearInterval(interval);
-    }
-  }, [products]);
+  //   return () => clearInterval(clear); // Cleanup on unmount
+  // }, [products, step]);
 
   const ProductCard = ({ product }) => (
     <motion.div
       key={product._id}
-      className="bg-white rounded-3xl shadow-xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      className=" bg-white rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
       onClick={() => navigate(`/productDetails/${product._id}`)}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
@@ -90,7 +110,7 @@ const ProductListing = () => {
     >
       <div className="relative">
         <motion.div
-          className="aspect-square overflow-hidden"
+          className="w-full overflow-hidden"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.4 }}
         >
@@ -140,8 +160,8 @@ const ProductListing = () => {
           </span>
         </motion.h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4  lg:grid-cols-4 gap-6">
-          {displayedProducts.map((product) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 ">
+          {[...products].slice(0, 6).map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

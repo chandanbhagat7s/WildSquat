@@ -6,6 +6,7 @@ import ProductListing from "../ProductL";
 import CategoryList from "./CategoryList";
 import ProductSection3 from "../ProductSection3";
 import ProductCardsOverview from "./ProductCardsOverview";
+import MultipleListing from "./MultipleListing";
 
 export default function Homepage() {
   const dispatch = useDispatch();
@@ -21,8 +22,9 @@ export default function Homepage() {
   }
   useEffect(() => {
     getAllDetails();
-  }, []);
 
+    window.scrollTo(0, 0); // Scroll to top when component mounts
+  }, []);
   return (
     <>
       {!load && (
@@ -32,6 +34,7 @@ export default function Homepage() {
           <ProductListing />
           <CategoryList />
           <ProductCardsOverview />
+          <MultipleListing />
           {/* <ProductInCrawsel /> */}
           <ProductSection3 />
           {/* <ProductSection4 /> */}

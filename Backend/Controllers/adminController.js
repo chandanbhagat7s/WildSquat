@@ -25,16 +25,16 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 
 
     // cover image
-    req.body.coverImage = `${req.body.name}-cover.jpeg`
-    await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`public/img/${req.body.coverImage}`)
+    req.body.coverImage = `${req.body.name}-${Math.random()}-cover.jpeg`
+    await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`./Public/img/${req.body.coverImage}`)
 
     // images
     req.body.Images = []
     req.files.images &&
         console.log(req.files, req.file);
     await Promise.all(req.files.images.map(async (el, i) => {
-        const fileName = `${req.body.name}-${i}.jpeg`
-        await sharp(el.buffer).toFormat('jpeg').toFile(`./public/img/${fileName}`)
+        const fileName = `${req.body.name}-${Math.random()}-${i}.jpeg`
+        await sharp(el.buffer).toFormat('jpeg').toFile(`./Public/img/${fileName}`)
         req.body.Images.push(fileName);
     }))
     console.log("exit");
@@ -54,8 +54,8 @@ exports.resizeToolImage = catchAsync(async (req, res, next) => {
 
     if (req.files.coverImage) {
 
-        req.body.coverImage = `toolCover-${Date.now()}.jpeg`
-        await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`public/Tools/${req.body.coverImage}`)
+        req.body.coverImage = `toolCover-${req.body.label}-${Date.now()}.jpeg`
+        await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`./Public/Tools/${req.body.coverImage}`)
         next()
         return
     }
@@ -106,7 +106,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         careInstructions,
         stock,
         brand,
-        madeIn,
+        gender,
     } = req.body;
     let c = JSON.parse(category);
     // adding into the category
@@ -129,7 +129,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         careInstructions,
         stock,
         brand,
-        madeIn,
+        gender,
     })
     if (!product) {
         return next(new appError("Product not created plese try again", 500))
@@ -417,13 +417,14 @@ exports.confirmShipemntForOrder = catchAsync(async (req, res, next) => {
 
 
 exports.createCategory = catchAsync(async (req, res, next) => {
-    const { label, shortDescription, name } = req.body;
+    const { label, shortDescription, name, gender } = req.body;
 
     const category = await Tool.create({
         name,
         label,
         coverImage: req.body.coverImage,
-        shortDescription
+        shortDescription,
+        gender
     })
 
 

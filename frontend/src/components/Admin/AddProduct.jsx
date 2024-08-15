@@ -5,10 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
 import { getAllCateogyNames } from "../../redux/slices/productSlice";
 import ProductSearch from "./SearchProduct";
+import DataTable from "./DataTable";
 
 const CreateProductForm = () => {
   const dispatch = useDispatch();
   const { categoryName } = useSelector((state) => state.product);
+  console.log(categoryName);
+
   const [product, setProduct] = useState({
     name: "",
     price: 1000,
@@ -24,7 +27,7 @@ const CreateProductForm = () => {
     category: [],
     colorCategory: "",
     careInstructions: "",
-    madeIn: "India",
+    gender: "",
     stock: 20,
   });
 
@@ -75,7 +78,7 @@ const CreateProductForm = () => {
           category: [],
           colorCategory: "",
           careInstructions: p.careInstructions,
-          madeIn: "India",
+          gender: p.gender,
           stock: 20,
         });
       }
@@ -92,6 +95,8 @@ const CreateProductForm = () => {
   };
 
   const handleCategoryChanges = (item) => {
+    console.log("called", item);
+
     let category = product.category.includes(item)
       ? product.category.filter((el) => el != item)
       : [...product.category, item];
@@ -142,6 +147,13 @@ const CreateProductForm = () => {
 
     try {
       const fd = new FormData();
+      if (product?.name?.length < 5) {
+        dispatch(
+          error({ message: "Product name must be at least of 5 character" })
+        );
+        return;
+      }
+
       for (const key in product) {
         if (key == "images") {
           product.images.map((el) => {
@@ -465,54 +477,38 @@ const CreateProductForm = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="category"
-                className="block text-sm font-medium text-gray-700"
-                placeholder="Pant , Track pant , jeans .. etc"
-              >
-                Add Into Category
-              </label>
-              <div className="flex flex-col">
-                {categoryName.map((category) => (
-                  <div className="flex  items-center" key={category.name}>
-                    <input
-                      type="checkbox"
-                      key={category._id}
-                      value={category.label}
-                      onChange={() => handleCategoryChanges(category._id)}
-                    />
-                    {category.label}
-                    <span className="ml-3 font-bold">({category.name})</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="colorCategory"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Color Category
-              </label>
-              <select
-                id="colorCategory"
-                name="colorCategory"
-                value={product.colorCategory}
-                onChange={handleInputChange}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select a color category</option>
-                {colorCategoryOptions.map((color) => (
-                  <option key={color} value={color}>
-                    {color}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="my-5">
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-700"
+              placeholder="Pant , Track pant , jeans .. etc"
+            >
+              Add Into Category
+            </label>
+            <DataTable data={categoryName} additon={handleCategoryChanges} />
           </div>
-
+          <div>
+            <label
+              htmlFor="colorCategory"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Color Category
+            </label>
+            <select
+              id="colorCategory"
+              name="colorCategory"
+              value={product.colorCategory}
+              onChange={handleInputChange}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="">Select a color category</option>
+              {colorCategoryOptions.map((color) => (
+                <option key={color} value={color}>
+                  {color}
+                </option>
+              ))}
+            </select>
+          </div>
           <div>
             <label
               htmlFor="careInstructions"
@@ -530,47 +526,44 @@ const CreateProductForm = () => {
             ></textarea>
           </div>
 
-          <div>
-            <label
-              htmlFor="madeIn"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Made In
-            </label>
-            <input
-              type="text"
-              id="madeIn"
-              name="madeIn"
-              value={product.madeIn}
-              onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="stock"
-              className="block text-sm font-medium text-gray-700"
-            >
-              stock
-            </label>
-            <input
-              type="text"
-              id="stock"
-              name="stock"
-              value={product.stock}
-              onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="madeIn"
+                className="block text-sm font-medium text-gray-700"
+              >
+                For Gender
+              </label>
+              <input
+                type="text"
+                id="gender"
+                name="gender"
+                value={product.gender}
+                onChange={handleInputChange}
+                placeholder="male or female"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="stock"
+                className="block text-sm font-medium text-gray-700"
+              >
+                stock
+              </label>
+              <input
+                type="text"
+                id="stock"
+                name="stock"
+                value={product.stock}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
           </div>
 
           <div className="pt-5">
             <div className="flex justify-end">
-              <button
-                type="button"
-                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Cancel
-              </button>
               <button
                 type="submit"
                 className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

@@ -58,12 +58,12 @@ const LuxuryProductCard = ({ product, index }) => {
       </div>
 
       <div className="mt-6 text-center">
-        <h3 className="  text-gray-800 mb-2">{product.name}</h3>
+        <h3 className="  text-gray-800 mb-2 lg:font-bold">{product.name}</h3>
 
         <div className="flex flex-col space-y-1">
           <button className=" flex justify-center hover:scale-105 items-center px-5 py-3  border border-1 border-indigo-200 rounded-lg">
             Add to
-            <FaShoppingCart />
+            <FaShoppingCart className="mx-2" />
           </button>
         </div>
       </div>
@@ -95,6 +95,7 @@ export default function AllProductList() {
     } else {
       getAllProductDetails();
     }
+    window.scrollTo(0, 0); // Scroll to top when component mounts
   }, []);
 
   return (

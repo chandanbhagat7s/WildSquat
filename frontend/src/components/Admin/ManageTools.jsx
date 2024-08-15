@@ -19,6 +19,7 @@ export default function ManageTools() {
     category: [],
     posters: [],
     cards: [],
+    multiple: [],
   });
   async function getAllTools() {
     try {
@@ -28,7 +29,8 @@ export default function ManageTools() {
         category = [],
         posters = [],
         cards = [],
-        custom = [];
+        custom = [],
+        multiple = [];
 
       data.map((el) => {
         if (el.name == "SLIDER") {
@@ -39,6 +41,8 @@ export default function ManageTools() {
           cards.push(el);
         } else if (el.name == "POSTER") {
           posters.push(el);
+        } else if (el.name == "X-MULTIPLE") {
+          multiple.push(el);
         } else {
           custom.push(el);
         }
@@ -49,6 +53,7 @@ export default function ManageTools() {
         category: [...category],
         posters: [...posters],
         cards: [...cards],
+        multiple: [...multiple],
         custom: [...custom],
       });
     } catch (e) {

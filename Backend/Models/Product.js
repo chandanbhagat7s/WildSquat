@@ -70,11 +70,6 @@ const productSchema = new mongoose.Schema({
         required: true,
 
     },
-    madeIn: {
-        type: String,
-        required: true,
-
-    },
     stock: {
         type: Number,
         required: true,
@@ -120,11 +115,12 @@ const productSchema = new mongoose.Schema({
     offer: {
         type: Object,
     },
-    // isCombo: {
-    //     type: Boolean,
-    //     required: [true, "Product is combo or not"]
-    // },
-    viewCount: { type: Number, default: 0 }
+    gender: {
+        type: String,
+        required: [true, "Please tell this product is for which gender "]
+    },
+    viewCount: { type: Number, default: 0 },
+
 
 
 });

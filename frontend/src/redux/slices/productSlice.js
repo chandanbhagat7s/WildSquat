@@ -96,7 +96,8 @@ const initialState = {
     posters: [],
     categoryName: [],
     msg: "",
-    cards: []
+    cards: [],
+    multiple: []
 
 }
 
@@ -115,6 +116,7 @@ const productSlice = createSlice({
                 let poster = []
                 let card = []
                 let trend = []
+                let multiple = []
                 action?.payload?.allTools.map((el) => {
                     if (el.name == "CATEGORY") {
                         category.push(el)
@@ -127,6 +129,9 @@ const productSlice = createSlice({
                     } else if (el.name == "CARDS") {
                         card.push(el)
 
+                    } else if (el.name == "X-MULTIPLE") {
+                        multiple.push(el)
+
                     } else if (el.name == "Trending") {
                         trend.push(el)
 
@@ -138,6 +143,7 @@ const productSlice = createSlice({
                 state.slider = slider;
                 state.cards = card;
                 state.trending = trend;
+                state.multiple = multiple;
             }
 
         }).addCase(getAllCateogyNames.fulfilled, (state, action) => {

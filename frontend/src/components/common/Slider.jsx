@@ -47,7 +47,7 @@ export function Slider() {
               />
               <div className="absolute inset-0 bg-black bg-opacity-30" />
 
-              <div className="absolute  bottom-0 flex flex-col justify-center items-center text-white p-4 text-center">
+              <div className="absolute  bottom-0 left-0  lg:translate-x-1/2 flex flex-col justify-center items-center text-white p-4 text-center">
                 <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">
                   {slider[currentIndex]?.label}
                 </h2>

@@ -17,32 +17,19 @@ const LuxuryProductShowcase = () => {
     >
       <div className="container mx-auto px-8">
         <motion.h2
-          className="text-7xl font-thin text-center mb-4"
+          className="text-5xl font-bold text-gray-800 mb-12 text-center"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <span className="text-gray-800">Curated Elegance</span>
+          What You
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+            Think Is Hear
+          </span>
         </motion.h2>
-        <motion.div
-          className="w-24 h-1 bg-gold-500 mx-auto mb-12"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        />
-        <motion.p
-          className="text-xl text-gray-600 font-light max-w-3xl text-center mb-24 mx-auto"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          Immerse yourself in our meticulously curated collection of exquisite
-          pieces, crafted to perfection and designed for the discerning
-          connoisseur.
-        </motion.p>
 
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
@@ -112,25 +99,11 @@ const LuxuryProductCard = ({ product, index }) => {
       </div>
 
       <div className="mt-6 text-center">
-        <h3 className="text-xl font-light text-gray-800 mb-2">
-          {product.label}
-        </h3>
-        <div className="flex justify-center items-center mb-3">
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} className="text-gold-500 w-4 h-4 mx-0.5" />
-          ))}
-        </div>
+        <h3 className=" font-bold text-gray-800 mb-2">{product.label}</h3>
+
         <p className="text-sm text-gray-500 mb-4 line-clamp-2">
           {product.shortDescription}
         </p>
-        <div className="flex justify-center items-center space-x-4">
-          <button className="text-gray-600 hover:text-gold-500 transition-colors duration-300">
-            <FaShoppingBag className="w-5 h-5" />
-          </button>
-          <button className="text-gray-600 hover:text-gold-500 transition-colors duration-300">
-            <FaRegHeart className="w-5 h-5" />
-          </button>
-        </div>
       </div>
     </motion.div>
   );

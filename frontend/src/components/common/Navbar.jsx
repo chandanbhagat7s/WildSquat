@@ -61,13 +61,15 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden sm:flex sm:space-x-10">
-              {["Home", "About", "variety"].map((item, i) => (
+              {["Home", "About", "Variety"].map((item, i) => (
                 <Link
                   key={item}
                   to={i == 1 ? "/about" : i == 0 ? "/" : "/categoryLists"}
-                  className={`text-gray-800 hover:text-indigo-600 inline-flex items-center px-1 pt-1 border-b-2 ${
-                    item === "Home" ? "border-indigo-500" : "border-transparent"
-                  } text-sm uppercase font-bold tracking-wider transition-colors duration-200`}
+                  className={`text-gray-800 hover:text-indigo-600 inline-flex items-center  ${
+                    item === "Home"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 scale-110 hover:text-white px-5 py-2 rounded-full text-white "
+                      : "bg-indigo-200 scale-90"
+                  }  text-sm uppercase font-bold  px-5 py-2 rounded-full text-black transition-colors duration-200`}
                 >
                   {item}
                 </Link>

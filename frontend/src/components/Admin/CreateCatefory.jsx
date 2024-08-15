@@ -11,6 +11,7 @@ const CreateCategory = () => {
   const [custom, setCustom] = useState("");
   const [image, setImage] = useState("");
   const [shortDescription, setShortDescription] = useState("");
+  const [gender, setGender] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleImageChange = (e) => {
@@ -28,6 +29,7 @@ const CreateCategory = () => {
       fd.append("name", custom ? custom : selectedValue);
       fd.append("label", label);
       fd.append("shortDescription", shortDescription);
+      fd.append("gender", gender);
       const data = await axios.post("/api/v1/admin/createCategory", fd);
       console.log(data);
       dispatch(success({ message: data.data.msg || "something went wrong" }));
@@ -73,10 +75,11 @@ const CreateCategory = () => {
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
           >
             <option value="">Select an option</option>
-            <option value="CATEGORY">CATEGORY</option>
-            <option value="POSTER">POSTER</option>
-            <option value="CARDS">CARDS</option>
             <option value="SLIDER">SLIDER</option>
+            <option value="CATEGORY">CATEGORY</option>
+            <option value="CARDS">CARDS</option>
+            <option value="POSTER">POSTER</option>
+            <option value="X-MULTIPLE">X-MULTIPLE</option>
             <option value="custom">Custom </option>
           </select>
           <p className="mt-2 text-sm text-gray-500">
@@ -165,6 +168,29 @@ const CreateCategory = () => {
               placeholder="Enter label (by what name you want to identify it)"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label
+            htmlFor="gender"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Gender
+          </label>
+          <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FiType className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              name="gender"
+              id="gender"
+              className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+              placeholder="male or female"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
             />
           </div>
         </div>

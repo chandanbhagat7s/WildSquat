@@ -188,7 +188,7 @@ const ProductOverview = () => {
   }, [id]);
 
   return (
-    <div className="container mx-auto px-4 pt-5 pb-8 mt-10">
+    <div className="container mx-auto px-4 mt-5 pb-8 ">
       <div className="flex flex-col md:flex-row -mx-4">
         {loading ? (
           <>
@@ -213,31 +213,33 @@ const ProductOverview = () => {
             )}
             {/* Left side - Image gallery */}
             <div className="md:w-2/5 px-4">
-              <div className="sticky top-0 space-y-2 ">
-                <div className="mb-1 flex flex-col relative">
-                  <div className="image-container">
-                    <img
-                      src={images[selectedImage]}
-                      alt={`Track Pant - Image ${selectedImage + 1}`}
-                      className="h-96 mx-auto rounded-lg main-image"
-                    />
-                    <div className="enlarged-view"></div>
+              <div className="sticky top-0 flex flex-col space-y-3">
+                <div className="flex justify-between">
+                  <div className="flex flex-col space-y-10 h-96 overflow-y-auto">
+                    {images.map((img, index) => (
+                      <img
+                        key={index}
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        className={`w-20 h-20 object-cover rounded-md cursor-pointer ${
+                          selectedImage === index
+                            ? "border-2 border-blue-500"
+                            : ""
+                        }`}
+                        onClick={() => setSelectedImage(index)}
+                      />
+                    ))}
                   </div>
-                </div>
-                <div className="flex space-x-2 overflow-x-auto">
-                  {images.map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`Thumbnail ${index + 1}`}
-                      className={`w-20 h-20 object-cover rounded-md cursor-pointer ${
-                        selectedImage === index
-                          ? "border-2 border-blue-500"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedImage(index)}
-                    />
-                  ))}
+                  <div className="mb-1 flex flex-col relative">
+                    <div className="image-container">
+                      <img
+                        src={images[selectedImage]}
+                        alt={`Track Pant - Image ${selectedImage + 1}`}
+                        className="h-96 mx-auto rounded-lg main-image"
+                      />
+                      <div className="enlarged-view"></div>
+                    </div>
+                  </div>
                 </div>
                 {/* Action Buttons */}
                 <div className="flex space-x-4 ">
