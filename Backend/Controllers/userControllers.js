@@ -5,7 +5,7 @@ exports.getCartHeartOrders = catchAsync(async (req, res, next) => {
 
     const product = await User.findById(req.user._id).populate({
         path: 'cart heart Ordred',
-        select: "name price shortDescription",
+        select: "name price coverImage",
 
     })
     console.log("product is ", product);

@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaSearch, FaHeart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import url from "../../assets/url";
 
 const ProductGrid = ({ products, addToCart }) => (
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
     <AnimatePresence>
       {products.map((product) => (
-        <ProductCard
+        <LuxuryProductCard
           key={product._id}
           product={product}
           addToCart={addToCart}
@@ -19,77 +19,62 @@ const ProductGrid = ({ products, addToCart }) => (
   </div>
 );
 
-const ProductCard = ({ product, addToCart }) => {
+const LuxuryProductCard = ({ product, addToCart }) => {
   const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ scale: 1.05 }}
-      className="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="group"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="relative">
-        <img
-          src={`${url}img/${product.coverImage}`}
-          alt={product.name}
-          className="w-full h-full object-cover transition-all duration-500"
-          style={{ transform: isHovered ? "scale(1.1)" : "scale(1)" }}
-        />
-        <div
-          className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition-opacity duration-300"
-          style={{ opacity: isHovered ? 1 : 0 }}
+      <div
+        className="relative overflow-hidden cursor-pointer shadow-lg rounded-lg"
+        onClick={() => navigate(`/productDetails/${product._id}`)}
+      >
+        <motion.div
+          className="aspect-[3/4] overflow-hidden"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.4 }}
         >
-          <button
-            onClick={() => navigate(`/productDetails/${product._id}`)}
-            className="bg-white text-gray-800 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300"
-          >
-            View Details
-          </button>
-        </div>
+          <img
+            src={`${url}img/${product.coverImage}`}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </motion.div>
       </div>
-      <div className="p-6">
-        <h3 className="text-sm lg:text-lg text-center font-bold text-gray-800 mb-2">
-          {product.name}
-        </h3>
-        <div className="flex justify-center items-center mb-4">
-          Rs.
-          <span className="text-2xl font-extrabold text-indigo-600">
-            {product.price}
-          </span>
-          {/* <div className="flex items-center">
-            <FaStar className="text-yellow-400 mr-1" />
-            <span className="text-sm font-medium text-gray-600">
-              4.5 (120 reviews)
-            </span>
-          </div> */}
+
+      <div className="mt-6 text-center">
+        <h3 className=" text-gray-800 mb-2 font-bold">{product.name}</h3>
+        <p className="text-gray-600 mb-4">Rs.{product.price}</p>
+
+        <div className="flex justify-center space-x-4">
+          <motion.button
+            className="flex items-center px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 w-2/3"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Add to
+            <FaShoppingCart className="ml-2" />
+          </motion.button>
         </div>
-        <button
-          onClick={() => addToCart(product)}
-          className="w-full   text-indigo-500 py-3 rounded-lg font-semibold hover:bg-indigo-700 hover:text-white transition-colors duration-300 flex items-center justify-center border"
-        >
-          <FaShoppingCart className="mr-2" /> Add to Cart
-        </button>
       </div>
     </motion.div>
   );
 };
 
 const FilterSidebar = ({ maxPrice, setMaxPrice, sortBy, setSortBy }) => (
-  <div className="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-    <h2 className="text-2xl font-bold text-gray-800 mb-6">Filters</h2>
+  <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-8">
+    <h2 className="text-2xl font-bold text-gray-800 mb-6">Refine Selection</h2>
 
-    <div>
+    <div className="mb-8">
       <h3 className="text-lg font-semibold text-gray-700 mb-4">Sort By</h3>
       <select
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value)}
-        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300"
       >
         <option value="priceLowToHigh">Price: Low to High</option>
         <option value="priceHighToLow">Price: High to Low</option>
@@ -103,7 +88,6 @@ const ClickProducts = () => {
   const [maxPrice, setMaxPrice] = useState(5000);
   const [sortBy, setSortBy] = useState("popular");
   const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("");
   const { toolId } = useParams();
 
   useEffect(() => {
@@ -126,10 +110,11 @@ const ClickProducts = () => {
     .filter((product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((product) => (category ? product.category === category : true))
     .sort((a, b) => {
       if (sortBy === "priceLowToHigh") return a.price - b.price;
       if (sortBy === "priceHighToLow") return b.price - a.price;
+      if (sortBy === "newest")
+        return new Date(b.createdAt) - new Date(a.createdAt);
       return 0; // Default to 'popular'
     });
 
@@ -138,33 +123,40 @@ const ClickProducts = () => {
     console.log("Added to cart:", product);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
+
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
       <motion.div
-        className="text-center pt-5 pb-10"
+        className="text-center mb-16"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <motion.h2
-          className="text-5xl font-bold text-gray-800 mb-8"
+        <motion.h1
+          className="text-5xl font-extrabold text-gray-900 mb-4"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
         >
-          Pick Up{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
-            What You Love
-          </span>{" "}
-          <span className="animate-pulse">💖</span>
-        </motion.h2>
-        <p className="mt-3 text-2xl text-indigo-800 font-semibold">
-          Discover performance-enhancing equipment for every athlete
-        </p>
+          Discover Your Perfect Gear
+        </motion.h1>
+        <motion.p
+          className="text-xl text-gray-600 max-w-3xl mx-auto"
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          Elevate your performance with our curated selection of premium
+          athletic equipment.
+        </motion.p>
       </motion.div>
+
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-8">
-          <aside className="md:w-1/4">
+        <div className="flex flex-col lg:flex-row gap-12">
+          <aside className="lg:w-1/4">
             <FilterSidebar
               maxPrice={maxPrice}
               setMaxPrice={setMaxPrice}
@@ -172,8 +164,19 @@ const ClickProducts = () => {
               setSortBy={setSortBy}
             />
           </aside>
-          <main className="md:w-3/4">
-            <div className="mb-8 flex items-center"></div>
+          <main className="lg:w-3/4">
+            <div className="mb-8">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full py-3 px-4 pl-12 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300"
+                />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
             <ProductGrid products={filteredProducts} addToCart={addToCart} />
           </main>
         </div>

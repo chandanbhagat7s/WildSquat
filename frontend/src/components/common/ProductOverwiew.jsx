@@ -1,4 +1,6 @@
 import axios from "axios";
+
+import { FaShoppingCart, FaCreditCard, FaChevronDown } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import {
   FaBoxOpen,
@@ -32,7 +34,33 @@ const ProductOverview = () => {
   const auth = useSelector((state) => state.auth);
   const nevigate = useNavigate();
 
+  const [openSection, setOpenSection] = useState("features");
+
+  const toggleSection = (section) => {
+    setOpenSection(openSection === section ? null : section);
+  };
+
   // const [loading2, setLoading2] = useState(false);
+
+  const AccordionItem = ({ title, icon, children, isOpen, toggle }) => (
+    <div className="mb-4 bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out ">
+      <button
+        className="w-full flex items-center justify-between py-2 px-3 bg-gradient-to-r from-indigo-800 to-purple-600 text-white"
+        onClick={toggle}
+      >
+        <div className="flex items-center">
+          {icon}
+          <span className="ml-3 font-semibold text-lg">{title}</span>
+        </div>
+        <FaChevronDown
+          className={`transition-transform duration-300 ${
+            isOpen ? "transform rotate-180" : ""
+          }`}
+        />
+      </button>
+      {isOpen && <div className="p-5 bg-white">{children}</div>}
+    </div>
+  );
 
   const handleStatus = async (data) => {
     try {
@@ -138,25 +166,6 @@ const ProductOverview = () => {
     }
   }
 
-  async function removeFromCart() {
-    try {
-      const res = await axios.get(
-        `/api/v1/product/removeFromCart/${product._id}`
-      );
-
-      if (res.data?.status == "success") {
-        dispatch(info({ message: "product removed from cart" }));
-      }
-    } catch (e) {
-      dispatch(
-        error({
-          message:
-            e?.response?.data?.msg ||
-            "product not added to cart, please try again",
-        })
-      );
-    }
-  }
   function handleImageHover(e) {
     const container = e.currentTarget;
     const img = container.querySelector(".main-image");
@@ -187,19 +196,16 @@ const ProductOverview = () => {
     }, 3000);
   }, [id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="container mx-auto px-4 mt-5 pb-8 ">
+    <div className="container mx-auto px-4 mt-10 pb-8 ">
+      {loading && <LoadingSpinner />}
       <div className="flex flex-col md:flex-row -mx-4">
         {loading ? (
-          <>
-            <div className="min-h-screen flex justify-center items-center">
-              <LoadingSpinner
-                imageUrl={
-                  "https://img.freepik.com/free-vector/bird-colorful-logo-gradient-vector_343694-1365.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1721865600&semt=sph"
-                }
-              />
-            </div>
-          </>
+          <>{/* <LoadingSpinner /> */}</>
         ) : (
           <>
             {showPopup && (
@@ -214,14 +220,14 @@ const ProductOverview = () => {
             {/* Left side - Image gallery */}
             <div className="md:w-2/5 px-4">
               <div className="sticky top-0 flex flex-col space-y-3">
-                <div className="flex justify-between">
+                <div className="flex justify-between md:justify-around lg:justify-around">
                   <div className="flex flex-col space-y-10 h-96 overflow-y-auto">
                     {images.map((img, index) => (
                       <img
                         key={index}
                         src={img}
                         alt={`Thumbnail ${index + 1}`}
-                        className={`w-20 h-20 object-cover rounded-md cursor-pointer ${
+                        className={`w-20 h-20 object-cover rounded-md cursor-pointer object-top ${
                           selectedImage === index
                             ? "border-2 border-blue-500"
                             : ""
@@ -242,18 +248,28 @@ const ProductOverview = () => {
                   </div>
                 </div>
                 {/* Action Buttons */}
-                <div className="flex space-x-4 ">
+                <div className="flex space-x-4 mt-6">
                   <button
-                    className="flex-1   text-indigo-600 shadow-lg  py-3 rounded-md ring-2 ring-indigo-500 ring-inset hover:bg-indigo-700 hover:text-indigo-100 hover:font-bold   hover:scale-105 hover:ring-blue-300"
+                    className="flex-1 bg-white text-indigo-600 font-semibold py-3 px-6 rounded-lg shadow-md 
+                   border-2 border-indigo-600 transition duration-300 ease-in-out
+                   hover:bg-indigo-600 hover:text-white hover:scale-105"
                     onClick={ATC}
                   >
-                    ADD TO CART
+                    <span className="flex items-center justify-center">
+                      <FaShoppingCart className="mr-2" />
+                      Add to Cart
+                    </span>
                   </button>
                   <button
-                    className="flex-1   text-indigo-800 shadow-lg py-3 rounded-md ring-2 ring-indigo-500 ring-inset hover:bg-indigo-700 hover:text-indigo-100 hover:font-bold   hover:scale-105 hover:ring-blue-300"
+                    className="flex-1 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md 
+                   transition duration-300 ease-in-out
+                   hover:bg-indigo-700 hover:scale-105"
                     onClick={() => setShowPopup(true)}
                   >
-                    BUY NOW
+                    <span className="flex items-center justify-center">
+                      <FaCreditCard className="mr-2" />
+                      Buy Now
+                    </span>
                   </button>
                 </div>
               </div>
@@ -261,33 +277,33 @@ const ProductOverview = () => {
 
             {/* Right side - Product information */}
             <div className="md:w-3/5 px-6 mt-8 md:mt-0 max-h-screen overflow-y-scroll">
-              <h1 className="text-3xl font-bold mb-3 text-gray-900">
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-indigo-900 ">
                 {product.name}
               </h1>
+              <div className="mr-10 border-gray-200 border-2"></div>
               <p className="text-lg text-gray-600 mb-4">
                 {product.shortDescription}
               </p>
               <div className="flex items-center mb-6">
                 <span className="text-3xl font-bold text-indigo-800">
-                  ₹{product.price}
+                  ₹ {product.price}
                 </span>
               </div>
 
               {/* Size Selection */}
               <div className="mb-6">
-                <h2 className="font-semibold mb-3 text-gray-800">Size</h2>
+                <h2 className="font-bold mb-3 text-gray-800">
+                  {" "}
+                  Available Size's
+                </h2>
                 <div className="flex space-x-3">
                   {product.sizes.map((size) => (
                     <button
                       key={size.size}
-                      className="px-4 py-2 border rounded-md hover:border-indigo-500 transition duration-300"
+                      className="px-4 py-2 border border-black rounded-md hover:border-indigo-800 transition duration-300"
                     >
                       <span className="text-lg font-semibold text-indigo-800">
                         {size.size}
-                      </span>
-                      <span className="ml-2 text-gray-600">Rs.</span>
-                      <span className="text-lg text-indigo-700 font-bold">
-                        {size.price}
                       </span>
                     </button>
                   ))}
@@ -296,7 +312,7 @@ const ProductOverview = () => {
 
               {/* Color Selection */}
               <div className="mb-6">
-                <h2 className="font-semibold mb-3 text-gray-800">Color</h2>
+                <h2 className="font-bold mb-3 text-gray-800">Color</h2>
                 <div className="flex space-x-3">
                   {/* {product.colors.map((color, index) => (
                     <button
@@ -324,99 +340,74 @@ const ProductOverview = () => {
                 </div>
               </div>
 
-              {/* Features */}
-              <div className="mb-8">
-                <h2 className="font-semibold mb-3 text-gray-800">Features</h2>
-                <ul className="list-disc list-inside text-gray-700">
-                  {product.features.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
-              </div>
+              <div className="max-w-4xl mx-auto mt-10 px-4">
+                <AccordionItem
+                  title="Features"
+                  icon={<FaBoxOpen className="text-2xl" />}
+                  isOpen={openSection === "features"}
+                  toggle={() => toggleSection("features")}
+                >
+                  <ul className="list-disc list-inside text-gray-700 space-y-2">
+                    {product.features.map((feature, index) => (
+                      <li key={index}>{feature}</li>
+                    ))}
+                  </ul>
+                </AccordionItem>
 
-              {/* Additional Information */}
-              <div className="bg-white shadow-md rounded-lg p-8 mt-10">
-                <h2 className="text-2xl font-semibold mb-6 text-gray-900">
-                  Additional Information
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Shipping Details */}
-                  <div className="flex items-start">
-                    <FaShippingFast className="text-2xl text-indigo-600 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                        Shipping
-                      </h3>
-                      <p className="text-gray-700">{product.shippingDetails}</p>
-                    </div>
-                  </div>
+                <AccordionItem
+                  title="Shipping"
+                  icon={<FaShippingFast className="text-2xl" />}
+                  isOpen={openSection === "shipping"}
+                  toggle={() => toggleSection("shipping")}
+                >
+                  <p className="text-gray-700">{product.shippingDetails}</p>
+                </AccordionItem>
 
-                  {/* Return Policy */}
-                  <div className="flex items-start">
-                    <FaExchangeAlt className="text-2xl text-indigo-600 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                        Returns
-                      </h3>
-                      <p className="text-gray-700">{product.returnDetails}</p>
-                    </div>
-                  </div>
+                <AccordionItem
+                  title="Returns"
+                  icon={<FaExchangeAlt className="text-2xl" />}
+                  isOpen={openSection === "returns"}
+                  toggle={() => toggleSection("returns")}
+                >
+                  <p className="text-gray-700">{product.returnDetails}</p>
+                </AccordionItem>
 
-                  {/* Made In */}
-                  <div className="flex items-start">
-                    <FaGlobeAsia className="text-2xl text-indigo-600 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                        Origin
-                      </h3>
-                      <p className="text-gray-700">Made in {product.madeIn}</p>
-                    </div>
-                  </div>
+                <AccordionItem
+                  title="Origin"
+                  icon={<FaGlobeAsia className="text-2xl" />}
+                  isOpen={openSection === "origin"}
+                  toggle={() => toggleSection("origin")}
+                >
+                  <p className="text-gray-700">Made in {product.madeIn}</p>
+                </AccordionItem>
 
-                  {/* Stock */}
-                  <div className="flex items-start">
-                    <FaBoxOpen className="text-2xl text-indigo-600 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                        Availability
-                      </h3>
-                      <p className="text-gray-700">{product.stock} in stock</p>
-                    </div>
-                  </div>
-                </div>
+                <AccordionItem
+                  title="Availability"
+                  icon={<FaBoxOpen className="text-2xl" />}
+                  isOpen={openSection === "availability"}
+                  toggle={() => toggleSection("availability")}
+                >
+                  <p className="text-gray-700">{product.stock} in stock</p>
+                </AccordionItem>
 
-                {/* Care Instructions */}
-                <div className="mt-10">
-                  <div className="flex items-center mb-4">
-                    <MdLocalLaundryService className="text-2xl text-indigo-600 mr-4" />
-                    <h3 className="font-semibold text-lg text-gray-800">
-                      Care Instructions
-                    </h3>
-                  </div>
+                <AccordionItem
+                  title="Care Instructions"
+                  icon={<MdLocalLaundryService className="text-2xl" />}
+                  isOpen={openSection === "care"}
+                  toggle={() => toggleSection("care")}
+                >
                   <p className="text-gray-700">{product.careInstructions}</p>
-                </div>
+                </AccordionItem>
 
-                {/* Long Description */}
-                <div className="mt-10">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    Description
-                  </h3>
-                  <p className="text-lg text-gray-600">
-                    {product.longDescription}
-                  </p>
-                </div>
-
-                {/* Reviews */}
-                <div className="mt-10">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    Reviews for{" "}
-                    <span className="text-indigo-700">{product.name}</span>
-                  </h3>
-                  <ReviewComponent pid={product._id} />
-                </div>
+                <AccordionItem
+                  title="Description"
+                  icon={<FaBoxOpen className="text-2xl" />}
+                  isOpen={openSection === "description"}
+                  toggle={() => toggleSection("description")}
+                >
+                  <p className="text-gray-700">{product.longDescription}</p>
+                </AccordionItem>
               </div>
-
-              <div className="pb-32"></div>
             </div>
           </>
         )}

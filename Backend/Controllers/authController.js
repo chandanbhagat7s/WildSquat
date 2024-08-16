@@ -18,9 +18,9 @@ const createTokenSendRes = (id, res, statusCode, data) => {
         ),
 
 
-        secure: true,
+        // secure: true,
         httpOnly: true,
-        sameSite: "None",
+        // sameSite: "None",
         path: "/",
     };
     if (process.env.NODE_ENV == 'production') {

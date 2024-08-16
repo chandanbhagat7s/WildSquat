@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { BiCategory } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaTag } from "react-icons/fa";
+import { FaEye, FaTag } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import url from "../../assets/url";
 import { FaRightLong } from "react-icons/fa6";
@@ -65,8 +66,8 @@ const MultipleListing = () => {
       </motion.h2>
 
       <div className="w-full max-w-7xl overflow-x-auto pb-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {displayedCards.map((card) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
+          {displayedCards.slice(0, 4).map((card) => (
             <Card
               key={card._id}
               id={card._id}
@@ -87,12 +88,13 @@ const MultipleListing = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300 animate-bounce"
+          className="inline-flex items-center space-x-2 px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300 animate-bounce"
           onClick={() =>
             navigate("/categoryLists", { state: { displayOther: "MULTIPLE" } })
           }
         >
-          View All variety{" "}
+          <FaEye className="mx-2" /> Collections
+          <RiCheckboxMultipleBlankLine className="mx-2" />{" "}
           <FiArrowRight className="ml-3 animate-ping" size={24} />
         </motion.button>
       </motion.div>

@@ -15,6 +15,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         // allowing the access to the protected route if we have jwt cookie
         token = req.cookies.jwt;
     }
+    console.log("token is ", token);
 
 
     if (!token) {

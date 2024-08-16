@@ -1,22 +1,37 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FiShoppingCart } from "react-icons/fi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { error, info, warning } from "../redux/slices/errorSlice";
-import url from "../assets/url";
+import { error, info, warning } from "../../redux/slices/errorSlice";
+import url from "../../assets/url";
 import { FaArrowTrendUp } from "react-icons/fa6";
+import { addToCart } from "../../redux/slices/productSlice";
 
 const ProductListing = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [displayedProducts, setDisplayedProducts] = useState([]);
-  const [step, setStep] = useState({
-    start: 0,
-    end: 4,
-  });
+
+  const { msg } = useSelector((state) => state.product);
+
+  async function ATC(id) {
+    try {
+      console.log("called with id", id);
+
+      const res = await dispatch(addToCart(id));
+      if (addToCart.fulfilled.match(res)) {
+        dispatch(info({ message: "Product added to cart" }));
+      } else {
+        dispatch(error({ message: msg || "Failed to add" }));
+      }
+    } catch (e) {
+      dispatch(
+        error({ message: "Product not added to cart, please try again" })
+      );
+    }
+  }
 
   // Fetch all product details
   async function getAllProductDetails() {
@@ -30,86 +45,21 @@ const ProductListing = () => {
     }
   }
 
-  // Add product to cart
-  async function addToCart(id, e) {
-    e.stopPropagation();
-    try {
-      const res = await axios.get(`/api/v1/product/addToCart/${id}`);
-      if (res.data?.status === "success") {
-        dispatch(info({ message: "Product added to cart" }));
-      }
-    } catch (e) {
-      dispatch(
-        warning({
-          message:
-            e?.response?.data?.msg ||
-            "Product not added to cart, please try again",
-        })
-      );
-    }
-  }
-
-  // Add product to favorites
-  async function addToHeart(id, e) {
-    e.stopPropagation();
-    try {
-      const res = await axios.get(`/api/v1/product/addToHeart/${id}`);
-      if (res.data?.status === "success") {
-        dispatch(info({ message: "Product added to favorites" }));
-      }
-    } catch (e) {
-      dispatch(
-        warning({
-          message:
-            e?.response?.data?.msg ||
-            "Product not added to favorites, please try again",
-        })
-      );
-    }
-  }
-
-  // Update the displayed products every 6 seconds
-  let updateDisplayedProducts = () => {
-    const totalProducts = products.length;
-    if (totalProducts === 0) return;
-
-    const newDisplayedProducts = products.slice(step.start, step.end);
-
-    setDisplayedProducts(newDisplayedProducts);
-
-    // Update the step, resetting if we reach the end of the product list
-    const newStart = step.end;
-    const newEnd = step.end + 4 > totalProducts ? 4 : step.end + 4;
-    setStep({
-      start: newStart >= totalProducts ? 0 : newStart,
-      end: newEnd,
-    });
-  };
-
   useEffect(() => {
     getAllProductDetails();
   }, []);
-
-  // Set up an interval to update the displayed products every 6 seconds
-  // useEffect(() => {
-  //   let clear = setInterval(() => {
-  //     updateDisplayedProducts();
-  //   }, 6000);
-
-  //   return () => clearInterval(clear); // Cleanup on unmount
-  // }, [products, step]);
 
   const ProductCard = ({ product }) => (
     <motion.div
       key={product._id}
       className=" bg-white rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-      onClick={() => navigate(`/productDetails/${product._id}`)}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       <div className="relative">
         <motion.div
+          onClick={() => navigate(`/productDetails/${product._id}`)}
           className="w-full overflow-hidden"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.4 }}
@@ -125,14 +75,14 @@ const ProductListing = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             className="p-3 bg-white rounded-full shadow-md text-indigo-600 hover:bg-indigo-100 transition-colors duration-200"
-            onClick={(e) => addToCart(product._id, e)}
+            onClick={() => ATC(product._id)}
           >
             <FiShoppingCart size={20} />
           </motion.button>
         </div>
       </div>
       <div className="p-6">
-        <h3 className="text-sm font-semibold text-gray-800 mb-2">
+        <h3 className="text-sm font-bold lg:font-semibold  text-gray-800 mb-2">
           {product.name}
         </h3>
         <p className="text-2xl font-bold text-indigo-600">₹{product.price}</p>

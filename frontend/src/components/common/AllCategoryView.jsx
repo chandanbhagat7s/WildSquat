@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
 import { useSelector } from "react-redux";
 import { FiHeart } from "react-icons/fi";
+import LoadingSpinner from "./Spinner";
 
 const LuxuryProductCard = ({ product, index }) => {
   const navigate = useNavigate();
@@ -120,21 +121,25 @@ export default function AllCategoryView() {
           Discover performance-enhancing equipment for every athlete
         </p>
       </motion.div>
-      <motion.div
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.8 }}
-      >
-        {display?.length > 0 &&
-          display.map((product, index) => (
-            <LuxuryProductCard
-              key={product._id}
-              product={product}
-              index={index}
-            />
-          ))}
-      </motion.div>
+      {display ? (
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+        >
+          {display?.length > 0 &&
+            display.map((product, index) => (
+              <LuxuryProductCard
+                key={product._id}
+                product={product}
+                index={index}
+              />
+            ))}
+        </motion.div>
+      ) : (
+        <LoadingSpinner />
+      )}
     </>
   );
 }

@@ -32,15 +32,18 @@ export const addToHeart = createAsyncThunk("/product/add/cart", async (data) => 
 
 })
 
-export const removeFromCart = createAsyncThunk("/product/remove/cart", async (data) => {
+export const removeFromCart = createAsyncThunk("/product/remove/cart", async (data, { rejectWithValue }) => {
 
     try {
-        const res = await axios.get(`/api/v1/user/removeFromCart/${data._id}`);
+        const res = await axios.get(`/api/v1/user/removeFromCart/${data}`);
+
+        console.log(res);
 
         return res.data
 
     } catch (e) {
-        return e.response;
+        console.log(e);
+        return rejectWithValue(e?.response?.data?.msg || "Please check Your internet connection");
     }
 
 })
@@ -154,7 +157,11 @@ const productSlice = createSlice({
             console.log(action);
 
             state.msg = action.payload;
-        });
+        }).addCase(removeFromCart.rejected, (state, action) => {
+            console.log(action);
+
+            state.msg = action.payload;
+        })
 
 
 

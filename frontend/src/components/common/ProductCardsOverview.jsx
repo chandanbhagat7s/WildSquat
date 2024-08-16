@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaEye } from "react-icons/fa";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +46,7 @@ const ProductCardsOverview = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <motion.h2
         className="text-5xl font-bold text-gray-800 mb-12 text-center"
         initial={{ y: -50, opacity: 0 }}
@@ -84,10 +85,11 @@ const ProductCardsOverview = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300"
+          className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300 animate-bounce"
           // onClick={() => navigate("/products")}
         >
-          view all top products <FiArrowRight className="ml-3" size={24} />
+          <FaEye className="mx-2" /> All Top{" "}
+          <FiArrowRight className="ml-3" size={24} />
         </motion.button>
       </motion.div>
     </div>
@@ -126,6 +128,8 @@ const ProductSlide = ({ product }) => {
 
   async function ATC(id) {
     try {
+      console.log("called with id", id);
+
       const res = await dispatch(addToCart(id));
       if (addToCart.fulfilled.match(res)) {
         dispatch(info({ message: "Product added to cart" }));
@@ -237,7 +241,7 @@ const ProductList = ({ products, currentIndex, setCurrentIndex }) => {
             <img
               src={`${url}img/${product.coverImage}`}
               alt={product.name}
-              className="w-20 h-20 object-cover rounded-md shadow-md"
+              className="w-20 h-20 object-cover object-top rounded-md shadow-md"
             />
           </motion.div>
         ))}

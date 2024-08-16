@@ -14,45 +14,51 @@ import { error, info } from "../../redux/slices/errorSlice";
 import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { removeFromCart } from "../../redux/slices/productSlice";
+import { BiCart, BiCartAdd, BiCollection } from "react-icons/bi";
+import { RiOrderPlayFill } from "react-icons/ri";
 
 const ProfilePage = ({
-  user,
   cartProducts,
   favoriteProducts,
   orderProducts,
-  load,
-  setLoad,
+
+  getData,
 }) => {
   const [activeTab, setActiveTab] = useState("profile");
   const navigate = useNavigate();
   const { data } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const removeFromCart = async (pid) => {
+  const { msg } = useSelector((state) => state.product);
+  const nevigate = useNavigate();
+
+  async function RTC(id) {
     try {
-      const res = await axios.get(`/api/v1/product/removeFromCart/${pid}`);
-      if (res.data?.status === "success") {
-        setLoad(!load);
-        dispatch(info({ message: "Product removed from cart" }));
+      console.log("called with id", id);
+
+      const res = await dispatch(removeFromCart(id));
+      if (removeFromCart?.fulfilled?.match(res)) {
+        getData();
+        dispatch(info({ message: "Product removed to cart" }));
+      } else {
+        dispatch(error({ message: msg || "Failed to add" }));
       }
     } catch (e) {
       dispatch(
-        error({
-          message:
-            e?.response?.data?.msg || "Failed to remove product from cart",
-        })
+        error({ message: "Product not added to cart, please try again" })
       );
     }
-  };
+  }
 
   const TabButton = ({ label, icon, isActive, onClick }) => (
     <motion.button
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className={`flex items-center px-6 py-3 rounded-full transition duration-300 ${
+      className={`flex justify-center items-center px-6 py-3 rounded-full transition duration-300 ${
         isActive
           ? "bg-indigo-600 text-white shadow-lg"
-          : "bg-white text-gray-600 hover:bg-gray-100"
+          : "bg-white text-gray-600 hover:bg-gray-100 border border-black"
       }`}
       onClick={onClick}
     >
@@ -66,35 +72,25 @@ const ProfilePage = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col md:flex-row items-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300"
+      className="flex flex-row  items-center justify-center p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition duration-300 space-y-2"
     >
       <img
-        src={`${url}img/${product.name}-cover.jpeg`}
+        src={`${url}img/${product.coverImage}`}
         alt={product.name}
-        className="w-24 h-24 object-cover rounded-md mr-4"
+        className="w-24 h-full object-cover rounded-md mr-4"
       />
-      <div className="flex-grow">
-        <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-        <p className="text-indigo-600 font-medium">
-          ${product.price.toFixed(2)}
-        </p>
-      </div>
-      <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row  space-x-2">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() =>
-            navigate("/productDetails", { state: { id: product._id } })
-          }
-          className="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-200 transition duration-150"
-        >
-          <FaInfoCircle className="inline mr-2" /> More Info
-        </motion.button>
+      <div className="space-y-2">
+        <div className="flex-grow text-center space-y-2">
+          <h3 className="  font-bold text-gray-800">{product.name}</h3>
+          <p className="text-indigo-600 font-medium text-xl">
+            Rs. {product.price}
+          </p>
+        </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => onRemove(product._id)}
-          className="px-4 py-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition duration-150"
+          className="px-4 py-2   text-red-600 rounded-full hover:bg-red-200 transition duration-150"
         >
           <FaTrash className="inline mr-2" /> {removeLabel}
         </motion.button>
@@ -144,7 +140,7 @@ const ProfilePage = ({
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <div className="flex flex-wrap justify-center  space-x-4 my-10">
+      <div className=" grid grid-cols-2 lg:grid-cols-4 gap-2 my-10">
         <TabButton
           label="Profile"
           icon={<FaUser className="text-xl" />}
@@ -185,14 +181,30 @@ const ProfilePage = ({
               <h2 className="text-3xl font-bold mb-6 text-gray-800">
                 Your Cart
               </h2>
-              {cartProducts.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onRemove={removeFromCart}
-                  removeLabel="Remove"
-                />
-              ))}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+                {cartProducts?.length > 0 ? (
+                  cartProducts.map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      product={product}
+                      onRemove={RTC}
+                      removeLabel="Remove"
+                      onMoreInfo={() =>
+                        nevigate(`/productDetails/${product._id}`)
+                      }
+                    />
+                  ))
+                ) : (
+                  <p className="py-2 text-xl animate-pulse font-semibold col-span-4 flex ">
+                    No Product Found ,
+                    <span className="text-indigo-600 font-bold">
+                      {" "}
+                      Add Product To Your Cart
+                    </span>{" "}
+                    <BiCart className="text-3xl mx-2 animate-bounce" />
+                  </p>
+                )}
+              </div>
             </div>
           )}
           {activeTab === "favorites" && (
@@ -200,14 +212,25 @@ const ProfilePage = ({
               <h2 className="text-3xl font-bold mb-6 text-gray-800">
                 Your Favorites
               </h2>
-              {favoriteProducts.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onRemove={(id) => console.log("Remove from favorites:", id)}
-                  removeLabel="Remove"
-                />
-              ))}
+              {favoriteProducts?.length > 0 ? (
+                favoriteProducts.map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onRemove={(id) => console.log("Remove from favorites:", id)}
+                    removeLabel="Remove"
+                  />
+                ))
+              ) : (
+                <p className="py-2 text-xl animate-pulse font-semibold col-span-4 flex ">
+                  No Collection Found ,
+                  <span className="text-indigo-600 font-bold">
+                    {" "}
+                    Add Collection
+                  </span>{" "}
+                  <BiCollection className="text-3xl mx-2 animate-bounce" />
+                </p>
+              )}
             </div>
           )}
           {activeTab === "orders" && (
@@ -215,14 +238,25 @@ const ProfilePage = ({
               <h2 className="text-3xl font-bold mb-6 text-gray-800">
                 Your Orders
               </h2>
-              {orderProducts.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onRemove={(id) => console.log("Cancel order:", id)}
-                  removeLabel="Cancel Order"
-                />
-              ))}
+              {orderProducts.length > 0 ? (
+                orderProducts.map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onRemove={(id) => console.log("Cancel order:", id)}
+                    removeLabel="Cancel Order"
+                  />
+                ))
+              ) : (
+                <p className="py-2 text-xl animate-pulse font-semibold col-span-4 flex ">
+                  No Product Found and No Purchase History ,
+                  <span className="text-indigo-600 font-bold">
+                    {" "}
+                    Order Something
+                  </span>{" "}
+                  <RiOrderPlayFill className="text-3xl mx-2 animate-bounce" />
+                </p>
+              )}
             </div>
           )}
         </motion.div>

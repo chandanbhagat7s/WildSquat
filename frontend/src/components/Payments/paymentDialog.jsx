@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import url from "../../assets/url";
 
 const BuyNowPopup = ({ quantity, setQuantity, product, onClose, onPay }) => {
   const totalPrice = product.price * quantity;
@@ -18,7 +19,7 @@ const BuyNowPopup = ({ quantity, setQuantity, product, onClose, onPay }) => {
         </div>
         <div className="mb-4">
           <img
-            src={`http://127.0.0.1:4000/img/${product.name}-cover.jpeg`}
+            src={`${url}img/${product.coverImage}`}
             alt={product.name}
             className="mx-auto h-48 object-cover rounded-lg"
           />
