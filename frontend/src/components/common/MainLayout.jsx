@@ -8,7 +8,7 @@ export default function MainLayout({ children }) {
       <div>
         <Navbar />
       </div>
-      <div className="py-8"></div>
+      <div className="py-8 lg:py-14"></div>
       <div className="">{children}</div>
       <div className="pb-48"></div>
       <Footer />

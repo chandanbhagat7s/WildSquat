@@ -61,19 +61,22 @@ const SearchCategoryProduct = ({ setSelectedProduct }) => {
       </div>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto">
+        <div
+          className="absolute  mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto "
+          style={{ zIndex: 300000000 }}
+        >
           {loading ? (
             <div className="flex items-center justify-center p-4 text-blue-500">
               <FaSpinner className="animate-spin mr-2" />
               <span>Searching...</span>
             </div>
           ) : (
-            <ul className="py-1">
+            <ul className="" style={{ zIndex: 300000000 }}>
               {products.length > 0 ? (
                 products.map((product, i) => (
                   <li
                     key={i}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                    className="px-4 py-3 border-b-2   cursor-pointer text-sm text-center font-semibold text-gray-500"
                     onClick={() =>
                       handleProductSelect({
                         id: product._id,

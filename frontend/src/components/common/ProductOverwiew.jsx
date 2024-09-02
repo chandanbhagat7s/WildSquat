@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { motion } from "framer-motion";
+
 import { FaShoppingCart, FaCreditCard, FaChevronDown } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import {
@@ -28,6 +30,7 @@ const ProductOverview = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
+  const [category, setCategory] = useState({});
   const [quantity, setQuantity] = useState(1);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -43,9 +46,9 @@ const ProductOverview = () => {
   // const [loading2, setLoading2] = useState(false);
 
   const AccordionItem = ({ title, icon, children, isOpen, toggle }) => (
-    <div className="mb-4 bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out ">
+    <div className="mb-4 bg-white rounded-lg   overflow-hidden transition-all duration-300 ease-in-out ">
       <button
-        className="w-full flex items-center justify-between py-2 px-3 bg-gradient-to-r from-indigo-800 to-purple-600 text-white"
+        className="w-full flex items-center justify-between py-2 px-3 bg-gradient-to-r   text-black border-b-2 border-gray-300 border-1"
         onClick={toggle}
       >
         <div className="flex items-center">
@@ -58,7 +61,11 @@ const ProductOverview = () => {
           }`}
         />
       </button>
-      {isOpen && <div className="p-5 bg-white">{children}</div>}
+      {isOpen && (
+        <div className="p-5 bg-white border-b-2 border-gray-700 border-1">
+          {children}
+        </div>
+      )}
     </div>
   );
 
@@ -139,6 +146,7 @@ const ProductOverview = () => {
         let i = res?.data?.product?.images.map((el) => `${url}img/${el}`);
         setImage([...i]);
         setProduct({ ...res?.data?.product });
+        setCategory({ ...res?.data?.category });
         setLoading(false);
       }
     } catch (e) {
@@ -201,7 +209,7 @@ const ProductOverview = () => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 mt-10 pb-8 ">
+    <div className="container mx-auto px-2 mt-10 pb-8 ">
       {loading && <LoadingSpinner />}
       <div className="flex flex-col md:flex-row -mx-4">
         {loading ? (
@@ -276,16 +284,13 @@ const ProductOverview = () => {
             </div>
 
             {/* Right side - Product information */}
-            <div className="md:w-3/5 px-6 mt-8 md:mt-0 max-h-screen overflow-y-scroll">
-              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-indigo-900 ">
+            <div className="md:w-3/5 px-6 mt-8 md:mt-0 max-h-screen overflow-y-scroll text-center">
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-black  ">
                 {product.name}
               </h1>
-              <div className="mr-10 border-gray-200 border-2"></div>
-              <p className="text-lg text-gray-600 mb-4">
-                {product.shortDescription}
-              </p>
-              <div className="flex items-center mb-6">
-                <span className="text-3xl font-bold text-indigo-800">
+              <p className=" text-gray-600 mb-4">{product.shortDescription}</p>
+              <div className="flex items-center justify-center mb-6">
+                <span className="text-3xl font-bold text-black">
                   ₹ {product.price}
                 </span>
               </div>
@@ -296,7 +301,7 @@ const ProductOverview = () => {
                   {" "}
                   Available Size's
                 </h2>
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 justify-center">
                   {product.sizes.map((size) => (
                     <button
                       key={size.size}
@@ -313,7 +318,7 @@ const ProductOverview = () => {
               {/* Color Selection */}
               <div className="mb-6">
                 <h2 className="font-bold mb-3 text-gray-800">Color</h2>
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 justify-center">
                   {/* {product.colors.map((color, index) => (
                     <button
                       key={index}
@@ -333,7 +338,10 @@ const ProductOverview = () => {
                               ? "border-2 border-blue-500"
                               : ""
                           }`}
-                          onClick={() => nevigate(`/productDetails/${img._id}`)}
+                          onClick={() => {
+                            window.scrollTo(0, 0);
+                            nevigate(`/productDetails/${img._id}`);
+                          }}
                         />
                       ))}
                   </div>
@@ -349,7 +357,9 @@ const ProductOverview = () => {
                 >
                   <ul className="list-disc list-inside text-gray-700 space-y-2">
                     {product.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
+                      <li key={index} className=" ">
+                        {feature}
+                      </li>
                     ))}
                   </ul>
                 </AccordionItem>
@@ -373,24 +383,6 @@ const ProductOverview = () => {
                 </AccordionItem>
 
                 <AccordionItem
-                  title="Origin"
-                  icon={<FaGlobeAsia className="text-2xl" />}
-                  isOpen={openSection === "origin"}
-                  toggle={() => toggleSection("origin")}
-                >
-                  <p className="text-gray-700">Made in {product.madeIn}</p>
-                </AccordionItem>
-
-                <AccordionItem
-                  title="Availability"
-                  icon={<FaBoxOpen className="text-2xl" />}
-                  isOpen={openSection === "availability"}
-                  toggle={() => toggleSection("availability")}
-                >
-                  <p className="text-gray-700">{product.stock} in stock</p>
-                </AccordionItem>
-
-                <AccordionItem
                   title="Care Instructions"
                   icon={<MdLocalLaundryService className="text-2xl" />}
                   isOpen={openSection === "care"}
@@ -411,6 +403,54 @@ const ProductOverview = () => {
             </div>
           </>
         )}
+      </div>
+      <div className="container px-1 my-8">
+        {!loading && (
+          <>
+            <CategoryCard category={category} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const CategoryCard = ({ category }) => {
+  const nevigate = useNavigate();
+  return (
+    <div className="   rounded-xl shadow-2xl">
+      <h2 className="text-3xl font-bold  mb-4"> Simillar Products </h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+        {category?.products?.map((product) => (
+          <div
+            key={product._id}
+            className="flex-shrink-0  bg-white rounded-lg  overflow-hidden transition-transform duration-300 hover:scale-105 mx-2"
+          >
+            <div
+              className="relative overflow-hidden cursor-pointer shadow-lg rounded-lg"
+              onClick={() => {
+                window.scrollTo(0, 0);
+                nevigate(`/productDetails/${product._id}`);
+              }}
+            >
+              <motion.div
+                className="aspect-[3/4] overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.4 }}
+              >
+                <img
+                  src={`${url}img/${product.coverImage}`}
+                  alt={product.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              </motion.div>
+            </div>
+            <div className="mt-6 text-center">
+              <h3 className=" text-gray-800 mb-2 font-bold">{product.name}</h3>
+              <p className="text-gray-600 mb-4">Rs.{product.price}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

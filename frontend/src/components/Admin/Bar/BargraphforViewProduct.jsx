@@ -20,13 +20,15 @@ ChartJS.register(
 );
 
 const BarGraph = ({ data }) => {
+  console.log(data);
+
   const chartData = {
     labels: data.map((item) => item.name),
     datasets: [
       {
         label: "View Count",
         data: data.map((item) => item.viewCount),
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        backgroundColor: "rgba(55, 48, 163)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },

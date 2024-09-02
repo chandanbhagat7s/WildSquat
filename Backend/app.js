@@ -14,7 +14,7 @@ const reviewRouter = require('./Routes/reviewRoute');
 const paymentRouter = require('./Routes/paymentsRoute');
 const userrouter = require('./Routes/userRouter');
 const toolRouter = require('./Routes/toolsRouter');
-const redis = require('redis');
+
 const syncViewCounts = require('./Redis/syncViewCounts');
 
 

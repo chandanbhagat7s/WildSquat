@@ -6,7 +6,7 @@ const { addToCart, addToHeart, removeFromCart, removeFromHeart, homepageData, ho
 const userrouter = express.Router()
 
 
-userrouter.get("/homepage", homepageData)
+userrouter.get("/homepage/:gender", homepageData)
 
 userrouter.use(isLoggedIn)
 userrouter.get("/getCartHeartOrders", getCartHeartOrders);

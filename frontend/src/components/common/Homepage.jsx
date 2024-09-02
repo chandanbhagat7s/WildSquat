@@ -11,14 +11,12 @@ import LoadingSpinner from "./Spinner";
 
 export default function Homepage() {
   const dispatch = useDispatch();
-
-  const { slider } = useSelector((state) => state.product);
-  console.log("slider is", slider);
+  const { gender } = useSelector((state) => state.auth);
 
   const [load, setLoad] = useState(true);
   // first get the data
   async function getAllDetails() {
-    let res = await dispatch(getHompageData());
+    let res = await dispatch(getHompageData(gender));
     console.log(res);
 
     if (res?.payload?.status == "success") {
@@ -26,12 +24,10 @@ export default function Homepage() {
     }
   }
   useEffect(() => {
-    console.log(slider?.length);
-
     getAllDetails();
 
     // window.scrollTo(0, 0); // Scroll to top when component mounts
-  }, []);
+  }, [gender]);
   return (
     <>
       {!load ? <Slider /> : <LoadingSpinner />}

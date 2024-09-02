@@ -4,66 +4,58 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaShoppingCart, FaSearch, FaHeart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import url from "../../assets/url";
+import { FiShoppingCart } from "react-icons/fi";
 
 const ProductGrid = ({ products, addToCart }) => (
-  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
     <AnimatePresence>
       {products.map((product) => (
-        <LuxuryProductCard
-          key={product._id}
-          product={product}
-          addToCart={addToCart}
-        />
+        <ProductCard key={product._id} product={product} />
       ))}
     </AnimatePresence>
   </div>
 );
 
-const LuxuryProductCard = ({ product, addToCart }) => {
-  const navigate = useNavigate();
-
-  return (
-    <motion.div
-      className="group"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-    >
-      <div
-        className="relative overflow-hidden cursor-pointer shadow-lg rounded-lg"
+const ProductCard = ({ product }) => (
+  <motion.div
+    key={product._id}
+    className=" bg-white rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <div className="relative">
+      <motion.div
         onClick={() => navigate(`/productDetails/${product._id}`)}
+        className="w-full overflow-hidden"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.4 }}
       >
-        <motion.div
-          className="aspect-[3/4] overflow-hidden"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
+        <img
+          src={`${url}img/${product.coverImage}`}
+          alt={product.name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+      </motion.div>
+      <div className="absolute bottom-0 right-4 flex space-x-2">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="p-3 bg-white rounded-full shadow-md text-indigo-600 hover:bg-indigo-100 transition-colors duration-200"
+          onClick={() => ATC(product._id)}
         >
-          <img
-            src={`${url}img/${product.coverImage}`}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </motion.div>
+          <FiShoppingCart size={20} />
+        </motion.button>
       </div>
-
-      <div className="mt-6 text-center">
-        <h3 className=" text-gray-800 mb-2 font-bold">{product.name}</h3>
-        <p className="text-gray-600 mb-4">Rs.{product.price}</p>
-
-        <div className="flex justify-center space-x-4">
-          <motion.button
-            className="flex items-center px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 w-2/3"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Add to
-            <FaShoppingCart className="ml-2" />
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+    </div>
+    <div className="p-6 text-center">
+      <h3 className="text-sm font-bold lg:font-semibold  text-gray-800 mb-2">
+        {product.name}
+      </h3>
+      <p className="text-2xl font-bold text-indigo-600">₹{product.price}</p>
+    </div>
+  </motion.div>
+);
 
 const FilterSidebar = ({ maxPrice, setMaxPrice, sortBy, setSortBy }) => (
   <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-8">
@@ -143,15 +135,6 @@ const ClickProducts = () => {
         >
           Discover Your Perfect Gear
         </motion.h1>
-        <motion.p
-          className="text-xl text-gray-600 max-w-3xl mx-auto"
-          initial={{ y: -30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          Elevate your performance with our curated selection of premium
-          athletic equipment.
-        </motion.p>
       </motion.div>
 
       <div className="max-w-7xl mx-auto">

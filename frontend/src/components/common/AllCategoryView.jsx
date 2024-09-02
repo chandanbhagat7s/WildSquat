@@ -6,80 +6,38 @@ import url from "../../assets/url";
 import { useSelector } from "react-redux";
 import { FiHeart } from "react-icons/fi";
 import LoadingSpinner from "./Spinner";
+import { BiCategory } from "react-icons/bi";
+import { FaTag } from "react-icons/fa";
 
-const LuxuryProductCard = ({ product, index }) => {
+const Card = ({ id, image, title, total }) => {
   const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
-      className="group "
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: index * 0.1 }}
+      className="w-full bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
+      whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+      onClick={() =>
+        navigate(`/toolsDetails/${id}`, { state: { tool: "CATEGORY" } })
+      }
     >
-      <div
-        className="relative overflow-hidden cursor-pointer"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onClick={() => navigate(`/toolsDetails/${product._id}`)}
-      >
-        <motion.div
-          className="aspect-[3/4] overflow-hidden"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
-        >
-          <img
-            src={`${url}Tools/${product.coverImage}`}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </motion.div>
+      <motion.div className="h-64 overflow-hidden">
+        <motion.img
+          src={`${url}Tools/${image}`}
+          className="w-full h-full object-cover "
+          whileHover={{ scale: 1.1, transition: { duration: 0.5 } }}
+        />
+      </motion.div>
 
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.button
-                className="bg-white text-gray-900 py-3 px-6 rounded-none text-sm uppercase tracking-wider font-medium hover:bg-gold-500 hover:text-black transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Discover
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div className="mt-6 text-center ">
-        <h3 className="flex items-center justify-center font-bold text-gray-800 mb-2">
-          {product.label}
-          <BsCollection className="mx-1" />
-        </h3>
-
-        <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-          {product.shortDescription}
-        </p>
-        <div className=" flex justify-center items-center ">
-          <button className="text-gray-600 hover:text-gold-500 transition-colors duration-300">
-            {/* <FaShoppingBag className="w-5 h-5" /> */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="flex  items-center space-x-2 p-3 bg-white rounded-full shadow-md text-red-500 hover:bg-red-100 transition-colors duration-200"
-              // onClick={(e) => addToHeart(product._id, e)}
-            >
-              Add to <FiHeart size={20} className="mx-1" />
-            </motion.button>
-          </button>
-        </div>
-      </div>
+      <motion.div className="p-4 bg-gradient-to-b from-gray-50 to-gray-100">
+        <motion.h3 className=" font-semibold text-gray-800 mb-2 flex items-center">
+          <BiCategory className="text-indigo-800 mr-2 " />
+          {title}
+        </motion.h3>
+        <motion.p className="text-sm text-gray-600 flex items-center">
+          <FaTag className="mr-2" />
+          {total} items
+        </motion.p>
+      </motion.div>
     </motion.div>
   );
 };
@@ -101,7 +59,7 @@ export default function AllCategoryView() {
   return (
     <>
       <motion.div
-        className="text-center py-16"
+        className="text-center pt-7"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
@@ -117,23 +75,22 @@ export default function AllCategoryView() {
             Premium Variety
           </span>
         </motion.h2>
-        <p className="mt-3 text-2xl text-indigo-800 font-semibold">
-          Discover performance-enhancing equipment for every athlete
-        </p>
       </motion.div>
       {display ? (
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-10"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3  "
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
           {display?.length > 0 &&
             display.map((product, index) => (
-              <LuxuryProductCard
+              <Card
                 key={product._id}
-                product={product}
-                index={index}
+                id={product._id}
+                image={product.coverImage}
+                title={product.label}
+                total={product.products.length}
               />
             ))}
         </motion.div>

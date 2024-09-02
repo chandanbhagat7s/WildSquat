@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import BarGraph from "./Bar/BargraphforViewProduct";
+import ChartData from "./Bar/ChartData";
 
 const VerticalCardList = ({ data }) => {
   return (
-    <div className="flex flex-col space-y-4 p-4  w-1/2">
+    <div className="flex flex-col space-y-4 p-4 ">
       {data?.length > 0 &&
         data.map((item) => (
           <div
@@ -42,9 +43,14 @@ export default function ProductData() {
 
   return (
     <>
-      <div className="bg-gray-100 min-h-screen">
-        <p className="flex text-2xl font-bold">Top View Products</p>
-        <VerticalCardList data={productData} />
+      <p className=" text-2xl font-bold ">Top View Products</p>
+      <div className="bg-gray-100 min-h-screen  ">
+        <div className=" ">
+          <VerticalCardList data={productData} />
+
+          <ChartData data={productData} />
+        </div>
+
         <BarGraph data={productData} />
       </div>
     </>

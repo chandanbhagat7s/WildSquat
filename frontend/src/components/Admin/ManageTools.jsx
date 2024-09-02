@@ -11,9 +11,11 @@ import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
 import FullScreenDialog from "../common/FullScreenDialog";
 import ToolProductAction from "./ToolProductAction";
+import { FaArrowDown, FaFemale, FaMale } from "react-icons/fa";
 
 export default function ManageTools() {
   const dispatch = useDispatch();
+  const [gender, setGender] = useState("male");
   const [tools, setTools] = useState({
     sliders: [],
     category: [],
@@ -23,7 +25,7 @@ export default function ManageTools() {
   });
   async function getAllTools() {
     try {
-      const res = await axios.get("/api/v1/admin/getAllMyTools");
+      const res = await axios.get(`/api/v1/admin/getAllMyTools/${gender}`);
       const data = res.data.allToolsdata;
       let sliders = [],
         category = [],
@@ -66,13 +68,31 @@ export default function ManageTools() {
 
   useEffect(() => {
     getAllTools();
-  }, []);
+  }, [gender]);
   return (
     <>
-      <div>
+      <div className="my-10">
         <h1 className="text-3xl font-bold text-center my-16">
           Tool Management
         </h1>
+        <div className="flex w-1/3  space-x-2 mx-auto rounded">
+          <button
+            className={`w-1/2 px-5 py-2 font-bold rounded-full   my-1 bg-indigo-400 ${
+              gender == "male" && "bg-indigo-700"
+            } text-white`}
+            onClick={() => setGender(gender == "male" ? "female" : "male")}
+          >
+            Male
+          </button>
+          <button
+            className={`w-1/2 px-5 py-2 font-bold rounded-full  my-1 bg-indigo-400 ${
+              gender !== "male" && "bg-indigo-700"
+            } text-white`}
+            onClick={() => setGender(gender == "female" ? "male" : "female")}
+          >
+            Female
+          </button>
+        </div>
         <ContentDisplay tools={tools} />
       </div>
     </>
@@ -131,9 +151,9 @@ const ContentCard = ({ item, openDialog, setBtn }) => {
   }
   return (
     <div className="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-      <div className="relative pb-48 overflow-hidden">
+      <div className="relative pb-72 overflow-hidden ">
         <img
-          className="absolute inset-0 h-full w-full object-cover transform hover:scale-105 transition-transform duration-300"
+          className="absolute inset-0 h-full w-full object-fill transform hover:scale-105 transition-transform duration-300"
           src={`${url}tools/${item.coverImage}`}
           alt={item.name}
         />

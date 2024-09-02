@@ -194,12 +194,16 @@ const CreateProductForm = () => {
     }
   };
   async function getCategory() {
-    await dispatch(getAllCateogyNames());
+    console.log("CALLED");
+
+    await dispatch(getAllCateogyNames(product.gender));
   }
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    console.log(product.gender.length);
+
+    product.gender.length > 0 ? getCategory() : "";
+  }, [product.gender]);
 
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
@@ -213,6 +217,26 @@ const CreateProductForm = () => {
               Auto Fill Product
             </div>
             <ProductSearch setSelectedProduct={handleClickSelectedProduct} />
+          </div>
+          <div className="flex justify-around">
+            <div className="title font-bold ">Select Gender First</div>
+            <select
+              name=""
+              id=""
+              className="rounded"
+              onChange={(e) => {
+                console.log("CALLED");
+
+                setProduct({
+                  ...product,
+                  gender: e.target.value,
+                });
+              }}
+            >
+              <option value="">Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
@@ -527,23 +551,6 @@ const CreateProductForm = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="madeIn"
-                className="block text-sm font-medium text-gray-700"
-              >
-                For Gender
-              </label>
-              <input
-                type="text"
-                id="gender"
-                name="gender"
-                value={product.gender}
-                onChange={handleInputChange}
-                placeholder="male or female"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
             <div>
               <label
                 htmlFor="stock"

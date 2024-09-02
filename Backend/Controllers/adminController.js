@@ -524,7 +524,8 @@ exports.updateSlider = catchAsync(async (req, res, next) => {
 
 
 exports.getAllMyTools = catchAsync(async (req, res, next) => {
-    const allToolsdata = await Tool.find({ name: { $ne: "HOTPRODUCTS" } })
+    const { gender } = req.params;
+    const allToolsdata = await Tool.find({ name: { $ne: "HOTPRODUCTS" }, gender: gender })
 
     res.status(200).send({
         status: "success",
@@ -617,8 +618,4 @@ exports.deletTool = catchAsync(async (req, res, next) => {
         msg: "operation performed successfully, delete tool "
     })
 })
-
-
-
-
 

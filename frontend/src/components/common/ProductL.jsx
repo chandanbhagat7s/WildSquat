@@ -12,9 +12,10 @@ import { addToCart } from "../../redux/slices/productSlice";
 const ProductListing = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
 
   const { msg } = useSelector((state) => state.product);
+  const { trending } = useSelector((state) => state.product);
+  console.log(trending);
 
   async function ATC(id) {
     try {
@@ -32,22 +33,6 @@ const ProductListing = () => {
       );
     }
   }
-
-  // Fetch all product details
-  async function getAllProductDetails() {
-    try {
-      const res = await axios.get("/api/v1/product/getAllTrendingProducts");
-      if (res.data.status === "success") {
-        setProducts(res?.data?.products[0].products);
-      }
-    } catch (e) {
-      dispatch(error({ message: e?.response?.msg || "Something went wrong" }));
-    }
-  }
-
-  useEffect(() => {
-    getAllProductDetails();
-  }, []);
 
   const ProductCard = ({ product }) => (
     <motion.div
@@ -81,7 +66,7 @@ const ProductListing = () => {
           </motion.button>
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-6 text-center">
         <h3 className="text-sm font-bold lg:font-semibold  text-gray-800 mb-2">
           {product.name}
         </h3>
@@ -99,19 +84,19 @@ const ProductListing = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-5xl font-bold text-gray-800 mb-12 text-center"
+          className="text-4xl lg:text-5xl font-bold text-gray-800 mb-12 text-center"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Discover Our{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
-            Trending Collections
+            Premium Collection
           </span>
         </motion.h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 ">
-          {[...products].slice(0, 6).map((product) => (
+          {[...trending[0].products].map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

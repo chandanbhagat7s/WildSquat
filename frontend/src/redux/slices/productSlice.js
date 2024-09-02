@@ -63,7 +63,7 @@ export const removeFromHeart = createAsyncThunk("/product/remove/heart", async (
 
 export const getHompageData = createAsyncThunk("/product/homepage", async (data) => {
     try {
-        const res = await axios.get("/api/v1/user/homepage")
+        const res = await axios.get(`/api/v1/user/homepage/${data}`)
 
         console.log(res);
         return res.data
@@ -78,15 +78,19 @@ export const getHompageData = createAsyncThunk("/product/homepage", async (data)
 })
 
 
-export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async () => {
+export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async (gender) => {
     try {
-        const res = await axios.get("/api/v1/product/getAllCategory?fields=name,_id,label");
+        console.log("CALLED");
+
+        const res = await axios.get(`/api/v1/product/getAllCategory?fields=name,_id,label&gender=${gender}`);
         console.log(res);
         return res.data
     } catch (e) {
         console.log(e);
     }
 })
+
+
 
 
 const initialState = {
@@ -100,7 +104,7 @@ const initialState = {
     categoryName: [],
     msg: "",
     cards: [],
-    multiple: []
+    multiple: [],
 
 }
 
@@ -147,6 +151,7 @@ const productSlice = createSlice({
                 state.cards = card;
                 state.trending = trend;
                 state.multiple = multiple;
+
             }
 
         }).addCase(getAllCateogyNames.fulfilled, (state, action) => {

@@ -51,12 +51,17 @@ export const loginForm = createAsyncThunk('/login/user', async (data) => {
 const initialState = {
     data: JSON.parse(localStorage.getItem("data")) || '',
     isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
+    gender: "male"
 }
 const authSlice = createSlice({
     name: 'Auth',
     initialState,
     reducers: {
+        changeGender: (state, action) => {
+            console.log("actioon is ", action);
 
+            state.gender = action.payload.gender
+        }
 
     },
     extraReducers: (builder) => {
@@ -85,7 +90,7 @@ const authSlice = createSlice({
     }
 })
 
-export const { logout } = authSlice.actions;
+export const { logout, changeGender } = authSlice.actions;
 
 export default authSlice.reducer
 

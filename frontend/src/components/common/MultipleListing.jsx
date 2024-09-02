@@ -54,7 +54,7 @@ const MultipleListing = () => {
   return (
     <div className="min-h-screen py-20 px-6 bg-gradient-to-br from-gray-50 to-white flex flex-col justify-center items-center">
       <motion.h2
-        className="text-5xl font-bold text-gray-800 mb-12 text-center"
+        className="text-4xl lg:text-5xl font-bold text-gray-800 mb-12 text-center"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}

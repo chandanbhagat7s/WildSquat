@@ -5,6 +5,7 @@ const appError = require("../utils/appError");
 const factory = require("../utils/factory");
 const catchAsync = require("../utils/catchAsync");
 const redisClient = require('../Redis/redisClient');
+const Apifeature = require("../utils/apiFeatures");
 
 exports.getAllProduct = catchAsync(async (req, res, next) => {
     const product = await Product.find({
@@ -43,7 +44,20 @@ exports.getProductById = catchAsync(async (req, res, next) => {
 
     const product = await Product.findById(productId).populate([{
         path: "colors"
+    }, {
+        path: "category",
+        select: "products name"
     }])
+    let category = []
+    let found = product.category.find((el) => el?.name == "CATEGORY")
+    if (found?._id) {
+        category = await Tool.findById(found._id).select("name products").populate({
+            path: "products",
+            select: "_id name price coverImage"
+        })
+
+
+    }
     redisClient.incr(`product:${productId}:viewCount`, (err, reply) => {
         if (err) {
             console.error('Error incrementing view count:', err);
@@ -52,7 +66,8 @@ exports.getProductById = catchAsync(async (req, res, next) => {
 
     res.status(200).send({
         status: "success",
-        product
+        product,
+        category
 
     })
 })
@@ -255,9 +270,21 @@ exports.getAllCategory = factory.getAll(Tool)
 
 
 exports.homepageData = catchAsync(async (req, res, next) => {
-
+    const { gender } = req.params;
     // getting the crawsel
-    const allTools = await Tool.find({})
+    let allTools = await Tool.find({
+        gender: gender
+    }).select("-gender -__v ");
+    // const allTools = await 
+
+    allTools = await Promise.all(
+        allTools.map(async (post) => {
+            if (post.name === 'Trending') {
+                await post.populate("products", "name price _id coverImage", {}, { limit: 6 })
+            }
+            return post;
+        })
+    );
 
     res.status(200).send({
         status: "success",
@@ -282,14 +309,14 @@ exports.getAlltrendingProducts = catchAsync(async (req, res, next) => {
 exports.getAllCardProducts = catchAsync(async (req, res, next) => {
 
     // getting the crawsel
-    const products = await Tool.find({ name: "CARDS" }).select("products _id").populate({
+    const products = await Tool.findOne({ name: "CARDS" }).select("products _id").populate({
         path: "products",
-        select: " "
+        select: "name price sizes coverImage shortDescription images "
     })
 
     res.status(200).send({
         status: "success",
-        products: products[0]
+        products: products
     })
 })
 

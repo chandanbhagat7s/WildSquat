@@ -48,7 +48,7 @@ const ProductCardsOverview = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <motion.h2
-        className="text-5xl font-bold text-gray-800 mb-12 text-center"
+        className="text-4xl lg:text-5xl font-bold text-gray-800 mb-12 text-center"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
@@ -57,9 +57,6 @@ const ProductCardsOverview = () => {
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
           Top Products
         </span>
-        <p className="mt-3 text-2xl text-indigo-800 font-semibold">
-          Quick view for quick choice
-        </p>
       </motion.h2>
       <ProductList
         products={products}
@@ -186,19 +183,21 @@ const ProductSlide = ({ product }) => {
         >
           {product.shortDescription}
         </motion.p>
-        <motion.ul
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="mb-8"
-        >
-          {product.features.slice(0, 3).map((feature, index) => (
-            <li key={index} className="flex items-center mb-2 text-gray-700">
-              <span className="mr-2 text-indigo-500">◆</span>
-              {feature}
-            </li>
-          ))}
-        </motion.ul>
+        <div className="mb-6">
+          <h2 className="font-bold mb-3 text-gray-800"> Available Size's</h2>
+          <div className="flex space-x-3">
+            {product?.sizes?.map((size) => (
+              <button
+                key={size.size}
+                className="px-4 py-2 border border-black rounded-md hover:border-indigo-800 transition duration-300"
+              >
+                <span className="text-lg font-semibold text-indigo-800">
+                  {size.size}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

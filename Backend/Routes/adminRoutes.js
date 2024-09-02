@@ -24,7 +24,7 @@ adminRouter.delete("/actionOnTool/:toolId", deletTool)
 
 // for frontend 
 adminRouter.post("/createCategory", uploadImages, resizeToolImage, createCategory)
-adminRouter.get("/getAllMyTools", getAllMyTools)
+adminRouter.get("/getAllMyTools/:gender", getAllMyTools)
 adminRouter.get("/getToolById/:toolId", getToolById)
 
 
