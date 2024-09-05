@@ -1,87 +1,82 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { CiLogin } from "react-icons/ci";
-import { FaMale, FaFemale, FaArrowDown, FaGenderless } from "react-icons/fa";
-import { FiUser, FiShoppingCart } from "react-icons/fi";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeGender } from "../../redux/slices/authSlice";
 
 const NavbarActions = () => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { gender } = useSelector((state) => state.auth);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { isLoggedIn, gender } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const [isToggled, setIsToggled] = useState(gender === "female");
 
-  const handleGenderSelect = (selectedGender) => {
-    console.log("SETTING to", selectedGender);
-
-    dispatch(changeGender({ gender: selectedGender }));
-    setIsDropdownOpen(false);
+  const handleGenderToggle = () => {
+    const newGender = isToggled ? "male" : "female";
+    setIsToggled(!isToggled);
+    dispatch(changeGender({ gender: newGender }));
   };
 
   return (
-    <div className="flex items-center space-x-2 text-sm">
-      {/* Gender Select Dropdown */}
-      <div className="relative">
+    <div className="flex items-center space-x-4 text-sm">
+      {/* Gender Toggle Switch */}
+      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-lg">
+        <span className={`text-blue-600 ${!isToggled ? "font-bold" : ""}`}>
+          {!isToggled ? "Male" : "M"}
+        </span>
         <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className=" bg-white text-blue-600 flex items-center space-x-2    px-4 py-2 rounded-full shadow-lg transition-transform transform hover:scale-105"
+          onClick={handleGenderToggle}
+          className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out ${
+            isToggled ? "bg-pink-600" : "bg-blue-600"
+          }`}
         >
-          {gender == "male" ? (
-            <FaMale className="h-6 w-6 text-blue-600" />
-          ) : (
-            <FaFemale className="h-6 w-6 text-pink-600" />
-          )}{" "}
-          <span>{gender ? gender : "Select Gender"}</span>
-          <FaArrowDown />
+          <div
+            className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+              isToggled ? "translate-x-6" : ""
+            }`}
+          ></div>
         </button>
-        {isDropdownOpen && (
-          <div className="absolute mt-2 bg-white rounded-md shadow-lg w-full z-10">
-            <button
-              onClick={() => handleGenderSelect("male")}
-              className="flex items-center space-x-2 px-4 py-2 hover:bg-blue-100 w-full text-left"
-            >
-              <FaMale className="h-6 w-6 text-blue-600" />
-              <span>Male</span>
-            </button>
-            <button
-              onClick={() => handleGenderSelect("female")}
-              className="flex items-center space-x-2 px-4 py-2 hover:bg-pink-100 w-full text-left"
-            >
-              <FaFemale className="h-6 w-6 text-pink-600" />
-              <span>Female</span>
-            </button>
-          </div>
-        )}
+        <span className={`text-pink-600 ${isToggled ? "font-bold" : ""}`}>
+          {isToggled ? "Female" : "F"}
+        </span>
       </div>
 
       {/* User Profile/Login Button */}
-      <button className="hover:text-gray-200">
-        {isLoggedIn ? (
-          <Link
-            to="/profile"
-            className="flex items-center space-x-2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg transition-transform transform hover:scale-105"
+      {isLoggedIn ? (
+        <Link
+          to="/profile"
+          className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <FiUser className="h-6 w-6" />
-          </Link>
-        ) : (
-          <Link
-            to="/login"
-            className="bg-white text-blue-600 px-4 py-2 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:bg-blue-50 flex"
+            <path
+              fillRule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </Link>
+      ) : (
+        <Link
+          to="/login"
+          className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+        >
+          <span>Login</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            Login <CiLogin className="text-2xl font-bold " />
-          </Link>
-        )}
-      </button>
-
-      {/* Cart Button */}
-      {/* <Link
-        to="/cart"
-        className="flex items-center space-x-2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:bg-gray-700"
-      >
-        <FiShoppingCart className="h-6 w-6" />
-        <span>Cart</span>
-      </Link> */}
+            <path
+              fillRule="evenodd"
+              d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </Link>
+      )}
     </div>
   );
 };

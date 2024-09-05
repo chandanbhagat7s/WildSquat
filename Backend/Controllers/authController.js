@@ -4,6 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const sendEmail = require("../utils/sendMail");
+const Otp = require("../Models/Otp");
 
 
 const createTokenSendRes = (id, res, statusCode, data) => {
@@ -70,7 +71,9 @@ exports.signUp = catchAsync(async (req, res, next) => {
         , district
         , pinCode
         , password
-        , addressLine1 } = req.body;
+        , addressLine1,
+        otp,
+        otpId } = req.body;
 
     if (
         !name ||
@@ -85,6 +88,26 @@ exports.signUp = catchAsync(async (req, res, next) => {
     ) {
         return next(new appError("Please fill all the fields", 400))
     }
+    if (!otp) {
+        return next(new appError("please enter otp first", 400))
+    }
+
+    const otpDoc = await Otp.findById(otpId)
+
+    if (!otpDoc) {
+        return next(new appError("Please Try again Otp is not send ", 400))
+    }
+
+    if (otp * 1 !== otpDoc.otp) {
+        return next(new appError("Otp is not correct , please enter valid otp  ", 400))
+
+    }
+
+
+
+
+
+
     const newUser = await User.create({
         name
         , email
@@ -189,6 +212,73 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 
 
+})
+
+
+
+const sendSMS = async (userName, apiKey, templateId, senderName, to, message) => {
+    const url = `https://account.bulksms.services/index.php/api/bulk-sms.html?username=${userName}&api_key=${apiKey}&template_id=${templateId}&from=${senderName}&to=${to}&message=${message}&sms_type=2`;
+
+
+    try {
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        const result = await response.text();
+        return result;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+};
+
+
+exports.genrateOtpAndSend = catchAsync(async (req, res, next) => {
+    const { number, email } = req.body;
+
+    const alreadyExist = await User.findOne({
+        $or: [
+            { email: email },
+            { mobile: number }
+        ]
+    })
+
+    if (alreadyExist) {
+        return next(new appError("User already exist with your email or mobile number", 400))
+    }
+
+
+
+    if (!number) {
+        return next(new appError("Please Provide Mobile Number to send OTP", 400))
+    }
+
+    function generateOTP() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    const otp = generateOTP();
+    const otpDoc = await Otp.create({
+        // otp: 123456,
+        otp: otp,
+        validUntil: Date.now() + 1000 * 60 * 10
+    })
+
+    console.log(process.env.UN, number, process.env.API_KEY, process.env.REG_TEMPLATE_ID,);
+
+    const sent = await sendSMS(process.env.UN, process.env.API_KEY, process.env.REG_TEMPLATE_ID, process.env.FROM, number, `OTP for new registration request is,  ${otp}. Please enter this to verify your identity and proceed with the new registration request. - WLDSQT`)
+    console.log(sent);
+
+
+
+
+
+
+    res.status(200).send({
+        status: "success",
+        otpId: otpDoc._id,
+        msg: "Opt Sent To Your Mobile no."
+    })
 })
 
 

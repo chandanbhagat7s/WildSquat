@@ -32,7 +32,8 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
             { name: "X-MULTIPLE" },
             { name: "POSTER" }
         ]
-    })
+    }).select("label _id name")
+
     let tool2 = await Tool.find({
         gender,
         $or: [
@@ -42,9 +43,10 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
     }).select("products name").populate([
         {
             path: "products",
-            select: "_id name coverImage"
+            select: "_id name "
         }
     ])
+    console.log("tool is ", tool);
 
 
     let category = []
@@ -55,17 +57,17 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
     tool2.map((el) => {
         switch (el.name) {
             case "Trending":
-                trend = el.products.slice(0, 10).map(item => {
+                trend = el.products.map(item => {
 
 
-                    let i = { id: item._id, name: item.name, img: item.coverImage }
+                    let i = { id: item._id, name: item.name }
                     return i
                 })
                 break;
 
             case "CARDS":
-                card = el.products.slice(0, 10).map(item => {
-                    let i = { id: item._id, name: item.name, img: item.coverImage }
+                card = el.products.map(item => {
+                    let i = { id: item._id, name: item.name }
                     return i
                 })
                 break;
@@ -73,18 +75,18 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
                 break;
         }
     })
-    console.log(card);
+
 
     tool.map((el) => {
         switch (el.name) {
             case "CATEGORY":
-                category.push({ id: el._id, name: el.label, img: el.coverImage })
+                category.push({ id: el._id, name: el.label })
                 break;
             case "X-MULTIPLE":
-                multiple.push({ id: el._id, name: el.label, img: el.coverImage })
+                multiple.push({ id: el._id, name: el.label })
                 break;
             case "POSTER":
-                poster.push({ id: el._id, name: el.label, img: el.coverImage })
+                poster.push({ id: el._id, name: el.label })
                 break;
 
 

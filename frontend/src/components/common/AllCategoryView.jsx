@@ -20,7 +20,7 @@ const Card = ({ id, image, title, total }) => {
         navigate(`/toolsDetails/${id}`, { state: { tool: "CATEGORY" } })
       }
     >
-      <motion.div className="h-64 overflow-hidden">
+      <motion.div className="h-72 overflow-hidden">
         <motion.img
           src={`${url}Tools/${image}`}
           className="w-full h-full object-cover "
@@ -78,7 +78,7 @@ export default function AllCategoryView() {
       </motion.div>
       {display ? (
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3  "
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3  "
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}

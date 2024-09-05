@@ -47,6 +47,27 @@ export const loginForm = createAsyncThunk('/login/user', async (data) => {
 
 
 })
+export const SendOtpToUser = createAsyncThunk('/login/user', async (data) => {
+
+
+    try {
+
+
+        const res = await axios.post('/api/v1/auth/sendOtp', data, {
+            withCredentials: true
+        })
+        if (res) {
+            return res
+
+
+        }
+    } catch (error) {
+
+        return error.response;
+    }
+
+
+})
 
 const initialState = {
     data: JSON.parse(localStorage.getItem("data")) || '',
