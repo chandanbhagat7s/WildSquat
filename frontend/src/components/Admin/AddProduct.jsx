@@ -10,8 +10,8 @@ import DataTable from "./DataTable";
 const CreateProductForm = () => {
   const dispatch = useDispatch();
   const { categoryName } = useSelector((state) => state.product);
-  console.log(categoryName);
 
+  let [store, setStore] = useState([]);
   const [product, setProduct] = useState({
     name: "",
     price: 1000,
@@ -29,6 +29,9 @@ const CreateProductForm = () => {
     careInstructions: "",
     gender: "",
     stock: 20,
+    dimension: [0, 0, 0],
+    stockPlace: 0,
+    weight: 0,
   });
 
   const sizeOptions = [
@@ -55,6 +58,14 @@ const CreateProductForm = () => {
   function handleClickSelectedProduct(id) {
     bringProductInfo(id);
   }
+  function handleDimension(value, index) {
+    let dim = [...product.dimension];
+    dim[index] = value;
+    setProduct({
+      ...product,
+      dimension: dim,
+    });
+  }
 
   async function bringProductInfo(id) {
     try {
@@ -80,6 +91,9 @@ const CreateProductForm = () => {
           careInstructions: p.careInstructions,
           gender: p.gender,
           stock: 20,
+          stockPlace: p.stockPlace,
+          weight: p.weight,
+          dimension: p.dimension,
         });
       }
     } catch (e) {
@@ -205,6 +219,28 @@ const CreateProductForm = () => {
     product.gender.length > 0 ? getCategory() : "";
   }, [product.gender]);
 
+  useEffect(() => {
+    async function getstockPlace() {
+      try {
+        const wherhouseDetails = await axios.get(
+          "/api/v1/ship/getAllWarehouseDetails"
+        );
+        let wd = wherhouseDetails.data.warehouse.map((el) => {
+          let obj = { name: el.warehouse_name, id: el.location_id };
+          return obj;
+        });
+        setStore(wd);
+      } catch (e) {
+        return dispatch(
+          error({
+            message: "somwthing went wrong in fetching wherehouse details",
+          })
+        );
+      }
+    }
+    getstockPlace();
+  }, []);
+
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -225,8 +261,6 @@ const CreateProductForm = () => {
               id=""
               className="rounded"
               onChange={(e) => {
-                console.log("CALLED");
-
                 setProduct({
                   ...product,
                   gender: e.target.value,
@@ -564,6 +598,82 @@ const CreateProductForm = () => {
                 name="stock"
                 value={product.stock}
                 onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="stock"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Dimension (in cm)
+              </label>
+              <input
+                type="text"
+                id="Dimension"
+                name="Dimension"
+                placeholder="Length"
+                value={product?.dimension[0] || ""}
+                onChange={(e) => handleDimension(e.target.value * 1, 0)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <input
+                type="text"
+                id="Dimension"
+                name="Dimension"
+                placeholder="breadth"
+                value={product?.dimension[1] || ""}
+                onChange={(e) => handleDimension(e.target.value * 1, 1)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <input
+                type="text"
+                id="Dimension"
+                name="Dimension"
+                placeholder="Height"
+                value={product?.dimension[2] || ""}
+                onChange={(e) => handleDimension(e.target.value * 1, 2)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="stock"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Stock Warehouse
+              </label>
+              <select
+                name="stockPlace"
+                id="stockPlace"
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">select</option>
+                {store.map((el) => {
+                  return (
+                    <option value={el.id} key={el.id}>
+                      {el.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="stock"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Weight (in kg)
+              </label>
+              <input
+                type="text"
+                name="weight"
+                onChange={handleInputChange}
+                value={product.weight || ""}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>

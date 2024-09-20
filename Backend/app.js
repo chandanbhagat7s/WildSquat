@@ -16,6 +16,7 @@ const userrouter = require('./Routes/userRouter');
 const toolRouter = require('./Routes/toolsRouter');
 
 const syncViewCounts = require('./Redis/syncViewCounts');
+const shipRouter = require('./Routes/shipRoutes');
 
 
 const app = express()
@@ -54,6 +55,7 @@ app.use('/api/v1/product', productRouter)
 app.use('/api/v1/review', reviewRouter)
 app.use('/api/v1/payment', paymentRouter)
 app.use('/api/v1/user', userrouter)
+app.use('/api/v1/ship', shipRouter)
 
 
 

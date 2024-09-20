@@ -107,6 +107,9 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         stock,
         brand,
         gender,
+        stockPlace,
+        weight,
+        dimension
     } = req.body;
     let c = JSON.parse(category);
     // adding into the category
@@ -130,6 +133,9 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         stock,
         brand,
         gender,
+        stockPlace,
+        weight,
+        dimension
     })
     if (!product) {
         return next(new appError("Product not created plese try again", 500))

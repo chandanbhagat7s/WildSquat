@@ -33,7 +33,7 @@ export default function Homepage() {
       {!load ? <Slider /> : <LoadingSpinner />}
       {!load ? <ProductListing /> : <LoadingSpinner />}
       {!load ? <CategoryList /> : <LoadingSpinner />}
-      {!load ? <ProductCardsOverview /> : <LoadingSpinner />}
+      {/* {!load ? <ProductCardsOverview /> : <LoadingSpinner />} */}
       {!load ? <MultipleListing /> : <LoadingSpinner />}
       {!load ? <ProductSection3 /> : <LoadingSpinner />}
     </>

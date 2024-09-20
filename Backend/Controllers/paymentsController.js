@@ -60,7 +60,8 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
 
     const { RAZORPAY_SECRET_KEY } = process.env;
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productid, quantity } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productids, quantity, type } = req.body;
+
 
 
     const generated_signature = crypto
@@ -74,16 +75,16 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
         return next(new appError("transaction failed please try again", 400))
     }
 
-    const product = await Product.findById(productid)
+    const product = await Product.find({ _id: { $in: productids } }).select("_id name price dimension coverImage stockPlace weight")
 
-    if (!product) {
-        return next(new appError("sorry product not found", 400))
-    }
+
+
     const Ordred = await Booked.create({
-        ofProduct: product._id,
+        ofProduct: product,
         byuser: req.user._id,
         price: product.price,
-        quantity
+        quantity,
+        type,
     })
 
     if (!Ordred) {
@@ -92,7 +93,7 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findByIdAndUpdate(req.user._id, {
-        $push: { Ordred: product._id }
+        $push: { Ordred }
     }, {
         new: true
     })
@@ -103,8 +104,10 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
 
 
+
     res.status(200).send({
         status: "success",
+        orderId: Ordred._id,
         msg: "payment done "
     })
 })

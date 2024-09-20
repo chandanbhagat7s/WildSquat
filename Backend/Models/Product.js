@@ -120,6 +120,16 @@ const productSchema = new mongoose.Schema({
         required: [true, "Please tell this product is for which gender "]
     },
     viewCount: { type: Number, default: 0 },
+    dimension: {
+        type: Array
+    },
+    stockPlace: {
+        type: Number
+    },
+    weight: {
+        type: Number,
+
+    }
 
 
 

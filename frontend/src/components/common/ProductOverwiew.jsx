@@ -34,6 +34,7 @@ const ProductOverview = () => {
   const [quantity, setQuantity] = useState(1);
 
   const [showPopup, setShowPopup] = useState(false);
+  const [showPopupOrder, setShowPopupOrder] = useState(false);
   const auth = useSelector((state) => state.auth);
   const nevigate = useNavigate();
 
@@ -73,14 +74,24 @@ const ProductOverview = () => {
     try {
       const res = await axios.post("/api/v1/payment/verifyPayment", {
         ...data,
-        productid: product._id,
+        productids: [product._id],
         productName: product.name,
       });
+      console.log(res);
 
       if (res.data?.status == "success") {
         dispatch(success({ message: res.data?.msg }));
+        const respoship = await axios.post("/api/v1/ship/shipProduct", {
+          orderId: res.data.orderId,
+        });
+        console.log(respoship);
+
+        setShowPopup(false);
+        // setShowPopupOrder(true);
       }
     } catch (e) {
+      console.log(e);
+
       dispatch(
         error({
           message:
@@ -225,6 +236,7 @@ const ProductOverview = () => {
                 setQuantity={setQuantity}
               />
             )}
+            {showPopupOrder && <HandleOrderLoadingScreen />}
             {/* Left side - Image gallery */}
             <div className="md:w-2/5 px-4">
               <div className="sticky top-0 flex flex-col space-y-3">
@@ -452,6 +464,14 @@ const CategoryCard = ({ category }) => {
           </div>
         ))}
       </div>
+    </div>
+  );
+};
+
+const HandleOrderLoadingScreen = () => {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div>Please wait while we are placing order, it may take 30 sec..</div>
     </div>
   );
 };
