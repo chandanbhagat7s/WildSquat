@@ -7,6 +7,25 @@ const sendEmail = require("../utils/sendMail");
 const Otp = require("../Models/Otp");
 
 
+
+const sendSMS = async (userName, apiKey, templateId, senderName, to, message) => {
+    const url = `https://account.bulksms.services/index.php/api/bulk-sms.html?username=${userName}&api_key=${apiKey}&template_id=${templateId}&from=${senderName}&to=${to}&message=${message}&sms_type=2`;
+
+
+    try {
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        const result = await response.text();
+        return result;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+};
+function generateOTP() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
 const createTokenSendRes = (id, res, statusCode, data) => {
 
     let token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -48,13 +67,20 @@ exports.login = catchAsync(async (req, res, next) => {
     if (!email || !password) {
         return next(new appError("please enter credential for get into in ", 400));
     }
+    let user;
+    if (email.includes("@")) {
 
-    const user = await User.findOne({ email }).select('+password')
+        user = await User.findOne({ email }).select('+password')
+    } else {
+        user = await User.findOne({ mobile: email }).select('+password')
+
+    }
+
 
 
     if (!user || !await user.correctPass(password, user.password)) {
 
-        return next(new appError("please enter valid email id and password", 400));
+        return next(new appError("Please Enter Valid email/mobile or Password", 400));
     }
     user.password = undefined
     createTokenSendRes(user.id, res, 200, user)
@@ -132,105 +158,111 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
 
-    const { email } = req.body;
-    if (!email) {
-        return next(new appError("please enter email for changing the password", 400));
+    const { mobile } = req.body;
+    if (!mobile) {
+        return next(new appError("please enter mobile for changing the password", 400));
     }
 
     // we need to find the user from DB and set password reset token in enc format
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ mobile })
     if (!user) {
-        return next(new appError("user do not exist with this mail ID,please register with your mail ID", 400));
+        return next(new appError("user do not exist with this mobile number , please register first", 400));
     }
 
     try {
-        const token = user.setPasswordRestToken();
-        console.log(token);
-        let message = `to reset the passwored click heare ${req.protocol}://${req.hostName}/api/v1/resetPassword/${token} `;
+        const otp = generateOTP();
+        user.passwordResetOTP = otp;
+        user.passwordExpires = Date.now() + 10 * 60 * 1000
 
-        console.log("the token is ", token);
-        // saving the user to database
-        await user.save({ validateBeforeSave: false })
-        // we will send the message of route and token on email address and 
-        await sendEmail()
+
+
+        const sent = await sendSMS(process.env.UN, process.env.API_KEY, process.env.REG_TEMPLATE_ID, process.env.FROM, mobile, `OTP for new registration request is,  ${otp}. Please enter this to verify your identity and proceed with the new registration request. - WLDSQT`)
+        if (!sent) {
+            user.passwordResetOTP = undefined
+            user.passwordExpires = undefined
+            await user.save()
+            return next(new appError("Please Try again , failed due to some issue", 500))
+        }
+        await user.save()
+        res.status(200).send({
+            status: "success",
+            userId: user._id,
+            msg: "Opt Sent To Your Mobile no."
+        })
+
+
+
     } catch (error) {
         console.log(error);
         user.passwordResetToken = undefined;
         user.expiresIn = undefined;
         await user.save();
-        return next(new appError("please try to change the password after some time", 404))
+        return next(new appError("please try to change the password after some time", 500))
     }
 
 
-    res.status(200).json({
-        status: 'success',
-        message: "check your email to reset password !!"
-    })
+
 
 
 
 
 })
 
+exports.verifyOtp = catchAsync(async (req, res, next) => {
+    const id = req.body.userId;
+    const otp = req.body.otp;
+    console.log(req.body);
 
+
+    if (!id) {
+        return next(new appError("Please retry again to genrate otp", 400))
+    }
+    if (!otp || otp.length < 6) {
+        return next(new appError("please Enter valid otp", 400))
+    }
+
+    const user = await User.findById(id)
+    if (user.passwordResetOTP !== otp) {
+        return next(new appError("please enter valid otp", 400))
+    }
+    res.status(200).send({
+        status: "success",
+        userId: user._id
+    })
+})
 
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
     const password = req.body.password;
-    const passwordConfirm = req.body.passwordConfirm;
+    const userId = req.body.userId;
     if (!password) {
         return next(new appError("please enter password to be set", 400))
     }
-    let token = req.params.token;
+    if (!userId) {
+        return next("please provide otp", 400)
+    }
 
 
-    // we need to create hash and then find it in database 
-
-    token = crypto.createHash('sha256').update(token).digest('hex');
-    let user = await User.findOne({
-        passwordResetToken: token, passwordExpires: { $gt: Date.now() }
-    })
+    let user = await User.findById(userId)
 
     if (!user) {
-        return next(new appError("please enter valid token or token has been expired", 400))
+        return next(new appError("please ensure are you requesting the reset password operation , you are not our member", 400))
     }
 
     user.password = password;
 
-    user.passwordResetToken = undefined;
+    user.passwordResetOTP = undefined;
     user.passwordExpires = undefined;
 
     await user.save();
 
     createTokenSendRes(user._id, res, 200, "your password is changed")
 
-
-
-
-
-
-
-
-
 })
 
 
 
-const sendSMS = async (userName, apiKey, templateId, senderName, to, message) => {
-    const url = `https://account.bulksms.services/index.php/api/bulk-sms.html?username=${userName}&api_key=${apiKey}&template_id=${templateId}&from=${senderName}&to=${to}&message=${message}&sms_type=2`;
 
-
-    try {
-        const response = await fetch(url, {
-            method: "GET"
-        });
-        const result = await response.text();
-        return result;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
-    }
-};
 
 
 exports.genrateOtpAndSend = catchAsync(async (req, res, next) => {
@@ -253,9 +285,7 @@ exports.genrateOtpAndSend = catchAsync(async (req, res, next) => {
         return next(new appError("Please Provide Mobile Number to send OTP", 400))
     }
 
-    function generateOTP() {
-        return Math.floor(100000 + Math.random() * 900000).toString();
-    }
+
 
     const otp = generateOTP();
     const otpDoc = await Otp.create({

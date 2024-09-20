@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema({
     },
 
     passwordChangedAt: Date,
-    passwordResetToken: String,
+    passwordResetOTP: Number,
     passwordExpires: Date
 
 
@@ -126,20 +126,7 @@ userSchema.methods.changedPasswords = async function (jwttokentime) {
 // now creating model out of schema 
 // setting password reset token inENC
 
-userSchema.methods.setPasswordRestToken = function () {
-    let tokenO = crypto.randomBytes(32).toString('hex')
 
-
-
-    let token = crypto.createHash('sha256').update(tokenO).digest('hex');
-
-    this.passwordResetToken = token;
-    this.passwordExpires = Date.now() + 10 * 60 * 60 * 1000;
-
-    return tokenO;
-
-
-}
 
 
 
