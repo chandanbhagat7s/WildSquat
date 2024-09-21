@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getHompageData } from "../../redux/slices/productSlice";
-import { Slider } from "./Slider";
-import ProductListing from "./ProductL";
+import Slider from "./Slider";
+import ProductListing from "./ProductListing";
 import CategoryList from "./CategoryList";
 import ProductSection3 from "../ProductSection3";
 import ProductCardsOverview from "./ProductCardsOverview";
 import MultipleListing from "./MultipleListing";
 import LoadingSpinner from "./Spinner";
+import PresentSection from "./PresentSection";
 
 export default function Homepage() {
   const dispatch = useDispatch();
@@ -33,8 +34,8 @@ export default function Homepage() {
       {!load ? <Slider /> : <LoadingSpinner />}
       {!load ? <ProductListing /> : <LoadingSpinner />}
       {!load ? <CategoryList /> : <LoadingSpinner />}
-      {/* {!load ? <ProductCardsOverview /> : <LoadingSpinner />} */}
-      {!load ? <MultipleListing /> : <LoadingSpinner />}
+      {!load ? <PresentSection /> : <LoadingSpinner />}
+
       {!load ? <ProductSection3 /> : <LoadingSpinner />}
     </>
   );

@@ -37,7 +37,7 @@ const ProductListing = () => {
   const ProductCard = ({ product }) => (
     <motion.div
       key={product._id}
-      className=" bg-white rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      className=" bg-gray-100 rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -55,11 +55,11 @@ const ProductListing = () => {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         </motion.div>
-        <div className="absolute bottom-0 right-4 flex space-x-2">
+        <div className="absolute bottom-0 right-4 flex space-x-2 ">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="p-3 bg-white rounded-full shadow-md text-indigo-600 hover:bg-indigo-100 transition-colors duration-200"
+            className="p-3 bg-white rounded-full shadow-md transition-colors duration-200"
             onClick={() => ATC(product._id)}
           >
             <FiShoppingCart size={20} />
@@ -67,10 +67,10 @@ const ProductListing = () => {
         </div>
       </div>
       <div className="p-6 text-center">
-        <h3 className="text-sm font-bold lg:font-semibold  text-gray-800 mb-2">
+        <h3 className=" font-bold lg:font-semibold  text-gray-800 mb-2">
           {product.name}
         </h3>
-        <p className="text-2xl font-bold text-indigo-600">₹{product.price}</p>
+        <p className="text-2xl font-bold text-gray-600">₹{product.price}</p>
       </div>
     </motion.div>
   );
@@ -84,13 +84,13 @@ const ProductListing = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-4xl lg:text-5xl font-bold text-gray-800 mb-12 text-center"
+          className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center "
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Discover Our{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+          <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
             Premium Collection
           </span>
         </motion.h2>
@@ -111,7 +111,7 @@ const ProductListing = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300 animate-bounce"
+          className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 animate-bounce"
           onClick={() => navigate("/productList/trending")}
         >
           View All

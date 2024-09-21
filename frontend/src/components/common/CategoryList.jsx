@@ -62,14 +62,14 @@ const CategoryList = () => {
   return (
     <div className="min-h-screen py-10 px-6 bg-gradient-to-br from-gray-50 to-white flex flex-col justify-center items-center">
       <motion.h2
-        className="text-4xl lg:text-5xl font-bold text-gray-800 mb-12 text-center"
+        className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
         Discover Our{" "}
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
-          Premium Variety
+        <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
+          Premium Category
         </span>
       </motion.h2>
 
@@ -88,7 +88,7 @@ const CategoryList = () => {
       </div>
 
       <motion.div
-        className="mt-20 text-center"
+        className="mt-20 text-center "
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.8 }}
@@ -96,10 +96,10 @@ const CategoryList = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center px-10 py-3 bg-indigo-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300 animate-bounce"
+          className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300  animate-pulse"
           onClick={() => navigate("/categoryLists")}
         >
-          View All variety{" "}
+          View All Category{" "}
           <FiArrowRight className="ml-3 animate-ping" size={24} />
         </motion.button>
       </motion.div>

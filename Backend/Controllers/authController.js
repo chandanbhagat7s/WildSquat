@@ -2,8 +2,6 @@ const User = require("../Models/User");
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const sendEmail = require("../utils/sendMail");
 const Otp = require("../Models/Otp");
 
 

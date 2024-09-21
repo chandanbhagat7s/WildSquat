@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import url from "../../assets/url";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,46 +10,49 @@ import { addToCart } from "../../redux/slices/productSlice";
 import LoadingSpinner from "./Spinner";
 import { FiShoppingCart } from "react-icons/fi";
 
-const ProductCard = ({ product }) => (
-  <motion.div
-    key={product._id}
-    className=" bg-white rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    <div className="relative">
-      <motion.div
-        onClick={() => navigate(`/productDetails/${product._id}`)}
-        className="w-full overflow-hidden"
-        whileHover={{ scale: 1.05 }}
-        transition={{ duration: 0.4 }}
-      >
-        <img
-          src={`${url}img/${product.coverImage}`}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-      </motion.div>
-      <div className="absolute bottom-0 right-4 flex space-x-2">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="p-3 bg-white rounded-full shadow-md text-indigo-600 hover:bg-indigo-100 transition-colors duration-200"
-          onClick={() => ATC(product._id)}
+const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  return (
+    <motion.div
+      key={product._id}
+      className=" bg-white rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="relative">
+        <motion.div
+          onClick={() => navigate(`/productDetails/${product._id}`)}
+          className="w-full overflow-hidden"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.4 }}
         >
-          <FiShoppingCart size={20} />
-        </motion.button>
+          <img
+            src={`${url}img/${product.coverImage}`}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </motion.div>
+        <div className="absolute bottom-0 right-4 flex space-x-2">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="p-3 bg-white rounded-full shadow-md text-indigo-600 hover:bg-indigo-100 transition-colors duration-200"
+            onClick={() => ATC(product._id)}
+          >
+            <FiShoppingCart size={20} />
+          </motion.button>
+        </div>
       </div>
-    </div>
-    <div className="p-6 text-center">
-      <h3 className="text-sm font-bold lg:font-semibold  text-gray-800 mb-2">
-        {product.name}
-      </h3>
-      <p className="text-2xl font-bold text-indigo-600">₹{product.price}</p>
-    </div>
-  </motion.div>
-);
+      <div className="p-6 text-center">
+        <h3 className="text-sm font-bold lg:font-semibold  text-gray-800 mb-2">
+          {product.name}
+        </h3>
+        <p className="text-2xl font-bold text-indigo-600">₹{product.price}</p>
+      </div>
+    </motion.div>
+  );
+};
 
 export default function AllProductList() {
   let showOf = useParams();

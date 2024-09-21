@@ -105,14 +105,14 @@ const ProductOverview = () => {
     try {
       // Step 1: Create an order on your server
       const orderResponse = await axios.post("/api/v1/payment/createOrder", {
-        amount: product.price * 100, // Razorpay expects amount in paise
+        amount: 1, // Razorpay expects amount in paise
         name: product.name,
       });
       console.log(orderResponse);
 
       const options = {
         key: orderResponse.data.key_id, // Replace with your Razorpay Key ID
-        amount: product.price,
+        amount: 1,
         currency: "INR",
         name: "WILDSQUAT",
         description: `Payment for ${product.name}`,
@@ -139,6 +139,8 @@ const ProductOverview = () => {
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (e) {
+      console.log(e);
+
       dispatch(
         error({
           message:
