@@ -1,17 +1,18 @@
-import { FaShoppingBag, FaRegHeart, FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import url from "../../../assets/url";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { GrFormNext } from "react-icons/gr";
 import { IoIosArrowBack } from "react-icons/io";
+import ThinkingCard from "../Common/Cards/ThinkingCard";
+import { FaArrowTrendUp } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const ThinkingSection = () => {
   const { gender } = useSelector((state) => state.auth);
   const [product, setProduct] = useState([]);
   const [page, setPage] = useState(1);
+  const nevigate = useNavigate();
 
   useEffect(() => {
     async function getData() {
@@ -74,7 +75,7 @@ const ThinkingSection = () => {
           >
             {product?.length > 0 &&
               product.map((product, index) => (
-                <LuxuryProductCard
+                <ThinkingCard
                   key={product._id}
                   product={product}
                   index={index}
@@ -91,69 +92,19 @@ const ThinkingSection = () => {
             <GrFormNext />
           </button>
         </div>
-      </div>
-    </motion.section>
-  );
-};
-
-const LuxuryProductCard = ({ product, index }) => {
-  const navigate = useNavigate();
-
-  return (
-    <motion.div
-      className="group relative bg-white border border-gray-300 rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: index * 0.1 }}
-    >
-      <div
-        className="relative cursor-pointer"
-        onClick={() => navigate(`/toolsDetails/${product._id}`)}
-      >
-        <motion.div
-          className="overflow-hidden aspect-w-3 aspect-h-4"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
-        >
-          <img
-            src={`${url}Tools/${product.coverImage}`}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </motion.div>
-
-        {/* Overlay with product details */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="absolute bottom-0 p-4 text-white">
-            <h3 className="text-lg font-bold">{product.label}</h3>
-            <div className="flex items-center mt-2">
-              <FaStar className="text-yellow-400 mr-1" />
-              <FaStar className="text-yellow-400 mr-1" />
-              <FaStar className="text-yellow-400 mr-1" />
-              <FaStar className="text-yellow-400 mr-1" />
-              <FaStar className="text-gray-400 mr-1" />
-              <span className="ml-2">4.0</span>
-            </div>
-            <p className="mt-2">Starting from ₹{product.price}</p>
-          </div>
+        <div className="flex justify-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 mt-10"
+            onClick={() => nevigate(`/categoryLists/POSTER`)}
+          >
+            Explore more...
+            <FaArrowTrendUp className="ml-3 animate-ping" size={24} />
+          </motion.button>
         </div>
       </div>
-
-      {/* Action buttons */}
-      <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <button className="p-2 bg-white rounded-full shadow hover:bg-gray-100">
-          <FaShoppingBag className="text-gray-800" />
-        </button>
-        <button className="p-2 bg-white rounded-full shadow hover:bg-gray-100">
-          <FaRegHeart className="text-red-500" />
-        </button>
-      </div>
-
-      {/* Product name and price */}
-      <div className="py-4 px-6 text-center">
-        <h3 className="font-semibold text-gray-800 text-lg">{product.label}</h3>
-      </div>
-    </motion.div>
+    </motion.section>
   );
 };
 

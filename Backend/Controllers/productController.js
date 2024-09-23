@@ -211,37 +211,6 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
 exports.getAllCategory = factory.getAll(Tool)
 
 
-exports.homepageData = catchAsync(async (req, res, next) => {
-    const { gender } = req.params;
-    if (gender !== "male" && gender !== "female") {
-        return next(new appError("Please specify gender", 400))
-    }
-    // getting the crawsel
-    let allTools = await Tool.find({
-        gender: gender,
-
-    }).select("name products coverImage label shortDescription");
-    // const allTools = await 
-
-    allTools = await Promise.all(
-        allTools.map(async (post) => {
-            if (post.name === 'Trending') {
-                await post.populate("products", "name price _id coverImage", {}, { limit: 6 })
-            } else {
-                post.name !== "SLIDER" && delete post.shortDescription
-                delete post.products
-
-            }
-            return post;
-        })
-    );
-
-    res.status(200).send({
-        status: "success",
-        allTools
-    })
-})
-
 exports.getTrending = catchAsync(async (req, res, next) => {
     const features = new Apifeature(Tool.find({ name: "Trending" }), req.query).populate().filter().sort().fields().pagination();
 
@@ -252,6 +221,7 @@ exports.getTrending = catchAsync(async (req, res, next) => {
 
     res.status(200).send({
         status: "success",
+        id: products[0]?._id,
         products: products[0]?.products
     })
 })

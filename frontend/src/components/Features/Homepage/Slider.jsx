@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import url from "../../assets/url";
+import url from "../../../assets/url";
 
 export default function Slider() {
   const { slider } = useSelector((state) => state.product);

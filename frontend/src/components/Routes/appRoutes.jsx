@@ -7,13 +7,12 @@ import ProfileOut from "../common/ProfileOut";
 import SignUpPage from "../Authentication/Signup";
 import Homepage from "../Features/Homepage/Homepage";
 import ClickProducts from "../common/ClickProducts";
-
-import AllCategoryView from "../common/AllCategoryView";
-import AllProductList from "../common/AllProductsList";
 import AccessDeniedPage from "../Instruction/AccessDenide";
 import Authentication from "../Authentication/Authenticater";
 import PageNotFound from "../Instruction/PageNotFound";
 import LoginPage from "../Authentication/Login";
+import BulkListLayoutProduct from "../Features/BulkList/BulkListLayoutProduct";
+import BulkListLayoutCard from "../Features/BulkList/BulkListLayoutCard";
 
 export default function AppRoutes() {
   return (
@@ -70,11 +69,11 @@ export default function AppRoutes() {
           }
         />
         <Route
-          path="/categoryLists"
+          path="/categoryLists/:tool"
           element={
             <MainLayout>
               <div className="">
-                <AllCategoryView />
+                <BulkListLayoutCard />
               </div>
             </MainLayout>
           }
@@ -84,7 +83,7 @@ export default function AppRoutes() {
           element={
             <MainLayout>
               <div className="">
-                <AllProductList />
+                <BulkListLayoutProduct />
               </div>
             </MainLayout>
           }

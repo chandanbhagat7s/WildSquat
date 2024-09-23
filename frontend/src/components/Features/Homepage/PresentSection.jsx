@@ -1,59 +1,17 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
-import { FiShoppingCart } from "react-icons/fi";
 import CategorySelector from "./PresentSub";
 import { useSelector } from "react-redux";
 import { GrFormNext } from "react-icons/gr";
 import { IoIosArrowBack } from "react-icons/io";
-const ProductCard = ({ product }) => {
-  const navigate = useNavigate();
-  return (
-    <motion.div
-      key={product._id}
-      className=" bg-gray-100 rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="relative">
-        <motion.div
-          onClick={() => navigate(`/productDetails/${product._id}`)}
-          className="w-full overflow-hidden"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
-        >
-          <img
-            src={`${url}img/${product.coverImage}`}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </motion.div>
-        <div className="absolute bottom-0 right-4 flex space-x-2 ">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="p-3 bg-white rounded-full shadow-md transition-colors duration-200"
-            onClick={() => ATC(product._id)}
-          >
-            <FiShoppingCart size={20} />
-          </motion.button>
-        </div>
-      </div>
-      <div className="p-6 text-center">
-        <h3 className=" font-bold lg:font-semibold  text-gray-800 mb-2">
-          {product.name}
-        </h3>
-        <p className="text-2xl font-bold text-gray-600">₹{product.price}</p>
-      </div>
-    </motion.div>
-  );
-};
+import { FaArrowTrendUp } from "react-icons/fa6";
+import ProductCard from "../Common/Cards/ProductCard";
 
 const PresentSection = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const nevigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [category, setCateogy] = useState([]);
   const { gender } = useSelector((state) => state.auth);
@@ -97,7 +55,7 @@ const PresentSection = () => {
 
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [gender]);
   useEffect(() => {
     selectedCategory && fetchProducts(selectedCategory);
   }, [page]);
@@ -165,6 +123,15 @@ const PresentSection = () => {
           <GrFormNext />
         </button>
       </div>
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 mt-10"
+        onClick={() => nevigate(`/productList/${selectedCategory}`)}
+      >
+        Explore more...
+        <FaArrowTrendUp className="ml-3 animate-ping" size={24} />
+      </motion.button>
     </div>
   );
 };

@@ -6,7 +6,7 @@ const { addToCart, removeFromCart, homepageData, homePageClickData } = require('
 const userrouter = express.Router()
 
 
-userrouter.get("/homepage/:gender", homepageData)
+// userrouter.get("/homepage/:gender", homepageData)
 
 userrouter.use(isLoggedIn)
 userrouter.get("/getCartHeartOrders", getCartHeartOrders);

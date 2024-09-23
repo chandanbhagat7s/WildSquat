@@ -1,8 +1,12 @@
 import React from "react";
 
-const LoadingSpinner = ({ justLoad }) => {
+const LoadingSpinner = ({ justLoad, small = false }) => {
   return (
-    <div className=" min-h-screen flex justify-center items-center flex-col space-y-4">
+    <div
+      className={` ${
+        !small && "min-h-screen"
+      } flex justify-center items-center flex-col space-y-4`}
+    >
       <div className="loading-container">
         <div className="spinner"></div>
         <img
@@ -12,7 +16,7 @@ const LoadingSpinner = ({ justLoad }) => {
           alt="Loading"
           className="loading-image "
         />
-        <style jsx>{`
+        <style>{`
           .loading-container {
             position: relative;
             width: 100px;

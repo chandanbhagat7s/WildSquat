@@ -10,35 +10,7 @@ import axios from "axios";
 import url from "../../../assets/url";
 import { GrFormNext } from "react-icons/gr";
 import { IoIosArrowBack } from "react-icons/io";
-
-const Card = ({ id, image, title, total }) => {
-  const navigate = useNavigate();
-
-  return (
-    <motion.div
-      className="w-full bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
-      whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-      onClick={() =>
-        navigate(`/toolsDetails/${id}`, { state: { tool: "CATEGORY" } })
-      }
-    >
-      <motion.div className="h-64 overflow-hidden">
-        <motion.img
-          src={`${url}Tools/${image}`}
-          className="w-full h-full object-cover "
-          whileHover={{ scale: 1.1, transition: { duration: 0.5 } }}
-        />
-      </motion.div>
-
-      <motion.div className="p-4 bg-gradient-to-b from-gray-50 to-gray-100">
-        <motion.h3 className=" font-semibold text-gray-800 mb-2 flex items-center">
-          <BiCategory className="text-indigo-800 mr-2 " />
-          {title}
-        </motion.h3>
-      </motion.div>
-    </motion.div>
-  );
-};
+import CategoryCard from "../Common/Cards/CategoryCard";
 
 const CategoryList = () => {
   const navigate = useNavigate();
@@ -96,7 +68,7 @@ const CategoryList = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
           {product.length > 0 &&
             product.map((card) => (
-              <Card
+              <CategoryCard
                 key={card._id}
                 id={card._id}
                 image={card.coverImage}
