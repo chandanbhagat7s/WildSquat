@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { SendOtpToUser, signupForm } from "../redux/slices/authSlice";
-import { error, info, success, warning } from "../redux/slices/errorSlice";
+
 import { Link, useNavigate } from "react-router-dom";
 import {
   FiUser,
@@ -13,6 +12,9 @@ import {
   FiFlag,
   FiArrowRight,
 } from "react-icons/fi";
+
+import { SendOtpToUser, signupForm } from "../../redux/slices/authSlice";
+import { error, info, success, warning } from "../../redux/slices/errorSlice";
 
 const SignUpPage = () => {
   const navigate = useNavigate();

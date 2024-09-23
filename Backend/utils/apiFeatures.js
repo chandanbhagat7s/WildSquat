@@ -11,7 +11,7 @@ class Apifeature {
     filter() {
         // console.log(this.queryStr);
         const reqObj = { ...this.queryStr };
-        const remove = ['page', 'limit', 'sort', 'fields']
+        const remove = ['page', 'limit', 'sort', 'fields', 'populateField', 'populateLimit', 'populate', 'populatPage']
         remove.forEach(el => {
             delete reqObj[el]
         })
@@ -59,6 +59,35 @@ class Apifeature {
         }
         return this;
     }
+
+    populate() {
+        if (this.queryStr.populate) {
+
+
+            // Define default values for page and limit
+            let page = parseInt(this.queryStr.populatPage) || 1;
+            let limit = parseInt(this.queryStr.populateLimit) || 6;
+            let skip = (page - 1) * limit;
+
+            // Get fields to select and path to populate from query parameters
+            let selectFields = this.queryStr.populateField?.split(',').join(" ") || "-__v";
+            let path = this.queryStr.populate?.split(',').join(" ");
+
+            // Use populate with path, select fields, and pagination options
+            this.query = this.query.populate({
+                path: path,
+                select: selectFields,
+                options: {
+                    limit: limit,
+                    skip: skip
+                }
+            });
+        }
+        return this;
+    }
+
+
+
 
 
 

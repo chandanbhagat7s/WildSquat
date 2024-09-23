@@ -1,16 +1,19 @@
 import { Route, Routes } from "react-router-dom";
-import Auth from "../common/Auth";
 import MainLayout from "../common/MainLayout";
 import CreateProductForm from "../Admin/AddProduct";
 import AdminPanel from "../Admin/AdminDash";
 import ProductOverview from "../common/ProductOverwiew";
 import ProfileOut from "../common/ProfileOut";
-import SignUpPage from "../Signup";
-import Homepage from "../common/Homepage";
+import SignUpPage from "../Authentication/Signup";
+import Homepage from "../Features/Homepage/Homepage";
 import ClickProducts from "../common/ClickProducts";
-import About from "../common/About";
+
 import AllCategoryView from "../common/AllCategoryView";
 import AllProductList from "../common/AllProductsList";
+import AccessDeniedPage from "../Instruction/AccessDenide";
+import Authentication from "../Authentication/Authenticater";
+import PageNotFound from "../Instruction/PageNotFound";
+import LoginPage from "../Authentication/Login";
 
 export default function AppRoutes() {
   return (
@@ -24,18 +27,27 @@ export default function AppRoutes() {
             </MainLayout>
           }
         />
-        <Route path="/login" element={<Auth />} />
-        <Route
-          path="/about"
-          element={
-            <MainLayout>
-              <About />
-            </MainLayout>
-          }
-        />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/createProduct" element={<CreateProductForm />} />
-        <Route path="/adminDash" element={<AdminPanel />} />
+        <Route path="/denide" element={<AccessDeniedPage />} />
+
+        <Route element={<Authentication allow={["user"]} />}>
+          {" "}
+          <Route
+            path="/profile"
+            element={
+              <MainLayout>
+                <div className="">
+                  <ProfileOut />
+                </div>
+              </MainLayout>
+            }
+          />
+        </Route>
+        <Route element={<Authentication allow={["ADMIN"]} />}>
+          <Route path="/createProduct" element={<CreateProductForm />} />
+          <Route path="/adminDash" element={<AdminPanel />} />
+        </Route>
 
         <Route
           path="/productDetails/:id"
@@ -77,16 +89,9 @@ export default function AppRoutes() {
             </MainLayout>
           }
         />
-        <Route
-          path="/profile"
-          element={
-            <MainLayout>
-              <div className="">
-                <ProfileOut />
-              </div>
-            </MainLayout>
-          }
-        />
+
+        {/* if no routes match then */}
+        <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </>
   );

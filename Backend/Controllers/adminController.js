@@ -538,15 +538,7 @@ exports.getAllMyTools = catchAsync(async (req, res, next) => {
         allToolsdata
     })
 })
-exports.getToolById = catchAsync(async (req, res, next) => {
-    const { toolId } = req.params;
-    const tooldata = await Tool.findById(toolId).populate("products")
 
-    res.status(200).send({
-        status: "success",
-        tooldata
-    })
-})
 
 
 

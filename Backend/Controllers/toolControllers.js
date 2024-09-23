@@ -20,6 +20,7 @@
 
 
 const Tool = require("../Models/Tools");
+const Apifeature = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 
 exports.getNevigationListItems = catchAsync(async (req, res, next) => {
@@ -141,11 +142,41 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
 
 
 })
+exports.getToolById = catchAsync(async (req, res, next) => {
+    const toolId = req.params.toolId;
+    const features = new Apifeature(Tool.find({ _id: toolId }), req.query).populate().filter().sort().fields().pagination();
+
+
+    const products = await features.query;
+
+    console.log(products);
+
+    res.status(200).send({
+        status: "success",
+        products: products[0]?.products
+    })
+})
+
+
+
+exports.getTools = catchAsync(async (req, res, next) => {
+    const tool = req.params.tool;
+    const features = new Apifeature(Tool.find({ name: tool }), req.query).populate().filter().sort().fields().pagination();
+
+
+    const products = await features.query;
+
+    console.log(products);
+
+    res.status(200).send({
+        status: "success",
+        products: products
+    })
 
 
 
 
-
+})
 
 
 

@@ -5,7 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaTag } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
-import url from "../../assets/url";
+import axios from "axios";
+
+import url from "../../../assets/url";
+import { GrFormNext } from "react-icons/gr";
+import { IoIosArrowBack } from "react-icons/io";
 
 const Card = ({ id, image, title, total }) => {
   const navigate = useNavigate();
@@ -31,10 +35,6 @@ const Card = ({ id, image, title, total }) => {
           <BiCategory className="text-indigo-800 mr-2 " />
           {title}
         </motion.h3>
-        <motion.p className="text-sm text-gray-600 flex items-center">
-          <FaTag className="mr-2" />
-          {total} items
-        </motion.p>
       </motion.div>
     </motion.div>
   );
@@ -42,22 +42,31 @@ const Card = ({ id, image, title, total }) => {
 
 const CategoryList = () => {
   const navigate = useNavigate();
-  const { category } = useSelector((state) => state.product);
-  const [displayedCards, setDisplayedCards] = useState([]);
+  const { gender } = useSelector((state) => state.auth);
+  const [product, setProduct] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (category?.length > 0) {
-      const updateDisplayedCards = () => {
-        const shuffled = [...category].slice(0, 6);
-        setDisplayedCards(shuffled.slice(0, 6));
-      };
+    async function getData() {
+      try {
+        const res = await axios.get(
+          `/api/v1/tools/getTool/CATEGORY?gender=${gender}&page=${page}&limit=6&fields=name,label,coverImage,_id`
+        );
 
-      updateDisplayedCards();
-      const interval = setInterval(updateDisplayedCards, 6000); // Change cards every 5 seconds
+        console.log(res.data);
+        if (res.data.products == 0) {
+          setPage(1);
+          return;
+        }
+        setProduct([...res?.data?.products]);
+      } catch (e) {
+        console.log(e);
 
-      return () => clearInterval(interval);
+        return e.response;
+      }
     }
-  }, [category]);
+    getData();
+  }, [gender, page]);
 
   return (
     <div className="min-h-screen py-10 px-6 bg-gradient-to-br from-gray-50 to-white flex flex-col justify-center items-center">
@@ -73,18 +82,37 @@ const CategoryList = () => {
         </span>
       </motion.h2>
 
-      <div className="w-full max-w-7xl overflow-x-auto pb-6">
+      <div className="relative">
+        <button
+          onClick={() => {
+            page >= 2 && setPage(page - 1);
+          }}
+          disabled={page == 1}
+          className="absolute left-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
+           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+        >
+          <IoIosArrowBack />
+        </button>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-          {displayedCards.map((card) => (
-            <Card
-              key={card._id}
-              id={card._id}
-              image={card.coverImage}
-              title={card.label}
-              total={card.products.length}
-            />
-          ))}
+          {product.length > 0 &&
+            product.map((card) => (
+              <Card
+                key={card._id}
+                id={card._id}
+                image={card.coverImage}
+                title={card.label}
+              />
+            ))}
         </div>
+        <button
+          onClick={() => {
+            setPage(page + 1);
+          }}
+          className="absolute right-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
+           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+        >
+          <GrFormNext />
+        </button>
       </div>
 
       <motion.div

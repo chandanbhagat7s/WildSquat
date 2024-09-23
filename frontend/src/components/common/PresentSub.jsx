@@ -52,17 +52,17 @@ const CategorySelector = ({
           className="flex items-center space-x-4 overflow-x-auto scrollbar-hide py-5 px-4 md:px-0 md:justify-center"
           onScroll={checkScrollPosition}
         >
-          {categories.map((category) => (
+          {categories.map((c) => (
             <button
-              key={category.id}
+              key={c._id}
               className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap ${
-                category.id === selectedCategory
+                c._id === selectedCategory
                   ? "bg-black text-white font-bold shadow-lg scale-105"
                   : "bg-gray-200 text-gray-800 hover:bg-gray-300"
               }`}
-              onClick={() => handleCategoryClick(category.id)}
+              onClick={() => handleCategoryClick(c._id)}
             >
-              <span className="text-sm md:text-base">{category.name}</span>
+              <span className="text-sm md:text-base">{c.label}</span>
             </button>
           ))}
         </div>

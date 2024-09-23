@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { error, success, warning } from "../redux/slices/errorSlice";
-import { loginForm } from "../redux/slices/authSlice";
+import { error, success, warning } from "../../redux/slices/errorSlice";
+import { loginForm } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock, FiLogIn, FiArrowLeft, FiPhone } from "react-icons/fi";
 import axios from "axios";

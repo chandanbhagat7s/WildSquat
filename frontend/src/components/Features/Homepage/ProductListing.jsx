@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
+import { IoIosArrowBack } from "react-icons/io";
+import { GrFormNext } from "react-icons/gr";
 import axios from "axios";
 import { FiShoppingCart } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { error, info, warning } from "../../redux/slices/errorSlice";
-import url from "../../assets/url";
+import { error, info } from "../../../redux/slices/errorSlice";
+import url from "../../../assets/url";
 import { FaArrowTrendUp } from "react-icons/fa6";
-import { addToCart } from "../../redux/slices/productSlice";
+import { addToCart } from "../../../redux/slices/productSlice";
 
 const ProductListing = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { msg } = useSelector((state) => state.product);
-  const { trending } = useSelector((state) => state.product);
-  console.log(trending);
+  const { gender } = useSelector((state) => state.auth);
+  const [product, setProduct] = useState([]);
+  const [page, setPage] = useState(1);
 
   async function ATC(id) {
     try {
@@ -74,6 +76,27 @@ const ProductListing = () => {
       </div>
     </motion.div>
   );
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await axios.get(
+          `/api/v1/product/getAllTrendingProducts?gender=${gender}&populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
+        );
+
+        console.log(res.data);
+        if (res.data.products == 0) {
+          setPage(1);
+          return;
+        }
+        setProduct([...res?.data?.products]);
+      } catch (e) {
+        console.log(e);
+
+        return e.response;
+      }
+    }
+    getData();
+  }, [gender, page]);
 
   return (
     <motion.div
@@ -94,11 +117,32 @@ const ProductListing = () => {
             Premium Collection
           </span>
         </motion.h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 ">
-          {[...trending[0].products].map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+        <div className="relative">
+          <button
+            onClick={() => {
+              page >= 2 && setPage(page - 1);
+            }}
+            disabled={page == 1}
+            className="absolute left-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
+           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+          >
+            <IoIosArrowBack />
+          </button>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 ">
+            {product.length > 0 &&
+              product.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+          </div>
+          <button
+            onClick={() => {
+              setPage(page + 1);
+            }}
+            className="absolute right-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
+           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+          >
+            <GrFormNext />
+          </button>
         </div>
       </div>
 

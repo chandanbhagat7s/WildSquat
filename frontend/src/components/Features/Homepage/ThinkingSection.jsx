@@ -2,10 +2,38 @@ import { FaShoppingBag, FaRegHeart, FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import url from "../assets/url";
+import url from "../../../assets/url";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { GrFormNext } from "react-icons/gr";
+import { IoIosArrowBack } from "react-icons/io";
 
-const LuxuryProductShowcase = () => {
-  const { posters } = useSelector((state) => state.product);
+const ThinkingSection = () => {
+  const { gender } = useSelector((state) => state.auth);
+  const [product, setProduct] = useState([]);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await axios.get(
+          `/api/v1/tools/getTool/POSTER?gender=${gender}&page=${page}&limit=10&fields=name,label,coverImage,_id`
+        );
+
+        console.log(res.data);
+        if (res.data.products == 0) {
+          setPage(1);
+          return;
+        }
+        setProduct([...res?.data?.products]);
+      } catch (e) {
+        console.log(e);
+
+        return e.response;
+      }
+    }
+    getData();
+  }, [gender, page]);
 
   return (
     <motion.section
@@ -27,21 +55,42 @@ const LuxuryProductShowcase = () => {
           </span>
         </motion.h2>
 
-        <motion.div
-          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-        >
-          {posters?.length > 0 &&
-            posters.map((product, index) => (
-              <LuxuryProductCard
-                key={product._id}
-                product={product}
-                index={index}
-              />
-            ))}
-        </motion.div>
+        <div className="relative">
+          <button
+            onClick={() => {
+              page >= 2 && setPage(page - 1);
+            }}
+            className="absolute left-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
+           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+          >
+            <IoIosArrowBack />
+          </button>
+
+          <motion.div
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.8 }}
+          >
+            {product?.length > 0 &&
+              product.map((product, index) => (
+                <LuxuryProductCard
+                  key={product._id}
+                  product={product}
+                  index={index}
+                />
+              ))}
+          </motion.div>
+          <button
+            onClick={() => {
+              setPage(page + 1);
+            }}
+            className="absolute right-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
+           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+          >
+            <GrFormNext />
+          </button>
+        </div>
       </div>
     </motion.section>
   );
@@ -108,4 +157,4 @@ const LuxuryProductCard = ({ product, index }) => {
   );
 };
 
-export default LuxuryProductShowcase;
+export default ThinkingSection;

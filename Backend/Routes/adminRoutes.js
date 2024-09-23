@@ -1,7 +1,8 @@
 const express = require('express');
-const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, getToolById, actionOnTool, deletTool, addOtherSimillarColorProduct } = require('../Controllers/adminController');
+const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, actionOnTool, deletTool, addOtherSimillarColorProduct } = require('../Controllers/adminController');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const giveAccess = require('../Middleware/giveAccessTo');
+const { getToolById } = require('../Controllers/toolControllers');
 const adminRouter = express.Router()
 
 // adminRouter.use(isLoggedIn, giveAccess("ADMIN"))

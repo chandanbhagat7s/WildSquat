@@ -170,37 +170,7 @@ exports.addToCart = catchAsync(async (req, res, next) => {
 })
 
 
-exports.addToHeart = catchAsync(async (req, res, next) => {
 
-    console.log(req.user);
-    const id = req.params.productId;
-    const product = await Product.findById(id)
-
-
-    if (!product) {
-        return next(new appError("Please choose valid product to be added to cart", 400))
-    }
-
-
-    if (req?.user?.heart?.includes(id)) {
-        return next(new appError("Product Already added to your Heart List 😊", 400))
-    }
-    const user = await User.findByIdAndUpdate(req?.user?._id, {
-        $push: { heart: product?._id }
-    }, {
-        new: true
-    })
-    console.log("up", user);
-
-    if (!user) {
-        return next(new appError("Please try again ", 500))
-    }
-
-    res.status(200).send({
-        status: "success",
-        msg: "product added to your Heart list"
-    })
-})
 
 exports.removeFromCart = catchAsync(async (req, res, next) => {
 
@@ -235,35 +205,7 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
 
 
 
-exports.removeFromHeart = catchAsync(async (req, res, next) => {
 
-    const id = req.params.productId;
-    const product = await Product.findById(id)
-
-
-    if (!product) {
-        return next(new appError("Please choose valid product to be remove from heart list", 400))
-    }
-
-
-    if (!req?.user?.heart?.includes(id)) {
-        return next(new appError("Product already removed form your heart list 😊", 400))
-    }
-    const user = await User.findByIdAndUpdate(req?.user?._id, {
-        $pull: { heart: product?._id }
-    }, {
-        new: true
-    })
-
-    if (!user) {
-        return next(new appError("Please try again ", 500))
-    }
-
-    res.status(200).send({
-        status: "success",
-        msg: "product removed from your Heart list"
-    })
-})
 
 
 exports.getAllCategory = factory.getAll(Tool)
@@ -271,16 +213,24 @@ exports.getAllCategory = factory.getAll(Tool)
 
 exports.homepageData = catchAsync(async (req, res, next) => {
     const { gender } = req.params;
+    if (gender !== "male" && gender !== "female") {
+        return next(new appError("Please specify gender", 400))
+    }
     // getting the crawsel
     let allTools = await Tool.find({
-        gender: gender
-    }).select("-gender -__v ");
+        gender: gender,
+
+    }).select("name products coverImage label shortDescription");
     // const allTools = await 
 
     allTools = await Promise.all(
         allTools.map(async (post) => {
             if (post.name === 'Trending') {
                 await post.populate("products", "name price _id coverImage", {}, { limit: 6 })
+            } else {
+                post.name !== "SLIDER" && delete post.shortDescription
+                delete post.products
+
             }
             return post;
         })
@@ -292,19 +242,24 @@ exports.homepageData = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.getAlltrendingProducts = catchAsync(async (req, res, next) => {
+exports.getTrending = catchAsync(async (req, res, next) => {
+    const features = new Apifeature(Tool.find({ name: "Trending" }), req.query).populate().filter().sort().fields().pagination();
 
-    // getting the crawsel
-    const products = await Tool.find({ name: "Trending" }).select("products _id").populate({
-        path: "products",
-        select: "name price _id coverImage"
-    })
+
+    const products = await features.query;
+
+    console.log(products);
 
     res.status(200).send({
         status: "success",
-        products
+        products: products[0]?.products
     })
 })
+
+
+
+
+
 
 exports.getAllCardProducts = catchAsync(async (req, res, next) => {
 

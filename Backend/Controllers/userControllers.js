@@ -4,7 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 exports.getCartHeartOrders = catchAsync(async (req, res, next) => {
 
     const product = await User.findById(req.user._id).populate({
-        path: 'cart heart Ordred',
+        path: 'cart  Ordred',
         select: "name price coverImage",
 
     })

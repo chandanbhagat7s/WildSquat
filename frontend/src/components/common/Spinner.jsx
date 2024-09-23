@@ -1,6 +1,6 @@
 import React from "react";
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ justLoad }) => {
   return (
     <div className=" min-h-screen flex justify-center items-center flex-col space-y-4">
       <div className="loading-container">
@@ -52,7 +52,7 @@ const LoadingSpinner = () => {
         `}</style>
       </div>
       <div className="text-gray-800 animate-pulse">
-        Please wait while content is loading ...
+        {!justLoad ? "   Please wait while content is loading ..." : ""}
       </div>
     </div>
   );

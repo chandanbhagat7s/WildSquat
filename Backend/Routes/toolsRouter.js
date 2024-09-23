@@ -2,12 +2,12 @@
 
 
 const express = require('express');
-const { getToolById } = require('../Controllers/adminController');
-const { getNevigationListItems } = require('../Controllers/toolControllers');
+const { getNevigationListItems, getTools, getToolById } = require('../Controllers/toolControllers');
 const toolRouter = express.Router()
 
 
 toolRouter.get("/getToolById/:toolId", getToolById)
+toolRouter.get("/getTool/:tool", getTools)
 toolRouter.get("/getNavigationData/:gender", getNevigationListItems)
 
 
