@@ -17,8 +17,6 @@ const multerStorage = multer.memoryStorage();
 
 
 exports.resizeImage = catchAsync(async (req, res, next) => {
-    console.log(req.body);
-    console.log("file is ", req.files);
     if (!req.files.coverImage || !req.files.images) {
         return next(new appError("please upload a file", 400))
     }
@@ -31,13 +29,12 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
     // images
     req.body.Images = []
     req.files.images &&
-        console.log(req.files, req.file);
-    await Promise.all(req.files.images.map(async (el, i) => {
-        const fileName = `${req.body.name}-${Math.random()}-${i}.jpeg`
-        await sharp(el.buffer).toFormat('jpeg').toFile(`./Public/img/${fileName}`)
-        req.body.Images.push(fileName);
-    }))
-    console.log("exit");
+        await Promise.all(req.files.images.map(async (el, i) => {
+            const fileName = `${req.body.name}-${Math.random()}-${i}.jpeg`
+            await sharp(el.buffer).toFormat('jpeg').toFile(`./Public/img/${fileName}`)
+            req.body.Images.push(fileName);
+        }))
+
 
     next()
 
@@ -150,7 +147,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     }
 
     const tool = await Tool.updateMany(filter, update)
-    console.log(tool);
+
 
 
     res.status(200).send({
@@ -182,7 +179,6 @@ exports.editProduct = catchAsync(async (req, res, next) => {
         madeIn,
         colorUpdate
     } = req.body;
-    console.log(req.body, id);
     if (colorUpdate) {
 
         await SimilarPrduct.findByIdAndUpdate(colors._id, {
@@ -384,7 +380,7 @@ exports.getAllOrdersForShipment = catchAsync(async (req, res, next) => {
     const orders = await Booked.find({
         ordredPlaced: false
     }).populate("ofProduct byuser")
-    console.log(orders);
+
 
 
 
@@ -565,7 +561,7 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
                 return el
             }
         })
-        console.log(ids);
+
         if (ids.length == 0) {
             return next(new appError("selected product was already added ", 400))
         }

@@ -1,24 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const Tool = require("../Models/Tools");
 const Apifeature = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
@@ -47,7 +26,7 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
             select: "_id name "
         }
     ])
-    console.log("tool is ", tool);
+
 
 
     let category = []
@@ -149,7 +128,7 @@ exports.getToolById = catchAsync(async (req, res, next) => {
 
     const products = await features.query;
 
-    console.log(products);
+
 
     res.status(200).send({
         status: "success",

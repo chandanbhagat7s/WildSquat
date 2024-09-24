@@ -29,7 +29,7 @@ const createTokenSendRes = (id, res, statusCode, data) => {
     let token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRIR_IN
     });
-    console.log("token is ", token);
+
     let cookieOptions = {
         expires: new Date(
             Date.now() + 90 * 24 * 60 * 60 * 1000
@@ -58,7 +58,7 @@ const createTokenSendRes = (id, res, statusCode, data) => {
 
 
 exports.login = catchAsync(async (req, res, next) => {
-    console.log(req);
+
     const { email, password } = req.body;
 
 
@@ -86,7 +86,7 @@ exports.login = catchAsync(async (req, res, next) => {
 })
 
 exports.signUp = catchAsync(async (req, res, next) => {
-    console.log(req.body);
+    (req.body);
     const { name
         , email
         , mobile
@@ -147,7 +147,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
         return next(new appError("something went wrrong  ", 500));
 
     }
-    console.log(newUser);
+    (newUser);
     newUser.password = undefined;
     createTokenSendRes(newUser._id, res, 201, newUser)
 });
@@ -191,7 +191,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 
     } catch (error) {
-        console.log(error);
+        (error);
         user.passwordResetToken = undefined;
         user.expiresIn = undefined;
         await user.save();
@@ -209,7 +209,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 exports.verifyOtp = catchAsync(async (req, res, next) => {
     const id = req.body.userId;
     const otp = req.body.otp;
-    console.log(req.body);
+    (req.body);
 
 
     if (!id) {
@@ -292,10 +292,10 @@ exports.genrateOtpAndSend = catchAsync(async (req, res, next) => {
         validUntil: Date.now() + 1000 * 60 * 10
     })
 
-    console.log(process.env.UN, number, process.env.API_KEY, process.env.REG_TEMPLATE_ID,);
+        (process.env.UN, number, process.env.API_KEY, process.env.REG_TEMPLATE_ID,);
 
     const sent = await sendSMS(process.env.UN, process.env.API_KEY, process.env.REG_TEMPLATE_ID, process.env.FROM, number, `OTP for new registration request is,  ${otp}. Please enter this to verify your identity and proceed with the new registration request. - WLDSQT`)
-    console.log(sent);
+        (sent);
 
 
 

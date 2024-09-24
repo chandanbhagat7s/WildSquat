@@ -95,7 +95,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
         console.log("oop", order.ofProduct);
 
         let orderDetails = order.ofProduct.map((el) => {
-            console.log(el.dimension,);
+
 
             let dim = el.dimension[0].split(",");
             let l = dim[0] * 1, b = dim[1] * 1, h = dim[2] * 1;

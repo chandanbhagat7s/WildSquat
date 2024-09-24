@@ -139,7 +139,7 @@ exports.getSearchedProduct = catchAsync(async (req, res, next) => {
 
 exports.addToCart = catchAsync(async (req, res, next) => {
 
-    console.log(req.user);
+    (req.user);
     const id = req.params.productId;
     const product = await Product.findById(id)
 
@@ -157,7 +157,7 @@ exports.addToCart = catchAsync(async (req, res, next) => {
     }, {
         new: true
     })
-    console.log("up", user);
+        ("up", user);
 
     if (!user) {
         return next(new appError("Please try again ", 500))
@@ -191,7 +191,7 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
     }, {
         new: true
     })
-    console.log("up", user);
+        ("up", user);
 
     if (!user) {
         return next(new appError("Please try again ", 500))
@@ -217,7 +217,7 @@ exports.getTrending = catchAsync(async (req, res, next) => {
 
     const products = await features.query;
 
-    console.log(products);
+
 
     res.status(200).send({
         status: "success",

@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import MainLayout from "../common/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import CreateProductForm from "../Admin/AddProduct";
 import AdminPanel from "../Admin/AdminDash";
 import ProductOverview from "../common/ProductOverwiew";

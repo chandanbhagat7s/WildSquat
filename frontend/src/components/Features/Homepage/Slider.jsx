@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import url from "../../../assets/url";
+import axios from "axios";
 
 export default function Slider() {
-  const { slider } = useSelector((state) => state.product);
+  const [slider, setSlider] = useState([]);
+  const { gender } = useSelector((state) => state.auth);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -22,6 +25,26 @@ export default function Slider() {
     );
   }, [slider.length]);
 
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await axios.get(
+          `/api/v1/tools/getTool/SLIDER?gender=${gender}&page=1&limit=10&fields=name,label,coverImage,_id,shortDescription`
+        );
+
+        console.log(res.data);
+        if (res.data.products == 0) {
+          return;
+        }
+        setSlider([...res?.data?.products]);
+      } catch (e) {
+        console.log(e);
+
+        return e.response;
+      }
+    }
+    getData();
+  }, [gender]);
   useEffect(() => {
     const interval = setInterval(nextSlide, 10000);
     return () => clearInterval(interval);

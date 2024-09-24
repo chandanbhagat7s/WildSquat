@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FiSearch,
@@ -13,9 +13,9 @@ import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { FaThinkPeaks, FaChevronDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import SearchCategoryProductAndItem from "./SearchCategoryProduct";
+import SearchCategoryProductAndItem from "./../../common/SearchCategoryProduct";
 import NavbarActions from "./NavbarAction";
-import logo from "./../../assets/logo.jpeg";
+import logo from "./../../../assets/logo.jpeg";
 
 const iconMap = {
   Category: FiBox,
@@ -103,8 +103,10 @@ const Navbar = () => {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <img src={logo} alt="Wild Squat Logo" className="h-10" />
-            <span className="font-bold text-lg text-gray-800">Wild Squat</span>
+            <img src={logo} alt="Wild Squat Logo" className="scale-125 h-12" />
+            <span className="font-bold text-lg text-gray-800 font-serif first-letter:text-2xl first-letter:font-bold ">
+              WILD<span className="text-gray-500">SQUAT</span>{" "}
+            </span>
           </Link>
 
           {/* Search Bar */}
@@ -142,8 +144,8 @@ const Navbar = () => {
       </div>
 
       {/* Primary Navigation */}
-      <div className="hidden lg:flex  border-b border-gray-200 shadow-sm">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between py-2">
+      <div className="hidden lg:flex  border-b border-gray-200 shadow-sm ">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between py-2 ">
           {categories.map((category) => (
             <NavItem key={category.name} category={category} />
           ))}

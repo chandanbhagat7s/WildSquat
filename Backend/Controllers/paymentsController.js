@@ -8,7 +8,7 @@ const User = require("../Models/User");
 
 
 
-// console.log(process.env.PORT);
+// (process.env.PORT);
 exports.createOrder = catchAsync(async (req, res, next) => {
 
     const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
@@ -49,7 +49,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         );
 
     } catch (error) {
-        console.log(error.message);
+        (error.message);
     }
 
 
@@ -69,7 +69,7 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
         .update(razorpay_order_id + '|' + razorpay_payment_id)
         .digest('hex');
 
-    // console.log(req.body);
+    // (req.body);
 
     if (generated_signature !== razorpay_signature) {
         return next(new appError("transaction failed please try again", 400))
