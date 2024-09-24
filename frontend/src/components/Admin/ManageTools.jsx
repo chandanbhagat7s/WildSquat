@@ -59,7 +59,6 @@ export default function ManageTools() {
         custom: [...custom],
       });
     } catch (e) {
-      console.log(e);
       dispatch(
         error({ message: e?.response?.data?.msg || "something went wrong" })
       );

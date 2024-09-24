@@ -24,8 +24,6 @@ const ReviewForm = ({ ofProduct }) => {
         setRating(0);
         dispatch(success({ message: res?.data?.msg || "Review Posted" }));
       }
-
-      console.log(res);
     } catch (e) {
       setMessage("");
       setRating(0);

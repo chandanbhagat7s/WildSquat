@@ -1,8 +1,8 @@
 
 const express = require('express');
-const { getCartHeartOrders } = require('../Controllers/userControllers');
+const { getCartHeartOrders, editProfile, changeNumber, verifyOtpChangeNumber } = require('../Controllers/userControllers');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
-const { addToCart, removeFromCart, homepageData, homePageClickData } = require('../Controllers/productController');
+const { addToCart, removeFromCart } = require('../Controllers/productController');
 const userrouter = express.Router()
 
 
@@ -13,9 +13,9 @@ userrouter.get("/getCartHeartOrders", getCartHeartOrders);
 userrouter.get("/addToCart/:productId", addToCart)
 
 userrouter.get("/removeFromCart/:productId", removeFromCart)
-
-
-userrouter.get("/homepage/clickData", homePageClickData)
+userrouter.patch("/editProfile", editProfile)
+userrouter.post("/changeMobileNumber", changeNumber)
+userrouter.post("/verifyAndChangeMobile", verifyOtpChangeNumber)
 
 
 module.exports = userrouter;

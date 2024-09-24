@@ -31,11 +31,9 @@ const CreateCategory = () => {
       fd.append("shortDescription", shortDescription);
       fd.append("gender", gender);
       const data = await axios.post("/api/v1/admin/createCategory", fd);
-      console.log(data);
+
       dispatch(success({ message: data.data.msg || "something went wrong" }));
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:

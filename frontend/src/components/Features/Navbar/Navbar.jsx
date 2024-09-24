@@ -28,7 +28,7 @@ const iconMap = {
 
 const NavItem = ({ category }) => {
   const navigate = useNavigate();
-  const Icon = iconMap[category.name] || FiBox;
+  const Icon = FiBox;
 
   return (
     <div className="group relative">
@@ -39,21 +39,19 @@ const NavItem = ({ category }) => {
         className="flex items-center space-x-2 py-2 px-4 text-gray-600 hover:bg-gray-300 hover:text-black rounded-md transition-colors duration-200"
       >
         <Icon className="w-5 h-5 text-gray-500 group-hover:text-gray-700" />
-        <span className="font-medium ">{category.name}</span>
-        {category.subItems && (
+        <span className="font-medium ">{category.label}</span>
+        {category.products && (
           <FaChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" />
         )}
       </button>
 
-      {category.subItems && (
+      {category?.products?.length > 0 && (
         <div className="absolute left-0 top-full hidden group-hover:block w-[50vw]  shadow-lg rounded-lg overflow-hidden  -translate-x-[15vw] bg-white bg-opacity-85 ">
           <ul className="py-2 grid grid-cols-3 gap-1">
-            {category.subItems.map((item, index) => (
+            {category?.products?.map((item, index) => (
               <li
                 key={index}
-                onClick={() =>
-                  navigate(`/${item.name.toLowerCase().replace(/\s+/g, "-")}`)
-                }
+                onClick={() => navigate(`/productDetails/${item._id}`)}
                 className="px-4 text-center font-semibold rounded py-2 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 cursor-pointer transition-colors duration-200"
               >
                 {item.name}
@@ -79,11 +77,12 @@ const Navbar = () => {
 
   async function getData() {
     try {
-      const res = await axios.get(`/api/v1/tools/getNavigationData/${gender}`);
-      setCategories([...res?.data?.categories]);
-    } catch (e) {
-      console.error("Error fetching navigation data:", e);
-    }
+      const res = await axios.get(
+        `/api/v1/tools/getTool/CATEGORY?gender=${gender}&limit=6&page=1&fields=label,_id,products&populate=products&populateField=name,_id&populateLimit=10`
+      );
+
+      setCategories([...res?.data?.products]);
+    } catch (e) {}
   }
 
   useEffect(() => {
@@ -155,7 +154,10 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-white shadow-lg absolute inset-x-0 top-16 max-h-screen overflow-y-auto z-40">
-          {/* Mobile Search */}
+          <div className="flex justify-center">
+            {" "}
+            <NavbarActions />
+          </div>
           <div className="p-4 border-b border-gray-200">
             <SearchCategoryProductAndItem
               setSelectedProduct={setSelectedProduct}
@@ -184,7 +186,7 @@ const MobileNavItem = ({ category }) => {
         className="w-full flex items-center justify-between px-4 py-3 text-left bg-white hover:bg-gray-100 transition-colors duration-200"
       >
         <span className="text-base font-medium text-gray-700">
-          {category.name}
+          {category.label}
         </span>
         <FaChevronDown
           className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${
@@ -192,14 +194,12 @@ const MobileNavItem = ({ category }) => {
           }`}
         />
       </button>
-      {isOpen && category.subItems && (
+      {isOpen && category?.products?.length > 0 && (
         <div className="bg-gray-50 px-4 py-2">
-          {category.subItems.map((subItem, index) => (
+          {category.products.map((subItem, index) => (
             <div
               key={index}
-              onClick={() =>
-                navigate(`/${subItem.name.toLowerCase().replace(/\s+/g, "-")}`)
-              }
+              onClick={() => navigate(`/productDetails/${subItem._id}`)}
               className="py-2 px-4 hover:bg-gray-100 cursor-pointer rounded-md transition-colors duration-200"
             >
               {subItem.name}

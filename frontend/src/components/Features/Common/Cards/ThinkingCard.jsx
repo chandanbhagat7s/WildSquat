@@ -16,7 +16,7 @@ const ThinkingCard = ({ product, index }) => {
     >
       <div
         className="relative cursor-pointer"
-        onClick={() => navigate(`/toolsDetails/${product?._id}`)}
+        onClick={() => navigate(`/productList/${product?._id}`)}
       >
         <motion.div
           className="overflow-hidden aspect-w-3 aspect-h-4"

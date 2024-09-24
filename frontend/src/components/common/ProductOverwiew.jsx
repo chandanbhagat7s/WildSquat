@@ -77,21 +77,17 @@ const ProductOverview = () => {
         productids: [product._id],
         productName: product.name,
       });
-      console.log(res);
 
       if (res.data?.status == "success") {
         dispatch(success({ message: res.data?.msg }));
         const respoship = await axios.post("/api/v1/ship/shipProduct", {
           orderId: res.data.orderId,
         });
-        console.log(respoship);
 
         setShowPopup(false);
         // setShowPopupOrder(true);
       }
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:
@@ -108,7 +104,6 @@ const ProductOverview = () => {
         amount: 1, // Razorpay expects amount in paise
         name: product.name,
       });
-      console.log(orderResponse);
 
       const options = {
         key: orderResponse.data.key_id, // Replace with your Razorpay Key ID
@@ -119,7 +114,7 @@ const ProductOverview = () => {
         order_id: orderResponse.data.order_id,
         handler: function (response) {
           // Handle successful payment
-          console.log("Payment successful:", response);
+
           handleStatus(response);
           // You should verify the payment signature on your server here
         },
@@ -139,8 +134,6 @@ const ProductOverview = () => {
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:
@@ -153,7 +146,7 @@ const ProductOverview = () => {
   const getData = async () => {
     try {
       const res = await axios.get(`/api/v1/product/getProduct/${id}`);
-      console.log(res);
+
       if (res?.data?.status == "success") {
         // Assuming we have two placeholder images
         let i = res?.data?.product?.images.map((el) => `${url}img/${el}`);
@@ -172,7 +165,7 @@ const ProductOverview = () => {
   async function ATC() {
     try {
       const res = await dispatch(addToCart(product._id));
-      console.log(res);
+
       if (addToCart.fulfilled.match(res)) {
         dispatch(info({ message: "product added to cart" }));
       } else {

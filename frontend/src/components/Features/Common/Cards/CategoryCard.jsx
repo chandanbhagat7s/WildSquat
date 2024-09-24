@@ -11,9 +11,7 @@ const CategoryCard = ({ id, image, title, total }) => {
       <motion.div
         className="w-full bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
         whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-        onClick={() =>
-          navigate(`/toolsDetails/${id}`, { state: { tool: "CATEGORY" } })
-        }
+        onClick={() => navigate(`/productList/${id}`)}
       >
         <img
           src={`${url}Tools/${image}`}

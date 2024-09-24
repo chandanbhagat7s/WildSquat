@@ -25,15 +25,12 @@ const CategoryList = () => {
           `/api/v1/tools/getTool/CATEGORY?gender=${gender}&page=${page}&limit=6&fields=name,label,coverImage,_id`
         );
 
-        console.log(res.data);
         if (res.data.products == 0) {
           setPage(1);
           return;
         }
         setProduct([...res?.data?.products]);
       } catch (e) {
-        console.log(e);
-
         return e.response;
       }
     }
@@ -97,7 +94,7 @@ const CategoryList = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300  animate-pulse"
-          onClick={() => navigate("/categoryLists")}
+          onClick={() => navigate("/categoryLists/CATEGORY")}
         >
           View All Category{" "}
           <FiArrowRight className="ml-3 animate-ping" size={24} />

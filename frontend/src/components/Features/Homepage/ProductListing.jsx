@@ -2,46 +2,19 @@ import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { GrFormNext } from "react-icons/gr";
 import axios from "axios";
-import { FiShoppingCart } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { error, info } from "../../../redux/slices/errorSlice";
-import url from "../../../assets/url";
 import { FaArrowTrendUp } from "react-icons/fa6";
-import { addToCart } from "../../../redux/slices/productSlice";
 import ProductCard from "../Common/Cards/ProductCard";
 
 const ProductListing = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { gender } = useSelector((state) => state.auth);
   const [product, setProduct] = useState([]);
   const [page, setPage] = useState(1);
   const [id, setId] = useState(0);
-
-  async function ATC(id) {
-    try {
-      console.log("called with id", id);
-
-      const res = await dispatch(addToCart(id));
-      if (addToCart.fulfilled.match(res)) {
-        dispatch(info({ message: "Product added to cart" }));
-      } else {
-        dispatch(error({ message: "Failed to add" }));
-      }
-    } catch (e) {
-      console.log(e);
-
-      dispatch(
-        error({
-          message:
-            e.response.msg || "Product not added to cart, please try again",
-        })
-      );
-    }
-  }
 
   useEffect(() => {
     async function getData() {
@@ -50,7 +23,6 @@ const ProductListing = () => {
           `/api/v1/product/getAllTrendingProducts?gender=${gender}&populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
         );
 
-        console.log(res.data);
         if (res.data.products == 0) {
           setPage(1);
           return;
@@ -58,8 +30,6 @@ const ProductListing = () => {
         setProduct([...res?.data?.products]);
         setId(res?.data?.id);
       } catch (e) {
-        console.log(e);
-
         return e.response;
       }
     }

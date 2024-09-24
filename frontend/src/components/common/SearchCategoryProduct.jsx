@@ -22,8 +22,7 @@ const SearchCategoryProduct = ({ setSelectedProduct }) => {
           if (response.data?.status == "success") {
             setProducts(response?.data?.products);
           }
-        } catch (error) {
-          console.error("Error fetching products:", error);
+        } catch (e) {
         } finally {
           setLoading(false);
         }

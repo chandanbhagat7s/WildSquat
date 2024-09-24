@@ -6,7 +6,6 @@ import ProductOverview from "../common/ProductOverwiew";
 import ProfileOut from "../common/ProfileOut";
 import SignUpPage from "../Authentication/Signup";
 import Homepage from "../Features/Homepage/Homepage";
-import ClickProducts from "../common/ClickProducts";
 import AccessDeniedPage from "../Instruction/AccessDenide";
 import Authentication from "../Authentication/Authenticater";
 import PageNotFound from "../Instruction/PageNotFound";
@@ -58,16 +57,7 @@ export default function AppRoutes() {
             </MainLayout>
           }
         />
-        <Route
-          path="/toolsDetails/:toolId"
-          element={
-            <MainLayout>
-              <div className="">
-                <ClickProducts />{" "}
-              </div>
-            </MainLayout>
-          }
-        />
+
         <Route
           path="/categoryLists/:tool"
           element={

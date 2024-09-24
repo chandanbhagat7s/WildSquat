@@ -32,14 +32,11 @@ export default function Slider() {
           `/api/v1/tools/getTool/SLIDER?gender=${gender}&page=1&limit=10&fields=name,label,coverImage,_id,shortDescription`
         );
 
-        console.log(res.data);
         if (res.data.products == 0) {
           return;
         }
         setSlider([...res?.data?.products]);
       } catch (e) {
-        console.log(e);
-
         return e.response;
       }
     }
@@ -75,14 +72,12 @@ export default function Slider() {
           <h2 className="text-3xl font-bold mb-4 md:bg-black p-1 md:p-2 md:text-white ">
             {slider[currentIndex]?.label}
           </h2>
-          <p className="text-lg mb-6  ">
+          <p className="text-sm mb-6  ">
             {slider[currentIndex]?.shortDescription}
           </p>
           <button
             onClick={() =>
-              navigate(`/toolsDetails/${slider[currentIndex]?._id}`, {
-                state: { tool: "SLIDER" },
-              })
+              navigate(`/productList/${slider[currentIndex]?._id}`)
             }
             className="bg-black text-white px-6 py-2 shadow-md rounded-full hover:bg-gray-700 hover:scale-110 hover:shadow-lg  transition-colors text-base font-semibold"
           >

@@ -9,7 +9,7 @@ export default function ProfileOut() {
   const [load, setLoad] = useState(false);
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.auth);
-  console.log(data);
+
   const [product, setProduct] = useState({
     cart: [],
     heart: [],
@@ -19,11 +19,10 @@ export default function ProfileOut() {
   async function getData() {
     try {
       const res = await axios.get("/api/v1/user/getCartHeartOrders");
-      console.log("res is ", res);
+
       if (res?.data?.status == "success") {
         setProduct({
           cart: [...res?.data?.product?.cart],
-          heart: [...res?.data?.product?.heart],
           orders: [...res?.data?.product?.Ordred],
         });
         setLoad(false);

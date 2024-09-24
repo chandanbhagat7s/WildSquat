@@ -83,7 +83,6 @@ const SignUpPage = () => {
     const statusOtp = await dispatch(
       SendOtpToUser({ number: formData.mobile, email: formData.email })
     );
-    console.log(statusOtp);
 
     if (statusOtp?.payload?.data?.status == "success") {
       setFormData({
@@ -118,7 +117,6 @@ const SignUpPage = () => {
         otp: enteredOtp,
       })
     );
-    console.log(res);
 
     if (res?.payload?.data?.status == "success") {
       dispatch(success({ message: "Account created successfully" }));

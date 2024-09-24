@@ -47,7 +47,7 @@ export const loginForm = createAsyncThunk('/login/user', async (data) => {
 
 
 })
-export const SendOtpToUser = createAsyncThunk('/login/user', async (data) => {
+export const SendOtpToUser = createAsyncThunk('/otp/user', async (data) => {
 
 
     try {
@@ -79,7 +79,6 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         changeGender: (state, action) => {
-            console.log("actioon is ", action);
 
             state.gender = action.payload.gender
         }

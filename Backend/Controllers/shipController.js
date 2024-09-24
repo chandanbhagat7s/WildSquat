@@ -13,10 +13,10 @@ async function loginAndGetToken() {
 // If you're using Node.js version below 18
 
 exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
-    console.log("CAME TO GENERATE");
+
 
     if (!token || Date.now() >= tokenExpiryTime) {
-        console.log("id and pass", process.env.SHIP_PASSWORD, process.env.SHIP_USERNAME);
+
 
         // Making the POST request with fetch
         const response = await fetch('https://api.bigship.in/api/login/user', {
@@ -38,7 +38,7 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
         }
 
         const data = await response.json(); // Parse JSON response
-        console.log(data);
+
 
         // token = data.token;  // Save the token if needed
         console.log("Token is", data?.data?.token);
@@ -72,7 +72,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
  "courier_id": 26,
         */
         const { orderId } = req.body;
-        console.log("CAME WIHT ORDERID", orderId);
+
 
         if (!orderId) {
             return next(new appError("Order id not created, please pass OrderId", 400));

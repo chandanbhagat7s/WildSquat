@@ -9,7 +9,7 @@ class Apifeature {
     }
 
     filter() {
-        // console.log(this.queryStr);
+
         const reqObj = { ...this.queryStr };
         const remove = ['page', 'limit', 'sort', 'fields', 'populateField', 'populateLimit', 'populate', 'populatPage']
         remove.forEach(el => {

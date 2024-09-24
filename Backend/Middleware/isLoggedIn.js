@@ -7,7 +7,7 @@ const catchAsync = require("../utils/catchAsync");
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
 
-    console.log("CAME INTO MIDDLEWARE");
+
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
         token = req.headers.authorization.split(' ')[1];
@@ -15,7 +15,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         // allowing the access to the protected route if we have jwt cookie
         token = req.cookies.jwt;
     }
-    console.log("token is ", token);
+
 
 
     if (!token) {

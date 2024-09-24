@@ -61,10 +61,10 @@ exports.getAllByFilterOut = (Model) => catchAsync(async (req, res, next) => {
 exports.getOne = Model => catchAsync(async (req, res, next) => {
 
     const doc = await Model.findById(req.params.id)
-    console.log(doc);
+
 
     if (!doc) {
-        console.log("entred");
+
         return next(new appError('unable to find documnet  ', 404))
     }
     res.status(200).json({

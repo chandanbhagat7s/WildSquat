@@ -9,7 +9,6 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
         gender,
         $or: [
             { name: "CATEGORY" },
-            { name: "X-MULTIPLE" },
             { name: "POSTER" }
         ]
     }).select("label _id name")
@@ -17,7 +16,6 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
     let tool2 = await Tool.find({
         gender,
         $or: [
-            { name: "CARDS" },
             { name: "Trending" },
         ]
     }).select("products name").populate([
@@ -29,77 +27,70 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
 
 
 
-    let category = []
-    let poster = []
-    let card = []
-    let trend = []
-    let multiple = []
-    tool2.map((el) => {
-        switch (el.name) {
-            case "Trending":
-                trend = el.products.map(item => {
+    const categoryMapping = {
+        "CATEGORY": "category",
+        "POSTER": "poster",
+        "Trending": "trend",
+    };
 
+    // Initialize all categories in a single object
+    let subItemsMap = {
+        category: [],
+        multiple: [],
+        poster: [],
+        trend: [],
+        card: []
+    };
 
-                    let i = { id: item._id, name: item.name }
-                    return i
-                })
-                break;
+    // Utility function to create sub-item object
+    const createSubItem = (id, name) => ({ id, name });
 
-            case "CARDS":
-                card = el.products.map(item => {
-                    let i = { id: item._id, name: item.name }
-                    return i
-                })
-                break;
-            default:
-                break;
+    // Combine both tool arrays into one for easier processing
+    const allTools = [...tool, ...tool2];
+
+    allTools.forEach((el) => {
+        // Check if the name is in the categoryMapping
+        const key = categoryMapping[el.name];
+
+        // If it's a valid key, add the items to the appropriate array in subItemsMap
+        if (key) {
+            if (el.products) {
+                // For `Trending` and `CARDS` with products array
+                subItemsMap[key].push(
+                    ...el.products.map(item => createSubItem(item._id, item.name))
+                );
+            } else {
+                // For `CATEGORY`, `X-MULTIPLE`, `POSTER`
+                subItemsMap[key].push(createSubItem(el._id, el.label));
+            }
         }
-    })
+    });
 
-
-    tool.map((el) => {
-        switch (el.name) {
-            case "CATEGORY":
-                category.push({ id: el._id, name: el.label })
-                break;
-            case "X-MULTIPLE":
-                multiple.push({ id: el._id, name: el.label })
-                break;
-            case "POSTER":
-                poster.push({ id: el._id, name: el.label })
-                break;
-
-
-
-            default:
-                break;
-        }
-    })
-
-
+    // Map subItemsMap to categories array with proper naming
     let categories = [
         {
             name: "Category",
-            subItems: category,
+            subItems: subItemsMap.category,
         },
-
         {
             name: "Multiple",
-            subItems: multiple,
+            subItems: subItemsMap.multiple,
         },
         {
             name: "Trending",
-            subItems: trend,
+            subItems: subItemsMap.trend,
         },
         {
             name: "Top Products",
-            subItems: card,
+            subItems: subItemsMap.card,
         },
         {
             name: "Thinking",
-            subItems: poster,
+            subItems: subItemsMap.poster,
         },
     ];
+
+
 
 
 
@@ -139,13 +130,27 @@ exports.getToolById = catchAsync(async (req, res, next) => {
 
 
 exports.getTools = catchAsync(async (req, res, next) => {
-    const tool = req.params.tool;
-    const features = new Apifeature(Tool.find({ name: tool }), req.query).populate().filter().sort().fields().pagination();
+    // Assuming req.params.tool is a comma-separated string like "POSTER,CATEGORY"
+    const toolParam = req.params.tool;
+
+    // Split the string into an array of values
+    const toolArray = toolParam.split(','); // ["POSTER", "CATEGORY"]
+
+    // Use the array in the query with the $in operator
+    const features = new Apifeature(
+        Tool.find({ name: { $in: toolArray } }),
+        req.query
+    )
+        .populate() // Populate if needed
+        .filter()   // Apply additional filters from query params
+        .sort()     // Apply sorting
+        .fields()   // Select specific fields
+        .pagination(); // Apply pagination
 
 
     const products = await features.query;
 
-    console.log(products);
+
 
     res.status(200).send({
         status: "success",

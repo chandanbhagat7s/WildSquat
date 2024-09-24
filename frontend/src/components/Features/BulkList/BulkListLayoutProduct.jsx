@@ -17,7 +17,6 @@ const BulkListLayoutProduct = () => {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
-  console.log("params", params);
 
   const fetchProducts = async () => {
     try {

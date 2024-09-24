@@ -9,9 +9,7 @@ import { warning } from "../../redux/slices/errorSlice";
 const SimilarColorProducts = ({ similarProducts, setSimilarProducts }) => {
   const dispatch = useDispatch();
   function setsearchedProductOnClick(id, obj) {
-    console.log(obj);
     if ([...similarProducts].find((el) => el.id == id)) {
-      console.log("ALERADY ADDED");
       dispatch(
         warning({ message: "product already added into simmilar products" })
       );

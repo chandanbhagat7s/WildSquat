@@ -125,8 +125,6 @@ const ProductSlide = ({ product }) => {
 
   async function ATC(id) {
     try {
-      console.log("called with id", id);
-
       const res = await dispatch(addToCart(id));
       if (addToCart.fulfilled.match(res)) {
         dispatch(info({ message: "Product added to cart" }));

@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import {
+  FiUser,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiHome,
+  FiFlag,
+  FiArrowRight,
+} from "react-icons/fi";
 import {
   FaUser,
   FaShoppingCart,
-  FaHeart,
   FaBox,
-  FaInfoCircle,
   FaTrash,
-  FaEdit,
+  FaExchangeAlt,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { error, info } from "../../redux/slices/errorSlice";
+import { error, info, success } from "../../redux/slices/errorSlice";
 import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, warning } from "framer-motion";
 import { removeFromCart } from "../../redux/slices/productSlice";
-import { BiCart, BiCartAdd, BiCollection } from "react-icons/bi";
+import { BiCart } from "react-icons/bi";
 import { RiOrderPlayFill } from "react-icons/ri";
+import { FiLogOut } from "react-icons/fi";
 
 const ProfilePage = ({
   cartProducts,
@@ -35,8 +43,6 @@ const ProfilePage = ({
 
   async function RTC(id) {
     try {
-      console.log("called with id", id);
-
       const res = await dispatch(removeFromCart(id));
       if (removeFromCart?.fulfilled?.match(res)) {
         getData();
@@ -57,7 +63,7 @@ const ProfilePage = ({
       whileTap={{ scale: 0.95 }}
       className={`flex justify-center items-center px-6 py-3 rounded-full transition duration-300 ${
         isActive
-          ? "bg-indigo-600 text-white shadow-lg"
+          ? "bg-gray-600 text-white shadow-lg"
           : "bg-white text-gray-600 hover:bg-gray-100 border border-black"
       }`}
       onClick={onClick}
@@ -81,8 +87,8 @@ const ProfilePage = ({
       />
       <div className="space-y-2">
         <div className="flex-grow text-center space-y-2">
-          <h3 className="  font-bold text-gray-800">{product.name}</h3>
-          <p className="text-indigo-600 font-medium text-xl">
+          <h3 className="  font-bold text-gray-800 ">{product.name}</h3>
+          <p className="text-gray-600 font-medium text-xl">
             Rs. {product.price}
           </p>
         </div>
@@ -98,45 +104,279 @@ const ProfilePage = ({
     </motion.div>
   );
 
-  const ProfileSection = () => (
-    <div className="bg-white rounded-xl shadow-lg p-8">
-      <div className="flex flex-col md:flex-row items-center mb-8">
-        <img
-          src="https://i1.rgstatic.net/ii/profile.image/1142222359674881-1649338440466_Q512/Ab-Cd-120.jpg"
-          alt={data.name}
-          className="w-32 h-32 rounded-full object-cover mr-8 mb-4 md:mb-0"
-        />
-        <div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">{data.name}</h1>
-          <p className="text-xl text-gray-600 mb-1">{data.email}</p>
-          <p className="text-xl text-gray-600">{data.mobile}</p>
+  const ProfileSection = () => {
+    const [formData, setFormData] = useState({
+      name: data.name || "",
+      email: data.email || "",
+      mobile: data.mobile || "",
+      country: data.country || "",
+      state: data.state || "",
+      district: data.district || "",
+      pinCode: data.pinCode || 0,
+      addressLine1: data.addressLine1 || "",
+    });
+    const [otpBox, setOtpBox] = useState({
+      otpId: "",
+      otp: "",
+      showBox: false,
+    });
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+
+    async function verifyAndChangeNumber() {
+      if (otpBox.otp.length < 6) {
+        return dispatch(warning({ message: "Please enter valid otp" }));
+      }
+      if (!otpBox.otpId) {
+        setOtpBox({ ...otpBox, showBox: false });
+        return dispatch(
+          warning({ message: "Please Try again to genrate otp" })
+        );
+      }
+      try {
+        const res = await axios.post(
+          "/api/v1/user/verifyAndChangeMobile",
+          {
+            number: formData.mobile,
+            otp: otpBox.otp,
+            otpId: otpBox.otpId,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res?.data?.status == "success") {
+          dispatch(success({ message: res.data.msg }));
+          setOtpBox({
+            otpId: "",
+            otp: "",
+            showBox: false,
+          });
+        }
+      } catch (e) {
+        dispatch(
+          error({
+            message:
+              e?.response?.data?.msg ||
+              "Please try again , something went wrong",
+          })
+        );
+      }
+    }
+
+    async function changeMobileNumber() {
+      if (data.mobile == formData.mobile) {
+        return dispatch(warning({ message: "Please Change number first" }));
+      }
+      try {
+        const res = await axios.post(
+          "/api/v1/user/changeMobileNumber",
+          {
+            number: formData.mobile,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res?.data?.status == "success") {
+          setOtpBox({ ...otpBox, otpId: res.data.otpId, showBox: true });
+
+          dispatch(success({ message: res.data.msg }));
+        }
+      } catch (e) {
+        dispatch(
+          error({
+            message:
+              e?.response?.data?.msg ||
+              "Please try again , something went wrong",
+          })
+        );
+      }
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+      try {
+        const res = await axios.patch(
+          "/api/v1/user/editProfile",
+
+          formData,
+
+          {
+            withCredentials: true,
+          }
+        );
+        if (res?.data?.status == "success") {
+          dispatch(
+            success({ message: res.data.msg || "Profile Updated Successfully" })
+          );
+        }
+      } catch (e) {
+        dispatch(
+          error({
+            message:
+              e?.response?.data?.msg ||
+              "Please try again , something went wrong",
+          })
+        );
+      }
+    }
+
+    const inputFields = [
+      {
+        name: "name",
+        type: "text",
+        placeholder: "Full Name",
+        icon: <FiUser className="w-5 h-5 text-gray-400" />,
+      },
+      {
+        name: "email",
+        type: "email",
+        placeholder: "Email address",
+        icon: <FiMail className="w-5 h-5 text-gray-400" />,
+      },
+
+      {
+        name: "country",
+        type: "text",
+        placeholder: "Country",
+        icon: <FiFlag className="w-5 h-5 text-gray-400" />,
+      },
+      {
+        name: "state",
+        type: "text",
+        placeholder: "State",
+        icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
+      },
+      {
+        name: "district",
+        type: "text",
+        placeholder: "District",
+        icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
+      },
+      {
+        name: "pinCode",
+        type: "text",
+        placeholder: "PIN Code",
+        icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
+      },
+      {
+        name: "addressLine1",
+        type: "text",
+        placeholder: "Address Line 1",
+        icon: <FiHome className="w-5 h-5 text-gray-400" />,
+      },
+    ];
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="flex flex-col md:flex-row items-center justify-center mb-8">
+          <img
+            src="https://i1.rgstatic.net/ii/profile.image/1142222359674881-1649338440466_Q512/Ab-Cd-120.jpg"
+            alt={data.name}
+            className="w-32 h-32 rounded-full object-cover mr-8 mb-4 md:mb-0"
+          />
         </div>
-      </div>
-      <div className="grid md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl">
-        <div>
-          <p className="text-gray-700 mb-2">
-            <span className="font-semibold">Address:</span> {data.addressLine1}
-          </p>
-          <p className="text-gray-700">
-            <span className="font-semibold">Location:</span> {data.state},{" "}
-            {data.country}
-          </p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {inputFields.map((field) => (
+              <div key={field.name} className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  {field.icon}
+                </div>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type={field.type}
+                  required
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                  placeholder={field.placeholder}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="group relative mx-auto flex justify-center py-2 px-20 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            >
+              Submit
+              <FiArrowRight className="ml-2 -mr-1 h-5 w-5" />
+            </button>
+          </div>
+        </form>
+        <div className="flex flex-col space-y-2 justify-center items-center my-20">
+          <label htmlFor="flex space-x-2 text-lg">
+            <span className="font-bold">Mobile</span>{" "}
+            <FiPhone className="  font-bold inline-block w-5 h-5 text-gray-400" />
+          </label>
+          <div className="flex items-center justify-center space-y-3 md:space-x-5 lg:flex-row flex-col ">
+            <input
+              id={"mobile"}
+              name={"mobile"}
+              type={"text"}
+              required
+              className="block px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+              placeholder={"mobile"}
+              value={formData["mobile"]}
+              onChange={handleChange}
+            />
+            {otpBox.showBox && (
+              <>
+                <input
+                  type={"number"}
+                  required
+                  className="block px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                  placeholder={"OTP"}
+                  onChange={(e) => {
+                    setOtpBox({ ...otpBox, otp: e.target.value * 1 });
+                  }}
+                />
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className=" px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition duration-300 w-[50vw] lg:w-[20vw] shadow-sm hover:shadow-lg disabled:bg-gray-400"
+                  disabled={data.mobile == formData.mobile}
+                  onClick={verifyAndChangeNumber}
+                >
+                  <FaExchangeAlt className="inline mr-2" />
+                  Verify and Change
+                </motion.button>
+              </>
+            )}
+            {!otpBox.showBox && (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className=" px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition duration-300 w-[50vw] lg:w-[20vw] shadow-sm hover:shadow-lg disabled:bg-gray-400"
+                disabled={data.mobile == formData.mobile}
+                onClick={changeMobileNumber}
+              >
+                <FaExchangeAlt className="inline mr-2" />
+                Change
+              </motion.button>
+            )}
+          </div>
         </div>
-        <div>
-          <p className="text-gray-700 mb-2">
-            <span className="font-semibold">Pin Code:</span> {data.pinCode}
-          </p>
+        <div className="flex flex-col">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition duration-300"
+            className="mt-4 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-300 w-[50vw] lg:w-[20vw] shadow-sm hover:shadow-lg"
           >
-            <FaEdit className="inline mr-2" /> Edit Profile
+            <FiLogOut className="inline mr-2" />
+            Logout
           </motion.button>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-100 min-h-screen">
@@ -153,12 +393,7 @@ const ProfilePage = ({
           isActive={activeTab === "cart"}
           onClick={() => setActiveTab("cart")}
         />
-        <TabButton
-          label="Favorites"
-          icon={<FaHeart className="text-xl" />}
-          isActive={activeTab === "favorites"}
-          onClick={() => setActiveTab("favorites")}
-        />
+
         <TabButton
           label="Orders"
           icon={<FaBox className="text-xl" />}
@@ -197,7 +432,7 @@ const ProfilePage = ({
                 ) : (
                   <p className="py-2 text-xl animate-pulse font-semibold col-span-4 flex ">
                     No Product Found ,
-                    <span className="text-indigo-600 font-bold">
+                    <span className="text-gray-600 font-bold">
                       {" "}
                       Add Product To Your Cart
                     </span>{" "}
@@ -207,32 +442,7 @@ const ProfilePage = ({
               </div>
             </div>
           )}
-          {activeTab === "favorites" && (
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-3xl font-bold mb-6 text-gray-800">
-                Your Favorites
-              </h2>
-              {favoriteProducts?.length > 0 ? (
-                favoriteProducts.map((product) => (
-                  <ProductCard
-                    key={product._id}
-                    product={product}
-                    onRemove={(id) => console.log("Remove from favorites:", id)}
-                    removeLabel="Remove"
-                  />
-                ))
-              ) : (
-                <p className="py-2 text-xl animate-pulse font-semibold col-span-4 flex ">
-                  No Collection Found ,
-                  <span className="text-indigo-600 font-bold">
-                    {" "}
-                    Add Collection
-                  </span>{" "}
-                  <BiCollection className="text-3xl mx-2 animate-bounce" />
-                </p>
-              )}
-            </div>
-          )}
+
           {activeTab === "orders" && (
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-3xl font-bold mb-6 text-gray-800">
@@ -250,7 +460,7 @@ const ProfilePage = ({
               ) : (
                 <p className="py-2 text-xl animate-pulse font-semibold col-span-4 flex ">
                   No Product Found and No Purchase History ,
-                  <span className="text-indigo-600 font-bold">
+                  <span className="text-gray-600 font-bold">
                     {" "}
                     Order Something
                   </span>{" "}

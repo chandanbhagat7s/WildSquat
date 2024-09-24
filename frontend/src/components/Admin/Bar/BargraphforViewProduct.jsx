@@ -20,8 +20,6 @@ ChartJS.register(
 );
 
 const BarGraph = ({ data }) => {
-  console.log(data);
-
   const chartData = {
     labels: data.map((item) => item.name),
     datasets: [

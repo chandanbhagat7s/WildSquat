@@ -30,11 +30,9 @@ export default function ProductData() {
       const res = await axios.get(
         "/api/v1/product/getAllProductsByFilter?fields=name,viewCount&page=1"
       );
-      console.log(res);
+
       setProductData([...res?.data?.data]);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   }
 
   useEffect(() => {

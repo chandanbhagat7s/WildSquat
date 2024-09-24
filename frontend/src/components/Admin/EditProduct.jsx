@@ -48,7 +48,6 @@ const EditProductForm = () => {
   };
 
   const handleCategoryChanges = (item) => {
-    console.log(editedProduct.category, item);
     let category = editedProduct.category.includes(item)
       ? editedProduct.category.filter((el) => el != item)
       : [...editedProduct.category, item];
@@ -69,18 +68,12 @@ const EditProductForm = () => {
     e.preventDefault();
     try {
       let res;
-      console.log(editedProduct);
-      console.log(
-        editedProduct?.colors?.simillarProducts?.length,
-        similarProducts?.length
-      );
 
       if (
         editedProduct?.colors?.simillarProducts?.length &&
         editedProduct?.colors?.simillarProducts?.length !==
           similarProducts?.length
       ) {
-        console.log("is", editedProduct._id);
         let colors = {
           _id: editedProduct?.colors._id,
           simillarProducts: similarProducts,
@@ -92,8 +85,6 @@ const EditProductForm = () => {
           colors,
         });
       } else {
-        console.log("is", editedProduct._id);
-
         res = await axios.patch(`/api/v1/admin/edit/${editedProduct._id}`, {
           ...editedProduct,
           colorUpdate: false,
@@ -109,8 +100,6 @@ const EditProductForm = () => {
       //   dispatch(success({ message: "product updated successfully" }));
       // }
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:
@@ -124,17 +113,15 @@ const EditProductForm = () => {
   async function bringProductInfo() {
     try {
       if (selectedProduct) {
-        console.log(selectedProduct);
         const res = await axios.get(
           `/api/v1/product/getProduct/${selectedProduct}`
         );
-        console.log("res is", res);
+
         setEditedProduct({
           ...res?.data?.product,
         });
         res?.data?.product?.colors?.simillarProducts?.length > 0 &&
           setSimilarProducts([...res?.data?.product?.colors?.simillarProducts]);
-        console.log("product", res?.data?.product);
       }
     } catch (e) {
       dispatch(
@@ -169,7 +156,6 @@ const EditProductForm = () => {
       </div>
       {editedProduct?.name && (
         <>
-          {console.log("product is", editedProduct)}
           <form
             onSubmit={handleSubmit}
             className="max-w-4xl mx-auto space-y-8   p-8 rounded-2xl shadow-2xl bg-gray-100"
@@ -373,7 +359,7 @@ const EditProductForm = () => {
                         className="form-checkbox h-5 w-5 text-indigo-600"
                       />
                       <span className="text-gray-700">{size.size}</span>
-                      {console.log(size)}
+
                       {editedProduct.sizes.find(
                         (item) => item.size == size.size
                       ) && (

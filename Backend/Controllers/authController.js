@@ -209,7 +209,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 exports.verifyOtp = catchAsync(async (req, res, next) => {
     const id = req.body.userId;
     const otp = req.body.otp;
-    (req.body);
+
 
 
     if (!id) {
@@ -292,10 +292,10 @@ exports.genrateOtpAndSend = catchAsync(async (req, res, next) => {
         validUntil: Date.now() + 1000 * 60 * 10
     })
 
-        (process.env.UN, number, process.env.API_KEY, process.env.REG_TEMPLATE_ID,);
+
 
     const sent = await sendSMS(process.env.UN, process.env.API_KEY, process.env.REG_TEMPLATE_ID, process.env.FROM, number, `OTP for new registration request is,  ${otp}. Please enter this to verify your identity and proceed with the new registration request. - WLDSQT`)
-        (sent);
+
 
 
 

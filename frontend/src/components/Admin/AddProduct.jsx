@@ -70,9 +70,8 @@ const CreateProductForm = () => {
   async function bringProductInfo(id) {
     try {
       if (id) {
-        console.log(id);
         const res = await axios.get(`/api/v1/product/getProduct/${id}`);
-        console.log("res is", res);
+
         const p = res?.data?.product;
         setProduct({
           name: p.name,
@@ -109,8 +108,6 @@ const CreateProductForm = () => {
   };
 
   const handleCategoryChanges = (item) => {
-    console.log("called", item);
-
     let category = product.category.includes(item)
       ? product.category.filter((el) => el != item)
       : [...product.category, item];
@@ -186,17 +183,14 @@ const CreateProductForm = () => {
         }
       }
 
-      console.log(fd.entries());
       const res = await axios.post("/api/v1/admin/create", fd);
-      console.log(res);
+
       if (res.data.status == "success") {
         dispatch(success({ message: "product added successfully" }));
       } else {
         dispatch(error({ message: "something went wrong please try again" }));
       }
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:
@@ -208,14 +202,10 @@ const CreateProductForm = () => {
     }
   };
   async function getCategory() {
-    console.log("CALLED");
-
     await dispatch(getAllCateogyNames(product.gender));
   }
 
   useEffect(() => {
-    console.log(product.gender.length);
-
     product.gender.length > 0 ? getCategory() : "";
   }, [product.gender]);
 

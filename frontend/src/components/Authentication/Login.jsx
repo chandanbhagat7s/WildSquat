@@ -309,11 +309,11 @@ const LoginPage = () => {
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="Enter your email"
+                  placeholder="Enter your email/mobile number"
                   value={formData.email}
                   onChange={handleChange}
                 />

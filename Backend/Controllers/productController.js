@@ -139,7 +139,7 @@ exports.getSearchedProduct = catchAsync(async (req, res, next) => {
 
 exports.addToCart = catchAsync(async (req, res, next) => {
 
-    (req.user);
+
     const id = req.params.productId;
     const product = await Product.findById(id)
 
@@ -157,7 +157,7 @@ exports.addToCart = catchAsync(async (req, res, next) => {
     }, {
         new: true
     })
-        ("up", user);
+
 
     if (!user) {
         return next(new appError("Please try again ", 500))

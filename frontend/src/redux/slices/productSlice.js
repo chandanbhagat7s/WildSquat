@@ -13,7 +13,7 @@ export const addToCart = createAsyncThunk("/product/add/cart", async (data, { re
         return res.data
 
     } catch (e) {
-        console.log(e);
+
         return rejectWithValue(e?.response?.data?.msg || "Please check Your internet connection");
     }
 
@@ -37,12 +37,12 @@ export const removeFromCart = createAsyncThunk("/product/remove/cart", async (da
     try {
         const res = await axios.get(`/api/v1/user/removeFromCart/${data}`);
 
-        console.log(res);
+
 
         return res.data
 
     } catch (e) {
-        console.log(e);
+
         return rejectWithValue(e?.response?.data?.msg || "Please check Your internet connection");
     }
 
@@ -66,13 +66,13 @@ export const removeFromHeart = createAsyncThunk("/product/remove/heart", async (
 
 export const getAllCateogyNames = createAsyncThunk("/product/getCategory", async (gender) => {
     try {
-        console.log("CALLED");
+
 
         const res = await axios.get(`/api/v1/product/getAllCategory?fields=name,_id,label&gender=${gender}`);
-        console.log(res);
+
         return res.data
     } catch (e) {
-        console.log(e);
+
     }
 })
 
@@ -99,11 +99,11 @@ const productSlice = createSlice({
                 state.categoryName = action.payload.data
             }
         }).addCase(addToCart.rejected, (state, action) => {
-            console.log(action);
+
 
             state.msg = action.payload;
         }).addCase(removeFromCart.rejected, (state, action) => {
-            console.log(action);
+
 
             state.msg = action.payload;
         })

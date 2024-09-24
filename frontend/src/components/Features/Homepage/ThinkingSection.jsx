@@ -21,15 +21,12 @@ const ThinkingSection = () => {
           `/api/v1/tools/getTool/POSTER?gender=${gender}&page=${page}&limit=10&fields=name,label,coverImage,_id`
         );
 
-        console.log(res.data);
         if (res.data.products == 0) {
           setPage(1);
           return;
         }
         setProduct([...res?.data?.products]);
       } catch (e) {
-        console.log(e);
-
         return e.response;
       }
     }

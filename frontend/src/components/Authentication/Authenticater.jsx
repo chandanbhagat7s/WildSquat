@@ -6,7 +6,6 @@ import { Navigate, Outlet } from "react-router-dom";
 export default function Authentication({ allow }) {
   const { isLoggedIn, data } = useSelector((state) => state.auth);
   let role = data.role;
-  console.log(isLoggedIn, role, allow);
   return isLoggedIn && [...allow].includes(role) ? (
     // this outlet is the children route which will be accessed on the half of roles
     <Outlet />

@@ -33,7 +33,6 @@ const PresentSection = () => {
       const response = await axios.get(
         `/api/v1/tools/getToolById/${categoryId}?populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
       );
-      console.log(response.data);
 
       const data = response.data;
       if (response.data.products == 0) {
@@ -42,9 +41,7 @@ const PresentSection = () => {
       }
 
       setProducts(data.products);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
+    } catch (error) {}
   };
 
   const handleCategoryClick = (categoryId) => {

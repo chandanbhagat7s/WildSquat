@@ -17,10 +17,6 @@ const AddSimillar = () => {
   const dispatch = useDispatch();
 
   const addToSelected = (product) => {
-    console.log(
-      product,
-      selectedProducts.find((el) => el.id == product.id)
-    );
     if (selectedProducts.find((el) => el.id == product.id)) {
       dispatch(warning({ message: "Product already added" }));
       return;
@@ -33,12 +29,11 @@ const AddSimillar = () => {
       const res = await axios.patch("/api/v1/admin/addColors", {
         ids: selectedProducts.map((el) => el?.id),
       });
-      console.log(res);
+
       if (res?.data?.status == "success") {
         dispatch(success({ message: res?.data?.msg }));
       }
     } catch (e) {
-      console.log(e);
       dispatch(
         error({ message: e?.response?.data?.msg || "something went wrong" })
       );

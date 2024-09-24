@@ -20,7 +20,7 @@ const ToolProductAction = ({ docid }) => {
   async function getDataOfTool() {
     try {
       const res = await axios.get(`/api/v1/admin/getToolById/${docid}`);
-      console.log(res.data.tooldata);
+
       setSelectedItem({ ...res.data.tooldata });
     } catch (e) {}
   }
@@ -62,7 +62,7 @@ const ToolProductAction = ({ docid }) => {
 
   const removeSelectedProducts = async () => {
     // Implement the logic to remove selected products
-    console.log("Removing products:", selectedProducts);
+
     try {
       const res = await axios.patch("/api/v1/admin/actionOnTool", {
         toolId: selectedItem._id,
@@ -86,7 +86,6 @@ const ToolProductAction = ({ docid }) => {
 
   return (
     <>
-      {console.log(searchedProduct)}
       {selectedItem?.name && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-4">{selectedItem.name}</h2>
