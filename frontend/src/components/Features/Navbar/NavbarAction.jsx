@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changeGender } from "../../../redux/slices/authSlice";
 
-const NavbarActions = () => {
+const NavbarActions = ({}) => {
   const { isLoggedIn, gender } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [isToggled, setIsToggled] = useState(gender === "female");
+  const nevigate = useNavigate();
 
   const handleGenderToggle = () => {
     const newGender = isToggled ? "male" : "female";
     setIsToggled(!isToggled);
+    // setIsMenuOpen(false);
+    nevigate("/");
     dispatch(changeGender({ gender: newGender }));
   };
 

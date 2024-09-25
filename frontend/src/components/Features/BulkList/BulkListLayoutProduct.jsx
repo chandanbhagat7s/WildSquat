@@ -7,9 +7,9 @@ import { error } from "../../../redux/slices/errorSlice";
 import LoadingSpinner from "../../common/Spinner";
 import ProductCard from "../Common/Cards/ProductCard";
 import { FaArrowTrendUp } from "react-icons/fa6";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const BulkListLayoutProduct = () => {
+const BulkListLayoutProduct = ({ toolId }) => {
   const dispatch = useDispatch();
   const { gender } = useSelector((state) => state.auth);
   const [products, setProducts] = useState([]);
@@ -21,10 +21,15 @@ const BulkListLayoutProduct = () => {
   const fetchProducts = async () => {
     try {
       let res;
-
-      res = await axios.get(
-        `/api/v1/tools/getToolById/${params.id}?populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
-      );
+      if (toolId) {
+        res = await axios.get(
+          `/api/v1/tools/getToolById/${toolId}?populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
+        );
+      } else {
+        res = await axios.get(
+          `/api/v1/tools/getToolById/${params.id}?populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
+        );
+      }
 
       const newProducts = res?.data?.products;
       if (newProducts?.length === 0) {
@@ -53,17 +58,31 @@ const BulkListLayoutProduct = () => {
       transition={{ duration: 1 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          Discover Our{" "}
-          <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
-            Premium Collection
-          </span>
-        </motion.h2>
+        {!toolId ? (
+          <motion.h2
+            className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            Discover Our{" "}
+            <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
+              Premium Collection
+            </span>
+          </motion.h2>
+        ) : (
+          <motion.h2
+            className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            You May also like{" "}
+            <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
+              Simillar Collection
+            </span>
+          </motion.h2>
+        )}
 
         <InfiniteScroll
           dataLength={products.length}
@@ -78,7 +97,7 @@ const BulkListLayoutProduct = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 mt-3"
-                  onClick={() => navigate("/categoryLists")}
+                  onClick={() => navigate("/categoryLists/CATEGORY")}
                 >
                   Explore more...
                   <FaArrowTrendUp className="ml-3 animate-ping" size={24} />

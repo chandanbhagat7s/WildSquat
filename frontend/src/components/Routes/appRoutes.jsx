@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import CreateProductForm from "../Admin/AddProduct";
 import AdminPanel from "../Admin/AdminDash";
-import ProductOverview from "../common/ProductOverwiew";
 import ProfileOut from "../common/ProfileOut";
 import SignUpPage from "../Authentication/Signup";
 import Homepage from "../Features/Homepage/Homepage";
@@ -12,6 +11,7 @@ import PageNotFound from "../Instruction/PageNotFound";
 import LoginPage from "../Authentication/Login";
 import BulkListLayoutProduct from "../Features/BulkList/BulkListLayoutProduct";
 import BulkListLayoutCard from "../Features/BulkList/BulkListLayoutCard";
+import Product from "../Features/ProductDetails/Product";
 
 export default function AppRoutes() {
   return (
@@ -52,7 +52,7 @@ export default function AppRoutes() {
           element={
             <MainLayout>
               <div className="">
-                <ProductOverview />{" "}
+                <Product />{" "}
               </div>
             </MainLayout>
           }

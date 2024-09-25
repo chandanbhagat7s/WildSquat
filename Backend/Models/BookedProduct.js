@@ -7,12 +7,9 @@ const productSchema = new mongoose.Schema({
     type: mongoose.mongo.ObjectId,
     ref: "user"
   },
-  ofProduct: {
-    type: [Object],
-  },
-  price: {
-    type: Number,
 
+  productData: {
+    type: Object
   },
   ordredPlaced: {
     type: Boolean,

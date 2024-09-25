@@ -48,16 +48,12 @@ exports.getProductById = catchAsync(async (req, res, next) => {
         path: "category",
         select: "products name"
     }])
-    let category = []
-    let found = product.category.find((el) => el?.name == "CATEGORY")
-    if (found?._id) {
-        category = await Tool.findById(found._id).select("name products").populate({
-            path: "products",
-            select: "_id name price coverImage"
-        })
 
+    const categoryid = await Tool.findOne({
+        products: { $in: product._id },
+        name: "CATEGORY"
+    }, "_id")
 
-    }
     redisClient.incr(`product:${productId}:viewCount`, (err, reply) => {
         if (err) {
             console.error('Error incrementing view count:', err);
@@ -67,7 +63,7 @@ exports.getProductById = catchAsync(async (req, res, next) => {
     res.status(200).send({
         status: "success",
         product,
-        category
+        categoryid
 
     })
 })

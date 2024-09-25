@@ -13,9 +13,9 @@ export default function GetAllOrdersPending() {
   async function getData() {
     try {
       const res = await axios.get("/api/v1/admin/getAllOrdersForShipment");
-      console.log(res);
+   
       if (res?.data?.status == "success") {
-        console.log(res);
+        
         setProduct([...res?.data?.orders]);
       }
     } catch (e) {

@@ -5,12 +5,11 @@ import { motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { error } from "../../../redux/slices/errorSlice";
 import LoadingSpinner from "../../common/Spinner";
-import ProductCard from "../Common/Cards/ProductCard";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 import CategoryCard from "../Common/Cards/CategoryCard";
 
-const BulkListLayoutCard = ({ tool = "CATEGORY" }) => {
+const BulkListLayoutCard = ({ tool }) => {
   const dispatch = useDispatch();
   const { gender } = useSelector((state) => state.auth);
   const [products, setProducts] = useState([]);
@@ -51,7 +50,7 @@ const BulkListLayoutCard = ({ tool = "CATEGORY" }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-2 lg:px-8">
         <motion.h2
           className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
           initial={{ y: -50, opacity: 0 }}
@@ -77,7 +76,7 @@ const BulkListLayoutCard = ({ tool = "CATEGORY" }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 mt-3"
-                  onClick={() => navigate("/categoryLists")}
+                  onClick={() => navigate("/categoryLists/POSETER")}
                 >
                   Explore more...
                   <FaArrowTrendUp className="ml-3 animate-ping" size={24} />

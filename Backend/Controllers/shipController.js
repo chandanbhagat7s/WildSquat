@@ -92,21 +92,21 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             price: 0,
 
         }
-        console.log("oop", order.ofProduct);
+        console.log("oop", order.productData, order);
 
-        let orderDetails = order.ofProduct.map((el) => {
+        let orderDetails = order.productData.map((el) => {
 
 
             let dim = el.dimension[0].split(",");
             let l = dim[0] * 1, b = dim[1] * 1, h = dim[2] * 1;
-            calculation = { ...calculation, lengthh: calculation.lengthh + l, breadth: calculation.breadth + b, height: calculation.height + h, weight: calculation.weight + el.weight, price: calculation.price + el.price }
+            calculation = { ...calculation, lengthh: calculation.lengthh < l ? l : calculation.lengthh, breadth: calculation.breadth < b ? b : calculation.breadth, height: calculation.height + h, weight: calculation.weight + el.weight, price: calculation.price + el.price * el.quantity }
             let obj = {
                 "product_category": "FashionClothing",
                 "product_sub_category": "",
                 "product_name": el.name,
-                "product_quantity": 1,
-                "each_product_invoice_amount": el.price,
-                "each_product_collectable_amount": el.price / 10,
+                "product_quantity": el.quantity,
+                "each_product_invoice_amount": el.price * el.quantity,
+                "each_product_collectable_amount": el.price * el.quantity / 10,
                 "hsn": ""
             }
             return obj
@@ -120,8 +120,8 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
         const shippingDetails = {
             "shipment_category": "b2c",
             "warehouse_detail": {
-                "pickup_location_id": order?.ofProduct?.stockPlace || 122222,
-                "return_location_id": order?.ofProduct?.stockPlace || 122222
+                "pickup_location_id": order?.productData[0]?.stockPlace || 122222,
+                "return_location_id": order?.productData[0]?.stockPlace || 122222
             },
             "consignee_detail": {
                 "first_name": order?.byuser?.name,
@@ -203,6 +203,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
             // now we are getting awb and other details
 
+            console.log("data is sp2 ", shippingpart2.data);
             const final = await axios.post(`https://api.bigship.in/api/shipment/data?shipment_data_id=1&system_order_id=${systemId[systemId.length - 1]}`, {
 
             }
@@ -212,7 +213,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                         'Authorization': `Bearer ${token}` // Authorization header with Bearer token
                     }
                 });
-
+            console.log("data of final ", final.data);
             /*
             data is  {
 data: 'system_order_id is 1002443557',
@@ -258,7 +259,7 @@ responseCode: 200
 
 
     } catch (e) {
-        console.log("done shippingpart1", e);
+        console.log("error shippingpart1", e);
         res.status(400).send({
             status: "fail",
             data: "done"

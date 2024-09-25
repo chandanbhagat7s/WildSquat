@@ -37,9 +37,9 @@ exports.createOrder = catchAsync(async (req, res, next) => {
                         key_id: RAZORPAY_ID_KEY,
                         product_name: req.body.name,
                         description: req.body.description,
-                        contact: "8567345632",
-                        name: "Sandeep Sharma",
-                        email: "sandeep@gmail.com"
+                        contact: `${req.user.mobile}`,
+                        name: req.user.name,
+                        email: req.user.email
                     });
                 }
                 else {
@@ -49,7 +49,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         );
 
     } catch (error) {
-        (error.message);
+        console.log(error);
     }
 
 
@@ -60,7 +60,7 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
 
     const { RAZORPAY_SECRET_KEY } = process.env;
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productids, quantity, type } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productData } = req.body;
 
 
 
@@ -75,16 +75,15 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
         return next(new appError("transaction failed please try again", 400))
     }
 
-    const product = await Product.find({ _id: { $in: productids } }).select("_id name price dimension coverImage stockPlace weight")
+
 
 
 
     const Ordred = await Booked.create({
-        ofProduct: product,
+        productData: productData,
         byuser: req.user._id,
-        price: product.price,
-        quantity,
-        type,
+
+        type: "Prepaid",
     })
 
     if (!Ordred) {

@@ -31,7 +31,6 @@ const ProductOverview = () => {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
   const [category, setCategory] = useState({});
-  const [quantity, setQuantity] = useState(1);
 
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupOrder, setShowPopupOrder] = useState(false);
