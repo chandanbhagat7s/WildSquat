@@ -60,19 +60,21 @@ const createTokenSendRes = (id, res, statusCode, data) => {
 exports.login = catchAsync(async (req, res, next) => {
 
     const { email, password } = req.body;
+    console.log();
 
 
     if (!email || !password) {
         return next(new appError("please enter credential for get into in ", 400));
     }
     let user;
-    if (email.includes("@")) {
+    if (`${email}`.includes("@")) {
 
         user = await User.findOne({ email }).select('+password')
     } else {
         user = await User.findOne({ mobile: email }).select('+password')
 
     }
+    console.log("USEr", user);
 
 
 
