@@ -21,6 +21,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
         sizes: el.sizes,
         selectedSize: "",
         stockPlace: el.stockPlace,
+        weight: el.weight,
       };
 
       return obj;

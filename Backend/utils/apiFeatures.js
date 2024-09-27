@@ -2,7 +2,6 @@
 
 class Apifeature {
     constructor(query, queryStr) {
-        console.log("query string", queryStr);
 
         this.query = query;
         this.queryStr = queryStr;

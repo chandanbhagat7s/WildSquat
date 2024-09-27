@@ -80,6 +80,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
         // get the details of user form order id 
         const order = await Booked.findById(orderId).populate("byuser")
+        order.phase = 0;
         if (!order) {
             return next(new appError("please validate order Id", 400))
         }
@@ -106,12 +107,14 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 "product_name": el.name,
                 "product_quantity": el.quantity,
                 "each_product_invoice_amount": el.price * el.quantity,
-                "each_product_collectable_amount": el.price * el.quantity / 10,
+                "each_product_collectable_amount": order?.type == "Prepaid" ? 0 : el.price * el.quantity / 10,
                 "hsn": ""
             }
             return obj
 
         })
+        console.log("calculation", calculation);
+
 
 
 
@@ -131,7 +134,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 "contact_number_secondary": "",
                 "email_id": "",
                 "consignee_address": {
-                    "address_line1": `${order?.byuser?.addressLine1}`,
+                    "address_line1": `${order?.byuser?.addressLine1.substr(0, 48)}`,
                     "address_line2": `${order?.byuser?.state} , ${order?.byuser?.country}`,
                     "address_landmark": "",
                     "pincode": `${order.byuser.pinCode}`
@@ -142,7 +145,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 "invoice_id": `${d.getMilliseconds()}`,
                 "payment_type": order?.type || "COD",
                 "shipment_invoice_amount": calculation.price,
-                "total_collectable_amount": calculation.price / 10,
+                "total_collectable_amount": order?.type == "Prepaid" ? 0 : calculation.price / 10,
                 "box_details": [
                     {
                         "each_box_dead_weight": calculation.weight,
@@ -150,7 +153,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                         "each_box_width": calculation.breadth || 15,
                         "each_box_height": calculation.height || 2,
                         "each_box_invoice_amount": calculation.price,
-                        "each_box_collectable_amount": calculation.price / 10,
+                        "each_box_collectable_amount": order?.type == "Prepaid" ? 0 : calculation.price / 10,
                         "box_count": 1,
                         "product_details": [
                             ...orderDetails
@@ -175,6 +178,15 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             }
         });
 
+        if (!shippingpart1?.data?.success) {
+            await order.save()
+            res.status(200).send({
+                status: "success",
+                data: "done"
+            })
+            return
+        }
+
         // if (condition) {
 
         // }
@@ -186,13 +198,60 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
         let systemId = shippingpart1?.data?.data
         systemId = systemId.length > 0 ? systemId.split(" ") : false
+        systemId = systemId[systemId.length - 1]
 
         if (systemId) {
-            console.log("menifistingby", systemId[systemId.length - 1]);
+            console.log("menifistingby", systemId);
+
+            // we will now fetch all the courier id and then form that mimium one will be seleted
+
+
+
+
+            const fetchCoriers = await axios.get(`https://appapinew.bigship.in/api/OrderShipment/Servicibility/CourierList/6393440/${systemId}`, {
+                headers: {
+
+                    'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+                }
+            });
+            console.log("available courers", fetchCoriers?.data?.data);
+
+            // if (!fetchCoriers?.data?.success) {
+            //     order.phase = 1
+            //     await order.save();
+
+            //     res.status(200).send({
+            //         status: "success",
+            //         data: "done"
+            //     })
+            //     return
+            // }
+
+            // if (fetchCoriers?.data?.data?.length == 0) {
+            //     order.phase = 1
+            //     await order.save()
+            //     res.status(200).send({
+            //         status: "success",
+            //         data: "done"
+            //     })
+            //     return
+            // }
+
+
+
+
+            const lowestChargeCourier = fetchCoriers?.data?.data?.reduce((prev, current) => {
+                return (prev.courierCharge < current.courierCharge) ? prev : current;
+            });
+
+            console.log(lowestChargeCourier, lowestChargeCourier.courierId);
+
+            lowestChargeCourier.courierId = 1
+
 
             const shippingpart2 = await axios.post("https://api.bigship.in/api/order/manifest/single", {
-                "system_order_id": systemId[systemId.length - 1],
-                "courier_id": 24
+                "system_order_id": systemId,
+                "courier_id": lowestChargeCourier.courierId
             }
                 , {
                     headers: {
@@ -202,9 +261,18 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 });
 
             // now we are getting awb and other details
-
             console.log("data is sp2 ", shippingpart2.data);
-            const final = await axios.post(`https://api.bigship.in/api/shipment/data?shipment_data_id=1&system_order_id=${systemId[systemId.length - 1]}`, {
+            if (!shippingpart2?.data?.success) {
+                order.phase = 1;
+                await order.save()
+                res.status(200).send({
+                    status: "success",
+                    data: "done"
+                })
+                return
+            }
+
+            const final = await axios.post(`https://api.bigship.in/api/shipment/data?shipment_data_id=1&system_order_id=${systemId}`, {
 
             }
                 , {
@@ -213,6 +281,11 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                         'Authorization': `Bearer ${token}` // Authorization header with Bearer token
                     }
                 });
+
+
+
+
+
             console.log("data of final ", final.data);
             /*
             data is  {
@@ -239,8 +312,9 @@ message: 'Successfully Completed',
 responseCode: 200
 }
             */
-            order.system_order_id = systemId[systemId.length - 1];
-            order.courier_id = final.data?.data?.courier_id * 1
+            order.system_order_id = systemId;
+            order.courier_id = lowestChargeCourier.courierId;
+            order.charges = lowestChargeCourier.courierCharge;
             order.courier_name = final.data?.data?.courier_name
             order.master_awb = final.data?.data?.master_awb
             order.ordredPlaced = true;
@@ -259,7 +333,7 @@ responseCode: 200
 
 
     } catch (e) {
-        console.log("error shippingpart1", e);
+        console.log("error shippingpart1", e?.response?.data, e);
         res.status(400).send({
             status: "fail",
             data: "done"

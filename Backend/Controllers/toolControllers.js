@@ -1,4 +1,5 @@
 const Tool = require("../Models/Tools");
+const createCache = require("../Redis/createCache");
 const Apifeature = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 
@@ -150,6 +151,7 @@ exports.getTools = catchAsync(async (req, res, next) => {
 
     const products = await features.query;
 
+    await createCache(req, products)
 
 
     res.status(200).send({

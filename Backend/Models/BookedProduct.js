@@ -42,7 +42,18 @@ const productSchema = new mongoose.Schema({
   deilvired: {
     type: Boolean,
     default: false
-  }
+  },
+  phase: {
+    type: Number,
+    /*
+    0 - nothing done
+    1 - systemid genrated
+    2 - menifested
+    3 -completed
+    
+    */
+  },
+
 
 
 

@@ -61,8 +61,7 @@ const Limiter = rateLimit.rateLimit({
 
 app.use("/api", Limiter)
 
-const PORT = process.env.PORT || 3000;
-console.log(PORT);
+
 
 app.use(morgan("dev"))
 app.use(express.json({ limit: "10kb" }))
@@ -83,7 +82,6 @@ mongoose.connect(process.env.DATABASE_URL, {
 
 // redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
-console.log(abc);
 
 
 app.use('/api/v1/tools', toolRouter)
@@ -111,25 +109,15 @@ app.use(globalErrorHandler)
 
 
 
-const server = app.listen(PORT, () => {
-    console.log("server started at port ", PORT);
-})
+
 
 syncViewCounts();
 
 
 
-process.on("unhandledRejection", (err) => {
-    console.log(err?.name, err?.message);
-    console.log("UNHANDLED REDECTION");
-    server.close(() => {
-
-        process.exit(0)
-    })
-
-})
 
 
+module.exports = app;
 
 
 
