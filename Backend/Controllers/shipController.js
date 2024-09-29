@@ -1,3 +1,4 @@
+const Razorpay = require("razorpay");
 const Booked = require("../Models/BookedProduct");
 const User = require("../Models/User");
 const appError = require("../utils/appError");
@@ -272,6 +273,8 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 return
             }
 
+
+
             const final = await axios.post(`https://api.bigship.in/api/shipment/data?shipment_data_id=1&system_order_id=${systemId}`, {
 
             }
@@ -282,7 +285,15 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                     }
                 });
 
-
+            if (!final?.data?.success) {
+                order.phase = 2;
+                await order.save()
+                res.status(200).send({
+                    status: "success",
+                    data: "done"
+                })
+                return
+            }
 
 
 
@@ -318,6 +329,7 @@ responseCode: 200
             order.courier_name = final.data?.data?.courier_name
             order.master_awb = final.data?.data?.master_awb
             order.ordredPlaced = true;
+            order.phase = 3
             await order.save()
             console.log("pase2 is ", shippingpart2.data, final.data);
 
@@ -369,7 +381,69 @@ exports.getAllWarehouse = catchAsync(async (req, res, next) => {
 
 
 
+exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
+    const { orderId } = req.body;
+    if (!orderId) {
+        return next(new appError("please pass orderId to process refund", 400))
+    }
 
+    const order = await Booked.findById(orderId)
+
+    if (!order) {
+        return next(new appError("You have not booked any order", 400))
+    }
+    if (order.cancled) {
+        return next(new appError("Your order is cancled already", 400))
+    }
+    if (order.refunded) {
+        return next(new appError("Your amount has been refunded already", 400))
+    }
+    // first cancle order 
+    const cancledShipment = await axios.post("https://api.bigship.in/api/order/cancel", [
+        order.master_awb
+    ]
+        , {
+            headers: {
+
+                'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+            }
+        });
+    console.log("cancleShipment", cancledShipment.data);
+
+
+    if (!cancledShipment?.data?.success) {
+
+        return next(new appError("Something went wrong please try again to cancle your order", 400))
+
+    }
+    order.cancledShipment = true;
+
+
+    const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+
+
+
+    var instance = new Razorpay({
+        key_id: RAZORPAY_ID_KEY,
+        key_secret: RAZORPAY_SECRET_KEY
+    })
+
+    let responce = instance.payments.refund(order.paymentId, {
+        "amount": "100",
+        "speed": "normal",
+        "notes": {
+            "notes_key_1": "Beam me up Scotty.",
+            "notes_key_2": "Engage"
+        },
+        "receipt": `Receipt No. ${order.orderId}`
+    })
+    console.log("responce", responce);
+    order.refunded = true
+    await order.save()
+    res.status(200).send({
+        status: "success"
+    })
+})
 
 
 

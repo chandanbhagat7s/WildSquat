@@ -6,6 +6,7 @@ const factory = require("../utils/factory");
 const catchAsync = require("../utils/catchAsync");
 const redisClient = require('../Redis/redisClient');
 const Apifeature = require("../utils/apiFeatures");
+const createCache = require("../Redis/createCache");
 
 exports.getAllProduct = catchAsync(async (req, res, next) => {
     const product = await Product.find({
@@ -187,7 +188,7 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
     }, {
         new: true
     })
-        ("up", user);
+
 
     if (!user) {
         return next(new appError("Please try again ", 500))
@@ -208,10 +209,39 @@ exports.getAllCategory = factory.getAll(Tool)
 
 
 exports.getTrending = catchAsync(async (req, res, next) => {
+
+    const generateCacheKey = (req) => {
+        const baseUrl = req.originalUrl.split('?')[0];
+        const queryString = JSON.stringify(req.query);  // Capture all query parameters
+        return `${baseUrl}:${queryString}`;
+    };
+    const cacheKey = generateCacheKey(req);
+
+
+    const cachedData = await redisClient.get(cacheKey);
+
+    if (cachedData) {
+        // Send cached data
+        console.log("SENDED CACHEd of trending");
+
+
+
+        return res.status(200).send({
+            status: "success",
+            id: JSON.parse(cachedData)[0]?._id,
+            products: JSON.parse(cachedData)[0]?.products
+        });
+    } else {
+
+    }
+
     const features = new Apifeature(Tool.find({ name: "Trending" }), req.query).populate().filter().sort().fields().pagination();
 
 
     const products = await features.query;
+    await redisClient.set(cacheKey, JSON.stringify(products), {
+        EX: 5 * 3600  // Cache expires in 5 hour
+    });
 
 
 

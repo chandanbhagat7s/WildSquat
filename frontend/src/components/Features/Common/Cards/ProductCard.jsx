@@ -19,6 +19,8 @@ const ProductCard = ({ product }) => {
         dispatch(warning({ message: msg || "Failed to add" }));
       }
     } catch (e) {
+      console.log(e);
+
       dispatch(
         error({
           message: e.message || "Product not added to cart, please try again",

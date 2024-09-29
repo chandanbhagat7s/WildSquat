@@ -1015,6 +1015,10 @@ video {
   height: 10%;
 }
 
+.h-\[100vh\] {
+  height: 100vh;
+}
+
 .h-\[80vh\] {
   height: 80vh;
 }
@@ -1025,10 +1029,6 @@ video {
 
 .h-full {
   height: 100%;
-}
-
-.h-\[100vh\] {
-  height: 100vh;
 }
 
 .max-h-60 {
@@ -1586,6 +1586,11 @@ video {
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
+.border-gray-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
 .border-gray-700 {
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
@@ -1598,11 +1603,6 @@ video {
 
 .border-transparent {
   border-color: transparent;
-}
-
-.border-gray-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
 
 .border-opacity-10 {
@@ -1761,6 +1761,10 @@ video {
 
 .bg-opacity-75 {
   --tw-bg-opacity: 0.75;
+}
+
+.bg-opacity-80 {
+  --tw-bg-opacity: 0.8;
 }
 
 .bg-opacity-85 {
@@ -2494,15 +2498,6 @@ video {
   --tw-ring-color: rgb(99 102 241 / var(--tw-ring-opacity));
 }
 
-.ring-white {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity));
-}
-
-.ring-offset-1 {
-  --tw-ring-offset-width: 1px;
-}
-
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -2624,6 +2619,11 @@ video {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
+.hover\:border-gray-800:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(31 41 55 / var(--tw-border-opacity));
+}
+
 .hover\:border-indigo-500:hover {
   --tw-border-opacity: 1;
   border-color: rgb(99 102 241 / var(--tw-border-opacity));
@@ -2632,11 +2632,6 @@ video {
 .hover\:border-indigo-800:hover {
   --tw-border-opacity: 1;
   border-color: rgb(55 48 163 / var(--tw-border-opacity));
-}
-
-.hover\:border-gray-800:hover {
-  --tw-border-opacity: 1;
-  border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 
 .hover\:bg-blue-100:hover {
@@ -3097,6 +3092,10 @@ video {
     width: 60%;
   }
 
+  .md\:w-\[80vw\] {
+    width: 80vw;
+  }
+
   .md\:flex-1 {
     flex: 1 1 0%;
   }
@@ -3130,6 +3129,10 @@ video {
 
   .md\:flex-row-reverse {
     flex-direction: row-reverse;
+  }
+
+  .md\:justify-end {
+    justify-content: flex-end;
   }
 
   .md\:justify-center {

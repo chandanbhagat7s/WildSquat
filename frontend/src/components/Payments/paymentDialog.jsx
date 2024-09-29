@@ -142,8 +142,8 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-100 rounded-lg p-6 w-full max-w-4xl shadow-xl">
+    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4 ">
+      <div className="bg-gray-100 rounded-lg p-6 w-full  max-w-4xl shadow-xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-800">Confirm Purchase</h2>
           <button
@@ -190,7 +190,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
                   </button>
                 </div>
                 <div className="flex space-x-2">
-                  {product.sizes.map((size) => (
+                  {product?.sizes?.map((size) => (
                     <button
                       key={size.size}
                       className={`px-4 py-2 border border-gray-200 rounded-md hover:border-gray-800 transition duration-300 ${
@@ -215,7 +215,9 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <p className="text-2xl font-bold text-gray-800">Total:</p>
+          <p className="text-2xl font-bold text-gray-800">
+            Total: {products?.length} Items
+          </p>
           <p className="text-2xl font-bold text-gray-800">
             Rs.
             {productData.reduce(

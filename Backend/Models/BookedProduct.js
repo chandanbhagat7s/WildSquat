@@ -53,6 +53,25 @@ const productSchema = new mongoose.Schema({
     
     */
   },
+  paymentId: String,
+  orderId: String,
+  refunded: {
+    type: Boolean,
+    default: false
+  },
+  cancledShipment: {
+    type: Boolean,
+    default: false
+  },
+  time: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: String,
+    enum: ["ORDRED", "CANCELED", "SHIPPED"]
+
+  }
 
 
 

@@ -64,12 +64,15 @@ const userSchema = new mongoose.Schema({
     Ordred: {
 
         type: [mongoose.mongo.ObjectId],
-        ref: "Product"
+        ref: "Booked"
     },
     alreadyOrdred: {
 
         type: [mongoose.mongo.ObjectId],
         ref: "Product"
+    },
+    district: {
+        type: String
     },
     mobileChangeOTP: Number,
     passwordChangedAt: Date,

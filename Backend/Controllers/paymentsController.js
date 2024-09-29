@@ -61,6 +61,8 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
     const { RAZORPAY_SECRET_KEY } = process.env;
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productData } = req.body;
+    console.log("data", razorpay_order_id, razorpay_payment_id, razorpay_signature, productData);
+
 
 
 
@@ -82,7 +84,8 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
     const Ordred = await Booked.create({
         productData: productData,
         byuser: req.user._id,
-
+        paymentId: razorpay_payment_id,
+        orderId: razorpay_order_id,
         type: "Prepaid",
     })
 

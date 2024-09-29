@@ -1,5 +1,5 @@
 const express = require('express');
-const { ensureShippingAuth, getAllWarehouse, shipProduct } = require('../Controllers/shipController');
+const { ensureShippingAuth, getAllWarehouse, shipProduct, cancleShpementAndRefund } = require('../Controllers/shipController');
 
 const shipRouter = express.Router()
 
@@ -7,6 +7,7 @@ const shipRouter = express.Router()
 shipRouter.use(ensureShippingAuth)
 shipRouter.post("/shipProduct", shipProduct)
 shipRouter.get("/getAllWarehouseDetails", getAllWarehouse)
+shipRouter.post("/cancleOrderAndRefund", cancleShpementAndRefund)
 
 
 // Integrating bigShip for shipping

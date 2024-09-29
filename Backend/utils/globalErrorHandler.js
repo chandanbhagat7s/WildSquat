@@ -100,6 +100,8 @@ module.exports = (err, req, res, next) => {
 
         callProdError(error || err, req, res)
     } else {
+        console.log(err);
+
         callDevError(err, req, res);
     }
 

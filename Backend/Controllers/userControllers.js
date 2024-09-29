@@ -28,10 +28,9 @@ exports.getCartHeartOrders = catchAsync(async (req, res, next) => {
 
     const product = await User.findById(req.user._id).populate({
         path: 'cart  Ordred',
-        select: "name price coverImage",
+        select: "name price coverImage sizes",
 
     })
-    console.log("product is ", product);
 
 
 
@@ -51,6 +50,25 @@ exports.getCartHeartOrders = catchAsync(async (req, res, next) => {
 
 
 
+})
+
+exports.getOrderProducts = catchAsync(async (req, res, next) => {
+
+    const orders = await User.find({
+        _id: req.user._id,
+
+    }).populate({
+        path: 'Ordred',
+        select: "-__v",
+
+    })
+
+
+
+    res.status(200).send({
+        status: "success",
+        orders
+    })
 })
 
 
