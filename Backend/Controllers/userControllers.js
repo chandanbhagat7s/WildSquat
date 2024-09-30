@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const Otp = require("../Models/Otp");
 const User = require("../Models/User");
 const appError = require("../utils/appError");
@@ -34,6 +35,8 @@ exports.getCartHeartOrders = catchAsync(async (req, res, next) => {
 
 
 
+
+
     res.status(200).send({
         status: "success",
         product
@@ -52,24 +55,63 @@ exports.getCartHeartOrders = catchAsync(async (req, res, next) => {
 
 })
 
-exports.getOrderProducts = catchAsync(async (req, res, next) => {
 
-    const orders = await User.find({
-        _id: req.user._id,
+const FOUR_HOURS = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
 
-    }).populate({
-        path: 'Ordred',
-        select: "-__v",
+exports.getOrderStatuses = async (req, res) => {
+    try {
+        const orders = await User.findById(req.user._id, "Ordred").populate({
+            path: 'Ordred',
+            select: "-__v",
+        });
 
-    })
+        const responses = await Promise.all(
+            orders.Ordred.map(async (order) => {
+                const now = Date.now();
+
+                // Check if the status was updated more than 4 hours ago
+                if (!order.statusUpdatedAt || now - order.statusUpdatedAt > FOUR_HOURS) {
+                    console.log(`Status outdated for order: ${order.shipOrderId}, requesting from API`);
+
+                    // Make the API request
+                    const response = await axios.get(
+                        `https://appapinew.bigship.in/api/Dashboard/GetShipmentDetails?user_Id=6393440&search_key=order_id&search_value=${order.shipOrderId}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${req.shippingToken}`, // Authorization header with Bearer token
+                            },
+                        }
+                    );
+
+                    const shipmentInfo = response.data?.data?.shipmentInfo;
+
+                    // Update the status and the timestamp in the database
+                    order.orderStatus = shipmentInfo.orderStatus;
+                    order.statusUpdatedAt = now;
+                    await order.save();
+
+                    return shipmentInfo.orderStatus; // Return the orderStatus
+                } else {
+                    console.log(`Status is up-to-date for order: ${order.shipOrderId}`);
+                    return order.orderStatus; // Use the cached status from the database
+                }
+            })
+        );
+        console.log(orders.Ordred);
 
 
-
-    res.status(200).send({
-        status: "success",
-        orders
-    })
-})
+        res.status(200).send({
+            status: "success",
+            orders: orders.Ordred,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            status: "error",
+            message: "Failed to fetch order statuses",
+        });
+    }
+};
 
 
 

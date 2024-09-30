@@ -30,6 +30,33 @@ env.config({ path: "./config.env" })
 
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'Public')))
+
+
+
+app.use(express.static('Public', {
+    setHeaders: function (res, path) {
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+    }
+}));
+// Serve static files with correct MIME type
+app.use(express.static('Public', {
+    setHeaders: function (res, path) {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
+
+app.use((req, res, next) => {
+    res.setHeader(
+        "Content-Security-Policy",
+        "script-src 'self' https://checkout.razorpay.com"
+    );
+    next();
+});
+
 // security for headers
 app.use(helmet())
 // security for mongoquery injection
@@ -95,6 +122,19 @@ app.use('/api/v1/ship', shipRouter)
 
 
 
+
+
+app.all("/api/*", (req, res) => {
+    res.status(404).send({
+        status: "error",
+        msg: "please hit valid url"
+    })
+})
+
+// Handle client-side routing, return all requests to the React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Public', 'index.html'));
+});
 
 
 

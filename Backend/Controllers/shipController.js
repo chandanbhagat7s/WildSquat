@@ -5,6 +5,7 @@ const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const axios = require("axios")
 let token = "";
+let tokenExpiryTime;
 // Function to login and fetch token
 async function loginAndGetToken() {
 
@@ -43,10 +44,12 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
         // token = data.token;  // Save the token if needed
         console.log("Token is", data?.data?.token);
-        token = data?.data?.token
+        token = data?.data?.token;
+        req.shippingToken = data?.data?.token;
 
         tokenExpiryTime = Date.now() + 12 * 60 * 60 * 1000; // Set token expiry for 12 hours
     }
+    req.shippingToken = token;
 
     next(); // Proceed to the next middleware or route handler
 });
@@ -120,6 +123,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
 
         const d = new Date()
+        let orderInvoiceId = Date.now()
 
         const shippingDetails = {
             "shipment_category": "b2c",
@@ -143,7 +147,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             },
             "order_detail": {
                 "invoice_date": d.toUTCString(Date.now()),
-                "invoice_id": `${d.getMilliseconds()}`,
+                "invoice_id": `${orderInvoiceId}`,
                 "payment_type": order?.type || "COD",
                 "shipment_invoice_amount": calculation.price,
                 "total_collectable_amount": order?.type == "Prepaid" ? 0 : calculation.price / 10,
@@ -169,7 +173,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             }
         }
 
-
+        order.shipOrderId = orderInvoiceId;
 
         // creating system id of order
         const shippingpart1 = await axios.post("https://api.bigship.in/api/order/add/single", shippingDetails, {
@@ -287,7 +291,8 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
             if (!final?.data?.success) {
                 order.phase = 2;
-                await order.save()
+                order.shipOrderId =
+                    await order.save()
                 res.status(200).send({
                     status: "success",
                     data: "done"
@@ -330,6 +335,7 @@ responseCode: 200
             order.master_awb = final.data?.data?.master_awb
             order.ordredPlaced = true;
             order.phase = 3
+
             await order.save()
             console.log("pase2 is ", shippingpart2.data, final.data);
 
@@ -395,12 +401,12 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
     if (order.cancled) {
         return next(new appError("Your order is cancled already", 400))
     }
-    if (order.refunded) {
-        return next(new appError("Your amount has been refunded already", 400))
-    }
+    // if (order.refunded) {
+    //     return next(new appError("Your amount has been refunded already", 400))
+    // }
     // first cancle order 
-    const cancledShipment = await axios.post("https://api.bigship.in/api/order/cancel", [
-        order.master_awb
+    const cancledShipment = await axios.put("https://api.bigship.in/api/order/cancel", [
+        order.master_awb * 1
     ]
         , {
             headers: {
@@ -437,9 +443,11 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
         },
         "receipt": `Receipt No. ${order.orderId}`
     })
-    console.log("responce", responce);
+    const r = await responce;
+    console.log("responce", responce, r);
     order.refunded = true
-    await order.save()
+    await order.save();
+    // await Booked.findByIdAndDelete(order._id)
     res.status(200).send({
         status: "success"
     })

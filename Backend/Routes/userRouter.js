@@ -1,8 +1,9 @@
 
 const express = require('express');
-const { getCartHeartOrders, editProfile, changeNumber, verifyOtpChangeNumber, getOrderProducts } = require('../Controllers/userControllers');
+const { getCartHeartOrders, editProfile, changeNumber, verifyOtpChangeNumber, getOrderStatuses } = require('../Controllers/userControllers');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const { addToCart, removeFromCart } = require('../Controllers/productController');
+const { ensureShippingAuth } = require('../Controllers/shipController');
 const userrouter = express.Router()
 
 
@@ -10,7 +11,7 @@ const userrouter = express.Router()
 
 userrouter.use(isLoggedIn)
 userrouter.get("/getCartHeartOrders", getCartHeartOrders);
-userrouter.get("/getOrderProducts", getOrderProducts);
+userrouter.get("/getOrderProducts", ensureShippingAuth, getOrderStatuses);
 userrouter.get("/addToCart/:productId", addToCart)
 
 userrouter.get("/removeFromCart/:productId", removeFromCart)

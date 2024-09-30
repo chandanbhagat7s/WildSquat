@@ -67,11 +67,18 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  status: {
-    type: String,
-    enum: ["ORDRED", "CANCELED", "SHIPPED"]
+  shipOrderId: {
+    type: String
+  },
+  statusUpdatedAt: {
+    type: Date,
 
+  },
+  orderStatus: {
+    type: String
   }
+
+
 
 
 
