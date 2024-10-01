@@ -26,7 +26,7 @@ export const signupForm = createAsyncThunk('/signup/user', async (data) => {
 
 })
 
-export const loginForm = createAsyncThunk('/login/user', async (data) => {
+export const loginForm = createAsyncThunk('/login/user', async (data, { rejectWithValue }) => {
 
 
     try {
@@ -36,13 +36,14 @@ export const loginForm = createAsyncThunk('/login/user', async (data) => {
             withCredentials: true
         })
         if (res) {
-            return res
+            return res.data
 
 
         }
-    } catch (error) {
+    } catch (e) {
+        console.log(e);
 
-        return error.response;
+        return rejectWithValue(e?.response?.data?.msg || "Please check Your internet connection");
     }
 
 
@@ -72,7 +73,8 @@ export const SendOtpToUser = createAsyncThunk('/otp/user', async (data) => {
 const initialState = {
     data: JSON.parse(localStorage.getItem("data")) || '',
     isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
-    gender: "male"
+    gender: "male",
+    msg: ""
 }
 const authSlice = createSlice({
     name: 'Auth',
@@ -105,6 +107,11 @@ const authSlice = createSlice({
             }
 
 
+        }).addCase(loginForm.rejected, (state, action) => {
+
+
+
+            state.msg = action.payload;
         })
 
     }

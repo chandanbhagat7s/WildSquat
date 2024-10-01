@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { error, success, warning } from "../../redux/slices/errorSlice";
 import { loginForm } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ import axios from "axios";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { msg } = useSelector((state) => state.auth);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     password: "",
@@ -58,20 +60,52 @@ const LoginPage = () => {
     if (!formData.email || !formData.password) {
       return dispatch(warning({ message: "Please enter all the details" }));
     }
+    if (formData.email.includes("@") && formData.email.length < 5) {
+      return dispatch(warning({ message: "Please enter valid email address" }));
+    }
+    if (
+      !formData.email.includes("@") &&
+      formData.email.length < 10 &&
+      formData.mobile.length >= 11
+    ) {
+      return dispatch(warning({ message: "Please enter valid mobile number" }));
+    }
+    if (!formData.email.includes("@") && formData.email.length == 10) {
+      const mobileNumberRegex = /^[6-9][0-9]{9}$/;
+
+      const isValid = mobileNumberRegex.test(formData.email);
+      console.log(isValid, formData.email);
+
+      if (!isValid) {
+        return dispatch(
+          warning({ message: "Please enter valid mobile number" })
+        );
+      }
+    }
+    if (formData.password.length < 5) {
+      return dispatch(warning({ message: "Please enter email or password" }));
+    }
+
     try {
       const res = await dispatch(loginForm(formData));
-      if (res?.payload?.data?.status === "success") {
+      if (loginForm.fulfilled.match(res)) {
         dispatch(success({ message: "Logged in successfully" }));
-        if (res?.payload?.data?.data?.role === "ADMIN") {
+        if (res?.payload?.data?.role === "ADMIN") {
           navigate("/adminDash");
         } else {
           navigate("/");
         }
       } else {
-        dispatch(error({ message: res?.payload?.data?.msg }));
+        dispatch(
+          error({
+            message: res?.payload || "Please enter valid email or password",
+          })
+        );
       }
     } catch (err) {
-      dispatch(error({ message: "An error occurred. Please try again." }));
+      console.log(err);
+
+      dispatch(error({ message: "Please Check Your internet connection" }));
     }
   };
 
@@ -97,8 +131,14 @@ const LoginPage = () => {
         setIsResendDisabled(true);
       }
     } catch (e) {
+      console.log(e);
+
       dispatch(
-        error({ message: "Something went wrong. Please try again later." })
+        error({
+          message:
+            e?.response?.data?.msg ||
+            "Something went wrong. Please try again later.",
+        })
       );
     }
   };

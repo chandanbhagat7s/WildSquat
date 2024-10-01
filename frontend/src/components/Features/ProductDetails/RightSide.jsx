@@ -12,7 +12,12 @@ import {
 import { MdLocalLaundryService } from "react-icons/md";
 import BuyNowPopup from "../../Payments/paymentDialog";
 import OrderProcessingPage from "../../Instruction/OrderProcessing";
+import { useDispatch, useSelector } from "react-redux";
+import { error, info } from "../../../redux/slices/errorSlice";
+import { addToCart } from "../../../redux/slices/productSlice";
 export default function RightSide({ product }) {
+  const dispatch = useDispatch();
+  const { msg } = useSelector((state) => state.product);
   const nevigate = useNavigate();
   let [orderProcessing, setOrderProcessing] = useState(false);
   const [openSection, setOpenSection] = useState("features");
@@ -20,6 +25,23 @@ export default function RightSide({ product }) {
   const toggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
+  async function ATC() {
+    try {
+      const res = await dispatch(addToCart(product._id));
+
+      if (addToCart.fulfilled.match(res)) {
+        dispatch(info({ message: "product added to cart" }));
+      } else {
+        dispatch(error({ message: msg || "failed to add " }));
+      }
+    } catch (e) {
+      dispatch(
+        error({
+          message: "product not added to cart, please try again",
+        })
+      );
+    }
+  }
 
   const AccordionItem = ({ title, icon, children, isOpen, toggle }) => (
     <div className="mb-4 bg-white rounded-lg   overflow-hidden transition-all duration-300 ease-in-out ">
@@ -82,7 +104,10 @@ export default function RightSide({ product }) {
         </div>
 
         <div className="flex flex-col space-y-2 mb-4">
-          <button className="flex-1 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+          <button
+            className="flex-1 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+            onClick={ATC}
+          >
             <FiShoppingCart className="inline-block mr-2" />
             Add to Cart
           </button>

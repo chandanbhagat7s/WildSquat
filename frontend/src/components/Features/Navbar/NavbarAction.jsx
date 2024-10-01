@@ -63,7 +63,7 @@ const NavbarActions = ({}) => {
       ) : (
         <Link
           to="/login"
-          className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+          className="flex items-center space-x-2 bg-gradient-to-r from-gray-500 to-black text-white px-4 py-2 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
         >
           <span>Login</span>
           <svg
