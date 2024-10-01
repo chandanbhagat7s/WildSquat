@@ -38,7 +38,7 @@ const ProductListing = () => {
 
   return (
     <motion.div
-      className="py-24"
+      className="py-24 bg-gray-50"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -51,7 +51,7 @@ const ProductListing = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Discover Our{" "}
-          <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
+          <span className="block md:inline-block bg-black text-white p-1 md:p-2 ">
             Premium Collection
           </span>
         </motion.h2>
@@ -66,7 +66,7 @@ const ProductListing = () => {
           >
             <IoIosArrowBack />
           </button>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 ">
+          <div className="grid grid-cols-2 md:grid-cols-3 md:grid-rows-2 lg:grid-rows-1 lg:grid-cols-6 gap-3 ">
             {product.length > 0 &&
               product.map((product) => (
                 <ProductCard key={product._id} product={product} />

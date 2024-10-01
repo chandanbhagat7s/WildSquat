@@ -46,7 +46,7 @@ const CategoryList = () => {
         transition={{ duration: 0.8, delay: 0.2 }}
       >
         Discover Our{" "}
-        <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
+        <span className="block md:inline-block bg-black text-white p-1 md:p-2 ">
           Premium Category
         </span>
       </motion.h2>

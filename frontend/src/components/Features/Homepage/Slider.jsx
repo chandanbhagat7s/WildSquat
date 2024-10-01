@@ -1,16 +1,23 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaPlay,
+  FaPause,
+  FaInfoCircle,
+} from "react-icons/fa";
+import { IoMdTime } from "react-icons/io";
 import url from "../../../assets/url";
 import axios from "axios";
 
-export default function Slider() {
+const Slider = () => {
   const [slider, setSlider] = useState([]);
   const { gender } = useSelector((state) => state.auth);
-
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
   const navigate = useNavigate();
 
   const nextSlide = useCallback(() => {
@@ -31,87 +38,125 @@ export default function Slider() {
         const res = await axios.get(
           `/api/v1/tools/getTool/SLIDER?gender=${gender}&page=1&limit=10&fields=name,label,coverImage,_id,shortDescription`
         );
-
-        if (res.data.products == 0) {
-          return;
+        if (res.data.products.length > 0) {
+          setSlider([...res.data.products]);
         }
-        setSlider([...res?.data?.products]);
       } catch (e) {
-        return e.response;
+        console.error("Error fetching slider data:", e);
       }
     }
     getData();
   }, [gender]);
+
   useEffect(() => {
-    const interval = setInterval(nextSlide, 10000);
+    let interval;
+    if (isPlaying) {
+      interval = setInterval(nextSlide, 5000);
+    }
     return () => clearInterval(interval);
-  }, [nextSlide]);
+  }, [isPlaying, nextSlide]);
 
   if (!slider?.length) return null;
 
   return (
-    <div className="relative w-full h-[80vh] flex overflow-hidden ">
-      <motion.div
-        key={currentIndex}
-        className={`flex flex-col md:flex-row ${
-          currentIndex % 2 == 0 ? "md:flex-row-reverse" : ""
-        } w-full h-full text-center`}
-      >
-        {/* Left side - Image */}
-        <div className="w-2/2 md:w-2/3 h-full relative">
+    <div className="relative w-full h-[50vh] lg:h-[80vh] bg-gray-900 text-white overflow-hidden mt-2 md:mt-5">
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
           <img
             src={`${url}Tools/${slider[currentIndex]?.coverImage}`}
             alt={`Slide ${currentIndex + 1}`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-50"
           />
-          {/* <div className="absolute inset-0 bg-black bg-opacity-30" /> */}
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-r md:from-black via-transparent md:to-black opacity-25" />
 
-        {/* Right side - Information */}
-        <div className="w-2/2 md:w-1/3 md:h-full  bg-gradient-to-br from-white to-gray-50   flex flex-col justify-center items-center pb-10 pt-4 md:p-8 border-b-2 border-black">
-          <h2 className="text-3xl font-bold mb-4 md:bg-black p-1 md:p-2 md:text-white ">
-            {slider[currentIndex]?.label}
-          </h2>
-          <p className="text-sm mb-6  ">
-            {slider[currentIndex]?.shortDescription}
-          </p>
-          <button
-            onClick={() =>
-              navigate(`/productList/${slider[currentIndex]?._id}`)
-            }
-            className="bg-black text-white px-6 py-2 shadow-md rounded-full hover:bg-gray-700 hover:scale-110 hover:shadow-lg  transition-colors text-base font-semibold"
-          >
-            Explore More
-          </button>
-        </div>
-      </motion.div>
+          <div className="absolute inset-0 flex flex-col justify-center items-start p-12 md:p-24 space-y-6">
+            <motion.h2
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-4xl md:text-6xl font-bold tracking-tight"
+            >
+              {slider[currentIndex]?.label}
+            </motion.h2>
+            <motion.p
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-xl max-w-2xl"
+            >
+              {slider[currentIndex]?.shortDescription}
+            </motion.p>
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex items-center space-x-4 md:flex-row flex-col md:space-x-2 space-y-2"
+            >
+              <button
+                onClick={() =>
+                  navigate(`/productList/${slider[currentIndex]?._id}`)
+                }
+                className="bg-white text-black px-6 py-3 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition-colors duration-300"
+              >
+                <FaInfoCircle />
+                <span>Explore It</span>
+              </button>
+              <div className="flex items-center space-x-2">
+                <IoMdTime className="text-2xl" />
+                <span>Limited Time Offer</span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Navigation Arrows */}
-      <button
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-700 p-3 rounded-full hover:bg-white/50 transition-colors z-10"
-        onClick={prevSlide}
-      >
-        <FaArrowLeft className="text-white text-lg" />
-      </button>
-      <button
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 p-3 rounded-full hover:bg-white/50 transition-colors z-10"
-        onClick={nextSlide}
-      >
-        <FaArrowRight className="text-white text-lg" />
-      </button>
+      {/* Navigation Controls */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+        <button
+          onClick={prevSlide}
+          className="bg-white/20 p-2 rounded-full hover:bg-white/40 transition-colors duration-300"
+        >
+          <FaChevronLeft className="text-2xl" />
+        </button>
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          className="bg-white/20 p-2 rounded-full hover:bg-white/40 transition-colors duration-300"
+        >
+          {isPlaying ? (
+            <FaPause className="text-2xl" />
+          ) : (
+            <FaPlay className="text-2xl" />
+          )}
+        </button>
+        <button
+          onClick={nextSlide}
+          className="bg-white/20 p-2 rounded-full hover:bg-white/40 transition-colors duration-300"
+        >
+          <FaChevronRight className="text-2xl" />
+        </button>
+      </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-        {slider?.map((_, index) => (
+      <div className="absolute md:bottom-8 left-[50%] -translate-x-[50%]  bottom-5 md:left-20 flex space-x-2">
+        {slider.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              currentIndex === index ? "bg-white scale-125" : "bg-white/50"
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              currentIndex === index ? "bg-white w-8" : "bg-white/50"
             }`}
           />
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default Slider;

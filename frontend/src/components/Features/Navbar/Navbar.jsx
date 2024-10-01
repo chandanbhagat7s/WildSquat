@@ -1,30 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  FiSearch,
-  FiMenu,
-  FiX,
-  FiBox,
-  FiLayers,
-  FiTag,
-  FiTrendingUp,
-} from "react-icons/fi";
-import { MdOutlineWorkspacePremium } from "react-icons/md";
-import { FaThinkPeaks, FaChevronDown } from "react-icons/fa";
+import { FiMenu, FiX, FiBox } from "react-icons/fi";
+import { FaChevronDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import SearchCategoryProductAndItem from "./../../common/SearchCategoryProduct";
 import NavbarActions from "./NavbarAction";
 import logo from "./../../../assets/logo.jpeg";
-
-const iconMap = {
-  Category: FiBox,
-  Collections: FiLayers,
-  Multiple: FiTag,
-  Trending: FiTrendingUp,
-  "Top Products": MdOutlineWorkspacePremium,
-  Thinking: FaThinkPeaks,
-};
+import PremiumNavbar from "../Homepage/NavList";
 
 const NavItem = ({ category }) => {
   const navigate = useNavigate();
@@ -67,18 +50,14 @@ const NavItem = ({ category }) => {
 const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState({
-    id: "",
-    name: "",
-    coverImage: "",
-  });
+
   const [categories, setCategories] = useState([]);
   const { gender } = useSelector((state) => state.auth);
 
   async function getData() {
     try {
       const res = await axios.get(
-        `/api/v1/tools/getTool/CATEGORY?gender=${gender}&limit=6&page=1&fields=label,_id,products&populate=products&populateField=name,_id&populateLimit=10`
+        `/api/v1/tools/getTool/CATEGORY?gender=${gender}&limit=6&page=1&fields=label,_id,products&populate=products&populateField=name,_id,coverImage&populateLimit=10`
       );
 
       setCategories([...res?.data?.products]);
@@ -88,12 +67,6 @@ const Navbar = () => {
   useEffect(() => {
     getData();
   }, [gender]);
-
-  useEffect(() => {
-    if (selectedProduct?.id) {
-      navigate(`/productDetails/${selectedProduct.id}`);
-    }
-  }, [selectedProduct, navigate]);
 
   return (
     <div className="w-full fixed top-0 z-50 bg-white bg-opacity-85 shadow-lg">
@@ -110,13 +83,8 @@ const Navbar = () => {
 
           {/* Search Bar */}
           <div className="hidden md:flex md:flex-1 mx-8">
-            <div className="relative w-full">
-              <SearchCategoryProductAndItem
-                setSelectedProduct={setSelectedProduct}
-              />
-              <button className="absolute right-0 top-0 mt-2 mr-2">
-                <FiSearch className="h-5 w-5 text-gray-500" />
-              </button>
+            <div className="relative w-full ">
+              <SearchCategoryProductAndItem />
             </div>
           </div>
 
@@ -143,13 +111,14 @@ const Navbar = () => {
       </div>
 
       {/* Primary Navigation */}
-      <div className="hidden lg:flex  border-b border-gray-200 shadow-sm ">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between py-2 ">
-          {categories.map((category, i) => (
+      {/* <div className="hidden lg:flex  border-b border-gray-200 shadow-sm ">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between py-2 "> */}
+      {/* {categories.map((category, i) => (
             <NavItem key={i} category={category} />
-          ))}
-        </nav>
-      </div>
+          ))} */}
+      <PremiumNavbar categories={categories} />
+      {/* </nav>
+      </div> */}
 
       {/* Mobile Menu */}
       {isMenuOpen && (
@@ -159,9 +128,7 @@ const Navbar = () => {
             <NavbarActions />
           </div>
           <div className="p-4 border-b border-gray-200">
-            <SearchCategoryProductAndItem
-              setSelectedProduct={setSelectedProduct}
-            />
+            <SearchCategoryProductAndItem />
           </div>
 
           <div className="py-4 px-4">
