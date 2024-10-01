@@ -29,7 +29,7 @@ export default function AppRoutes() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/denide" element={<AccessDeniedPage />} />
 
-        <Route element={<Authentication allow={["user"]} />}>
+        <Route element={<Authentication allow={["user", "ADMIN"]} />}>
           {" "}
           <Route
             path="/profile"

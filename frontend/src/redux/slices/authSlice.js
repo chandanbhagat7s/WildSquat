@@ -83,12 +83,17 @@ const authSlice = createSlice({
         changeGender: (state, action) => {
 
             state.gender = action.payload.gender
+        },
+        logout: (state, action) => {
+            state.isLoggedIn = false,
+                state.data = {},
+                state.msg = ""
         }
 
     },
     extraReducers: (builder) => {
         builder.addCase(signupForm.fulfilled, (state, action) => {
-            //console.log(action);
+            console.log(action);
             if (action.payload.data.status == "success") {
                 localStorage.setItem("isLoggedIn", JSON.stringify(true))
                 localStorage.setItem("data", JSON.stringify(action?.payload?.data?.data))
@@ -98,12 +103,12 @@ const authSlice = createSlice({
 
 
         }).addCase(loginForm.fulfilled, (state, action) => {
-
-            if (action.payload.data.status == "success") {
+            console.log(action);
+            if (action?.payload?.status == "success") {
                 localStorage.setItem("isLoggedIn", JSON.stringify(true))
-                localStorage.setItem("data", JSON.stringify(action?.payload?.data?.data))
+                localStorage.setItem("data", JSON.stringify(action?.payload?.data))
                 state.isLoggedIn = true;
-                state.data = action?.payload?.data?.data;
+                state.data = action?.payload?.data;
             }
 
 

@@ -312,7 +312,15 @@ exports.genrateOtpAndSend = catchAsync(async (req, res, next) => {
 })
 
 
+exports.logout = catchAsync(async (req, res, next) => {
 
+    res.cookie('jwt', 'logout', {
+        expires: new Date(Date.now() + 5 * 1000),
+        httpOnly: true
+    })
+
+    res.status(200).json({ status: 'success' })
+})
 
 
 

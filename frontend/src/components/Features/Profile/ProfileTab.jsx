@@ -14,11 +14,14 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../../redux/slices/authSlice";
 
 const ProfileTab = ({ data, setLoad, load }) => {
   console.log("DATA", data, data.name, load);
 
   const dispatch = useDispatch();
+  const nevigate = useNavigate();
   const [formData, setFormData] = useState({
     name: data.name || "",
     email: data.email || "",
@@ -86,6 +89,21 @@ const ProfileTab = ({ data, setLoad, load }) => {
     if (data.mobile == formData.mobile) {
       return dispatch(warning({ message: "Please Change number first" }));
     }
+    if (formData.mobile.length >= 11 || formData.mobile.length < 10) {
+      return dispatch(warning({ message: "Please enter valid mobile number" }));
+    }
+    if (formData.mobile.length == 10) {
+      const mobileNumberRegex = /^[6-9][0-9]{9}$/;
+
+      const isValid = mobileNumberRegex.test(formData.mobile);
+      console.log(isValid, formData.mobile);
+
+      if (!isValid) {
+        return dispatch(
+          warning({ message: "Please enter valid mobile number" })
+        );
+      }
+    }
     try {
       const res = await axios.post(
         "/api/v1/user/changeMobileNumber",
@@ -138,6 +156,20 @@ const ProfileTab = ({ data, setLoad, load }) => {
             e?.response?.data?.msg || "Please try again , something went wrong",
         })
       );
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      const res = await axios.get("/api/v1/auth/logout");
+      if (res?.data?.status == "success") {
+        dispatch(success({ message: "You are Logged out now !" }));
+        dispatch(logout());
+        localStorage.clear();
+        nevigate("/");
+      }
+    } catch (e) {
+      dispatch(error({ message: "Something Went wrong !" }));
     }
   }
 
@@ -289,6 +321,7 @@ const ProfileTab = ({ data, setLoad, load }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="mt-4 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-300 w-[50vw] lg:w-[20vw] shadow-sm hover:shadow-lg"
+              onClick={handleLogout}
             >
               <FiLogOut className="inline mr-2" />
               Logout

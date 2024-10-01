@@ -5,12 +5,12 @@ import { loginForm } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock, FiLogIn, FiArrowLeft, FiPhone } from "react-icons/fi";
 import axios from "axios";
+import { FaEye } from "react-icons/fa";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { msg } = useSelector((state) => state.auth);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     password: "",
@@ -24,6 +24,8 @@ const LoginPage = () => {
   const [timer, setTimer] = useState(180);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     let interval;
@@ -66,7 +68,7 @@ const LoginPage = () => {
     if (
       !formData.email.includes("@") &&
       formData.email.length < 10 &&
-      formData.mobile.length >= 11
+      formData.email.length >= 11
     ) {
       return dispatch(warning({ message: "Please enter valid mobile number" }));
     }
@@ -89,12 +91,16 @@ const LoginPage = () => {
     try {
       const res = await dispatch(loginForm(formData));
       if (loginForm.fulfilled.match(res)) {
-        dispatch(success({ message: "Logged in successfully" }));
-        if (res?.payload?.data?.role === "ADMIN") {
+        if (res?.payload?.data?.role == "ADMIN") {
+          console.log("nevigating");
+
           navigate("/adminDash");
+          // location.assign("/adminDash");
         } else {
           navigate("/");
         }
+        dispatch(success({ message: "Logged in successfully" }));
+        console.log(res, res?.payload?.data?.role);
       } else {
         dispatch(
           error({
@@ -330,8 +336,8 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-700">
       <div className="bg-gray-100 p-10 rounded-2xl shadow-2xl w-full max-w-md">
-        <h2 className="text-4xl font-bold text-gray-900 text-center mb-8">
-          {isForgotPassword ? "Forgot Password" : "Welcome Back"}
+        <h2 className="text-4xl font-bold text-gray-900 text-center mb-8 capitalize">
+          {isForgotPassword ? "Forgot Password" : "Wildsquat Welcomes You !"}
         </h2>
         {!isForgotPassword ? (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -373,7 +379,7 @@ const LoginPage = () => {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={show ? "text" : "password"}
                   autoComplete="current-password"
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
@@ -381,6 +387,14 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
+                {
+                  <div
+                    className="absolute top-[50%] -translate-y-[50%] end-2 cursor-pointer"
+                    onClick={() => setShow(!show)}
+                  >
+                    <FaEye className="text-lg" />
+                  </div>
+                }
               </div>
             </div>
             <div className="flex items-center justify-end">

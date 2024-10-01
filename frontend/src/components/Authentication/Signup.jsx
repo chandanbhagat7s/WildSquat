@@ -15,9 +15,11 @@ import {
 
 import { SendOtpToUser, signupForm } from "../../redux/slices/authSlice";
 import { error, info, success, warning } from "../../redux/slices/errorSlice";
+import { FaEye } from "react-icons/fa";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -26,7 +28,7 @@ const SignUpPage = () => {
     password: "",
     cnfpassword: "",
     mobile: "",
-    country: "",
+    country: "India ",
     state: "",
     district: "",
     pinCode: "",
@@ -64,6 +66,11 @@ const SignUpPage = () => {
     if (formData.password !== formData.cnfpassword) {
       return dispatch(
         warning({ message: "Please check password and confirm password" })
+      );
+    }
+    if (formData.password.length < 8) {
+      return dispatch(
+        warning({ message: "Password to be atleast of 8 characters" })
       );
     }
 
@@ -147,7 +154,7 @@ const SignUpPage = () => {
     {
       name: "password",
       type: "password",
-      placeholder: "Password",
+      placeholder: "Password /Atleast 8 Characters",
       icon: <FiLock className="w-5 h-5 text-gray-400" />,
     },
     {
@@ -183,7 +190,7 @@ const SignUpPage = () => {
     {
       name: "pinCode",
       type: "text",
-      placeholder: "PIN Code",
+      placeholder: "PIN Code eg.412303",
       icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
     },
     {
@@ -195,11 +202,11 @@ const SignUpPage = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-400 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gray-700 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-4xl bg-gray-300 md:bg-gradient-to-tl from-gray-400 via-gray-300 to-gray-300 shadow-2xl rounded-2xl overflow-hidden capitalize">
         <div className="px-8 py-12">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
-            {step === 1 ? "Create your account" : "Verify OTP"}
+          <h2 className="text-3xl font-bold text-center text-gray-700 mb-2 capitalize animate-pulse">
+            {step === 1 ? "Become Member of Wildsquat" : "Verify OTP"}
           </h2>
           <p className="text-center text-gray-600 mb-8">
             {step === 1
@@ -218,20 +225,39 @@ const SignUpPage = () => {
                     <input
                       id={field.name}
                       name={field.name}
-                      type={field.type}
+                      type={
+                        field.type == "password" && show ? "text" : field.type
+                      }
                       required
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className={`block w-full pl-10 pr-3 py-2 rounded-md leading-5 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-gray-500 ring-1 sm:text-sm  ${
+                        (field.name == "cnfpassword" ||
+                          field.name == "password") &&
+                        (formData.password !== formData.cnfpassword ||
+                          (formData.password.length < 8 &&
+                            formData.password.length > 0))
+                          ? "ring-red-500 ring-1 focus:ring-red-600"
+                          : ""
+                      } `}
                       placeholder={field.placeholder}
                       value={formData[field.name]}
                       onChange={handleChange}
+                      disabled={field.name == "country"}
                     />
+                    {field.name == "password" && (
+                      <div
+                        className="absolute top-[50%] -translate-y-[50%] end-2"
+                        onClick={() => setShow(!show)}
+                      >
+                        <FaEye className="text-lg" />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
               <div>
                 <button
                   type="submit"
-                  className="group relative mx-auto flex justify-center py-2 px-20 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="group relative mx-auto flex justify-center py-2 px-20 border border-transparent text-sm font-medium  text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 rounded-lg"
                 >
                   Sign Up
                   <FiArrowRight className="ml-2 -mr-1 h-5 w-5" />
@@ -247,21 +273,24 @@ const SignUpPage = () => {
                     id={`otp-${index}`}
                     type="text"
                     maxLength="1"
-                    className="w-12 h-12 text-center text-2xl border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-12 h-12 text-center text-2xl border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                     value={digit}
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                   />
                 ))}
               </div>
-              <p className="py-2">
-                Waht to change your mobile number{" "}
-                <button className="text-black" onClick={() => setStep(1)}>
+              <p className="py-2 capitalize">
+                Want to change your mobile number{" "}
+                <button
+                  className="text-black text-lg font-bold"
+                  onClick={() => setStep(1)}
+                >
                   Click hear
                 </button>{" "}
               </p>
               <button
                 onClick={verifyOtp}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
                 Verify OTP
               </button>
@@ -273,7 +302,7 @@ const SignUpPage = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-gray-600 hover:text-gray-500"
             >
               Sign in
             </Link>
