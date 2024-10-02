@@ -5,12 +5,24 @@ const client = redis.createClient({
 });
 
 client.connect()
-client.on('connect', () => {
+client.on('connect', async () => {
     console.log('Connected to Redis...');
+    try {
+        // Flush all data
+        const result = await client.flushAll();
+        console.log('Redis cache cleared:', result);
+    } catch (err) {
+        console.error('Error clearing Redis cache:', err);
+    } finally {
+        // Disconnect the client
+        // client.quit();
+    }
 });
 
 client.on('error', (err) => {
     console.error('Redis error:', err);
 });
+
+
 
 module.exports = client;

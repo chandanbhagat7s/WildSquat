@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
-import { BiCategory } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaTag } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import axios from "axios";
-
-import url from "../../../assets/url";
-import { GrFormNext } from "react-icons/gr";
-import { IoIosArrowBack } from "react-icons/io";
 import CategoryCard from "../Common/Cards/CategoryCard";
 
 const CategoryList = () => {
@@ -22,10 +16,10 @@ const CategoryList = () => {
     async function getData() {
       try {
         const res = await axios.get(
-          `/api/v1/tools/getTool/CATEGORY?gender=${gender}&page=${page}&limit=6&fields=name,label,coverImage,_id`
+          `/api/v1/tools/getTool/CATEGORY?gender=${gender}&page=${page}&limit=8&fields=name,label,coverImage,_id`
         );
 
-        if (res.data.products == 0) {
+        if (res.data.products === 0) {
           setPage(1);
           return;
         }
@@ -38,31 +32,23 @@ const CategoryList = () => {
   }, [gender, page]);
 
   return (
-    <div className="min-h-screen py-10 px-6 bg-gradient-to-br from-gray-50 to-white flex flex-col justify-center items-center">
+    <div className="min-h-screen py-12 px-8 bg-gradient-to-r bg-gray-100 flex flex-col justify-center items-center space-y-10 lg:space-y-16 pb-20">
+      {/* Title Section */}
       <motion.h2
-        className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
+        className="text-4xl lg:text-5xl font-extrabold text-gray-700 mb-12 text-center leading-snug"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Discover Our{" "}
-        <span className="block md:inline-block bg-black text-white p-1 md:p-2 ">
-          Premium Category
+        Explore Our{" "}
+        <span className="block md:inline-block bg-black text-white px-3 py-2 rounded-md">
+          Premium Categories
         </span>
       </motion.h2>
 
-      <div className="relative">
-        <button
-          onClick={() => {
-            page >= 2 && setPage(page - 1);
-          }}
-          disabled={page == 1}
-          className="absolute left-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
-           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
-        >
-          <IoIosArrowBack />
-        </button>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+      {/* Category Grid */}
+      <div className="relative w-full max-w-screen-xl">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {product.length > 0 &&
             product.map((card) => (
               <CategoryCard
@@ -73,19 +59,11 @@ const CategoryList = () => {
               />
             ))}
         </div>
-        <button
-          onClick={() => {
-            setPage(page + 1);
-          }}
-          className="absolute right-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
-           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
-        >
-          <GrFormNext />
-        </button>
       </div>
 
+      {/* View All Button */}
       <motion.div
-        className="mt-20 text-center "
+        className=""
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.8 }}
@@ -93,11 +71,11 @@ const CategoryList = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300  animate-pulse"
+          className="inline-flex items-center px-12 py-4 bg-gray-600 text-white rounded-full font-bold text-lg shadow-lg hover:bg-gray-700 transition-colors duration-300"
           onClick={() => navigate("/categoryLists/CATEGORY")}
         >
-          View All Category{" "}
-          <FiArrowRight className="ml-3 animate-ping" size={24} />
+          View All Categories
+          <FiArrowRight className="ml-3" size={24} />
         </motion.button>
       </motion.div>
     </div>

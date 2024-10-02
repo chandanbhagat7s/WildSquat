@@ -110,15 +110,9 @@ const Navbar = () => {
         </nav>
       </div>
 
-      {/* Primary Navigation */}
-      {/* <div className="hidden lg:flex  border-b border-gray-200 shadow-sm ">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between py-2 "> */}
-      {/* {categories.map((category, i) => (
-            <NavItem key={i} category={category} />
-          ))} */}
-      <PremiumNavbar categories={categories} />
-      {/* </nav>
-      </div> */}
+      <div className="hidden lg:block">
+        <PremiumNavbar categories={categories} />
+      </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
