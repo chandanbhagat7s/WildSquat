@@ -50,19 +50,20 @@ const CreateCategory = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-xl">
+    <div className="max-w-2xl mx-auto mt-10 p-10 bg-white rounded-2xl shadow-2xl">
       <div className="mb-6">
-        <h2 className="text-3xl font-semibold text-gray-800">Category Form </h2>
-        <span className="text-sm text-gray-400">
-          Create category , add slider , cards , posters
-        </span>
+        <h2 className="text-4xl font-bold text-gray-900">Category Form</h2>
+        <p className="text-sm text-gray-500">
+          Create category, add slider, cards, posters
+        </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
+        {/* Choose a category */}
         <div>
           <label
             htmlFor="categories"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-800"
           >
             Choose a category
           </label>
@@ -70,7 +71,7 @@ const CreateCategory = () => {
             id="categories"
             value={selectedValue}
             onChange={handleChange}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-2 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 rounded-lg"
           >
             <option value="">Select an option</option>
             <option value="SLIDER">SLIDER</option>
@@ -78,31 +79,28 @@ const CreateCategory = () => {
             <option value="CARDS">CARDS</option>
             <option value="POSTER">POSTER</option>
             <option value="X-MULTIPLE">X-MULTIPLE</option>
-            <option value="custom">Custom </option>
+            <option value="custom">Custom</option>
           </select>
-          <p className="mt-2 text-sm text-gray-500">
-            Selected: {selectedValue}
-          </p>
         </div>
 
-        {selectedValue == "custom" && (
+        {/* Custom Name */}
+        {selectedValue === "custom" && (
           <div>
             <label
               htmlFor="custom"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-lg font-medium text-gray-800"
             >
               Custom Name
             </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="mt-2 relative rounded-lg shadow-sm">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FiType className="h-5 w-5 text-gray-400" />
               </div>
               <input
                 type="text"
-                name="custom"
                 id="custom"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                placeholder="Some name"
+                className="focus:ring-indigo-600 focus:border-indigo-600 block w-full pl-10 py-2 sm:text-base border-gray-300 rounded-lg"
+                placeholder="Enter custom name"
                 value={custom}
                 onChange={(e) => setCustom(e.target.value)}
               />
@@ -110,17 +108,18 @@ const CreateCategory = () => {
           </div>
         )}
 
+        {/* Cover Image */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Cover Image (1N)
+          <label className="block text-lg font-medium text-gray-800 mb-2">
+            Cover Image
           </label>
-          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-indigo-500 transition duration-150">
-            <div className="space-y-1 text-center my-4">
+          <div className="mt-1 flex justify-center items-center px-6 py-5 border-2 border-dashed rounded-lg transition-all duration-150 hover:border-indigo-600">
+            <div className="text-center">
               {coverImage ? (
                 <img
                   src={coverImage}
                   alt="Cover"
-                  className="mx-auto h-32 w-32 object-cover rounded-md"
+                  className="h-64 w-64 object-cover rounded-lg mx-auto"
                 />
               ) : (
                 <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
@@ -128,12 +127,11 @@ const CreateCategory = () => {
               <div className="flex text-sm text-gray-600 mt-2">
                 <label
                   htmlFor="file-upload"
-                  className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                  className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
                 >
                   <span>Upload a file</span>
                   <input
                     id="file-upload"
-                    name="file-upload"
                     type="file"
                     className="sr-only"
                     onChange={handleImageChange}
@@ -147,79 +145,100 @@ const CreateCategory = () => {
           </div>
         </div>
 
+        {/* Label */}
         <div>
           <label
             htmlFor="label"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-800 mb-2"
           >
-            Label
+            Label / Title
           </label>
-          <div className="mt-1 relative rounded-md shadow-sm">
+          <div className="relative rounded-lg shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FiType className="h-5 w-5 text-gray-400" />
             </div>
             <input
               type="text"
-              name="label"
               id="label"
-              className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-              placeholder="Enter label (by what name you want to identify it)"
+              className="focus:ring-indigo-600 focus:border-indigo-600 block w-full pl-10 py-2 sm:text-base border-gray-300 rounded-lg"
+              placeholder="Enter label"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
             />
           </div>
         </div>
 
+        {/* Gender (Radio Button) */}
         <div>
-          <label
-            htmlFor="gender"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
+          <label className="block text-lg font-medium text-gray-800 mb-2">
             Gender
           </label>
-          <div className="mt-1 relative rounded-md shadow-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiType className="h-5 w-5 text-gray-400" />
+          <div className="mt-2 space-y-4">
+            <div className="flex items-center">
+              <input
+                id="male"
+                name="gender"
+                type="radio"
+                value="male"
+                checked={gender === "male"}
+                onChange={(e) => setGender(e.target.value)}
+                className="focus:ring-indigo-600 h-4 w-4 text-indigo-600 border-gray-300"
+              />
+              <label
+                htmlFor="male"
+                className="ml-3 block text-base text-gray-800"
+              >
+                Male
+              </label>
             </div>
-            <input
-              type="text"
-              name="gender"
-              id="gender"
-              className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-              placeholder="male or female"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            />
+            <div className="flex items-center">
+              <input
+                id="female"
+                name="gender"
+                type="radio"
+                value="female"
+                checked={gender === "female"}
+                onChange={(e) => setGender(e.target.value)}
+                className="focus:ring-indigo-600 h-4 w-4 text-indigo-600 border-gray-300"
+              />
+              <label
+                htmlFor="female"
+                className="ml-3 block text-base text-gray-800"
+              >
+                Female
+              </label>
+            </div>
           </div>
         </div>
 
+        {/* Short Description */}
         <div>
           <label
             htmlFor="short-description"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-800 mb-2"
           >
             Short Description
           </label>
-          <div className="mt-1 relative rounded-md shadow-sm">
+          <div className="relative rounded-lg shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FiAlignLeft className="h-5 w-5 text-gray-400" />
             </div>
             <textarea
               id="short-description"
-              name="short-description"
-              rows="3"
-              className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+              rows="4"
+              className="focus:ring-indigo-600 focus:border-indigo-600 block w-full pl-10 py-2 sm:text-base border-gray-300 rounded-lg"
               placeholder="Enter short description"
               value={shortDescription}
               onChange={(e) => setShortDescription(e.target.value)}
-            ></textarea>
+            />
           </div>
         </div>
 
+        {/* Submit Button */}
         <div className="pt-5">
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
             onClick={handleSubmit}
           >
             Submit

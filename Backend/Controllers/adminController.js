@@ -1,4 +1,6 @@
 const multer = require("multer");
+const fs = require('fs');
+const path = require('path');
 const Product = require("../Models/Product");
 const catchAsync = require("../utils/catchAsync");
 const sharp = require("sharp");
@@ -351,28 +353,49 @@ exports.removeThisProductFromSimillarColor = catchAsync(async (req, res, next) =
 
 
 
-exports.hideProduct = catchAsync(async (req, res, next) => {
+exports.deleteProduct = catchAsync(async (req, res, next) => {
+    const { productIds } = req.body;
 
-
-    const { productId } = req.params;
-    if (!productId) {
-        return next(new appError("please describe the product", 400))
+    if (!productIds || productIds.length === 0) {
+        return next(new appError("Please provide products to delete", 400));
     }
 
-    const product = await Product.findByIdAndUpdate(productId, {
-        hidden: true
-    }, {
-        new: true
-    })
-    if (!product) {
-        return next(new appError("product not updated to hide , please try again ", 400))
+    // Find all the products by the provided IDs
+    const allProducts = await Product.find({ _id: { $in: productIds } });
+
+    // If products are found, delete images from public directory
+    if (allProducts.length > 0) {
+        allProducts.forEach(product => {
+            if (product.coverImage) {
+                const coverImagePath = path.join(__dirname, '../Public/img', product.coverImage);
+                if (fs.existsSync(coverImagePath)) {
+                    fs.unlinkSync(coverImagePath);  // Delete cover image
+                }
+            }
+
+            if (product.images && product.images.length > 0) {
+                product.images.forEach(image => {
+                    const imagePath = path.join(__dirname, '../Public/img', image);
+                    if (fs.existsSync(imagePath)) {
+                        fs.unlinkSync(imagePath);  // Delete each associated image
+                    }
+                });
+            }
+        });
     }
+
+    await Tool.updateMany({
+        _id: { $in: productIds }
+    }, { $pull: { product: { $in: productIds } } })
+
+    // Delete products from database
+    await Product.deleteMany({ _id: { $in: productIds } });
 
     res.status(200).send({
         status: "success",
-        msg: "product hidden successfully"
-    })
-})
+        msg: "Products deleted successfully"
+    });
+});
 
 
 exports.getAllOrdersForShipment = catchAsync(async (req, res, next) => {

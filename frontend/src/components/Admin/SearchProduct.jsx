@@ -41,7 +41,7 @@ const ProductSearch = ({ setSelectedProduct }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 p-8 bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-2xl">
+    <div className="max-w-3xl mx-auto mt-8 px-2 lg:p-8 bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-2xl">
       <div className="relative mb-6">
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
         <input
@@ -59,25 +59,26 @@ const ProductSearch = ({ setSelectedProduct }) => {
           <span>Searching for products...</span>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="grid grid-cols-2  lg:grid-cols-3 gap-1 lg:gap-6">
           {products.length > 0 ? (
             products.map((product, i) => (
               <li
                 key={i}
                 className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transform transition duration-300 hover:scale-105 cursor-pointer text-center"
-                onClick={() =>
+                onClick={() => {
+                  setSearchTerm("");
                   setSelectedProduct(product._id, {
                     name: product?.name,
                     coverImage: product.coverImage,
-                  })
-                }
+                  });
+                }}
               >
                 <img
                   src={`${url}img/${product.coverImage}`}
                   alt={product.name}
                   className="h-24 w-full object-contain mb-2 rounded-lg"
                 />
-                <h3 className="text-lg font-semibold text-gray-700">
+                <h3 className="text-sm font-semibold text-gray-700">
                   {product.name}
                 </h3>
               </li>

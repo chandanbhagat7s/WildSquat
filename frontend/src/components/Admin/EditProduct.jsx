@@ -161,13 +161,13 @@ const EditProductForm = () => {
         <>
           <form
             onSubmit={handleSubmit}
-            className="max-w-4xl mx-auto p-10 space-y-8 rounded-3xl shadow-2xl bg-white border border-gray-200"
+            className="max-w-4xl mx-auto px-2 py-10 space-y-8 rounded-3xl shadow-2xl bg-white border border-gray-200"
           >
             <div className="text-center">
               <h2 className="text-4xl font-extrabold text-gray-800 mb-2">
                 Edit Product
               </h2>
-              <p className="text-2xl text-blue-500 font-semibold">
+              <p className="text-2xl text-blue-500 font-bold">
                 {editedProduct.name}
               </p>
             </div>
@@ -176,7 +176,7 @@ const EditProductForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               {/* Name */}
               <div>
-                <label className="block text-lg font-semibold text-gray-700 mb-1">
+                <label className=" block text-lg font-bold text-gray-700 mb-1">
                   Product Name
                 </label>
                 <input
@@ -188,7 +188,7 @@ const EditProductForm = () => {
                 />
               </div>
               <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Price
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
@@ -205,7 +205,7 @@ const EditProductForm = () => {
 
               {/* Short Description */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Short Description
                 </label>
                 <textarea
@@ -219,7 +219,7 @@ const EditProductForm = () => {
 
               {/* Long Description */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Long Description
                 </label>
                 <textarea
@@ -232,11 +232,11 @@ const EditProductForm = () => {
               </div>
 
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Category
                 </label>
                 <div className="flex flex-col">
-                  {categoryName.map((category) => (
+                  {/* {categoryName.map((category) => (
                     <div className="flex  items-center" key={category._id}>
                       <input
                         type="checkbox"
@@ -250,7 +250,7 @@ const EditProductForm = () => {
                       {category.label}
                       <span className="ml-3 font-bold">({category.name})</span>
                     </div>
-                  ))}
+                  ))} */}
 
                   <DataTable
                     data={categoryName}
@@ -263,10 +263,10 @@ const EditProductForm = () => {
 
               {/* Colors */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Colors
                 </label>
-                <div className="container mx-auto p-8">
+                <div className="container mx-auto lg:p-8">
                   {editedProduct?.colors ? (
                     <SimilarColorProducts
                       similarProducts={similarProducts}
@@ -280,7 +280,7 @@ const EditProductForm = () => {
 
               {/* Features */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Features
                 </label>
                 {editedProduct.features.map((feature, index) => (
@@ -303,29 +303,15 @@ const EditProductForm = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem("features")}
-                  className="mt-2 flex items-center justify-center w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="mt-2 flex items-center justify-center w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <FaPlus className="mr-2" /> Add Feature
                 </button>
               </div>
 
-              {/* Made In */}
-              <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
-                  Made In
-                </label>
-                <input
-                  type="text"
-                  name="madeIn"
-                  value={editedProduct.madeIn}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                />
-              </div>
-
               {/* Material */}
               <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Material
                 </label>
                 <input
@@ -346,7 +332,7 @@ const EditProductForm = () => {
 
               {/* Sizes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className=" block text-sm font-bold text-gray-700">
                   Sizes and Prices
                 </label>
                 <div className="mt-2 space-y-2">
@@ -370,7 +356,7 @@ const EditProductForm = () => {
                       ) && (
                         <input
                           type="number"
-                          placeholder={`Price for ${size.size}`}
+                          placeholder={`Piceswe have ${size.size}`}
                           value={(function getPriceBySize(size) {
                             const item = editedProduct.sizes.find(
                               (item) => item.size === size
@@ -388,23 +374,9 @@ const EditProductForm = () => {
                 </div>
               </div>
 
-              {/* Stock */}
-              <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
-                  Stock
-                </label>
-                <input
-                  type="number"
-                  name="stock"
-                  value={editedProduct.stock}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                />
-              </div>
-
               {/* Status */}
               <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Status
                 </label>
                 <select
@@ -420,7 +392,7 @@ const EditProductForm = () => {
 
               {/* Care Instructions */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Care Instructions
                 </label>
                 <textarea
@@ -434,7 +406,7 @@ const EditProductForm = () => {
 
               {/* Return Details */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Return Details
                 </label>
                 <textarea
@@ -448,7 +420,7 @@ const EditProductForm = () => {
 
               {/* Shipping Details */}
               <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Shipping Details
                 </label>
                 <textarea
@@ -464,7 +436,7 @@ const EditProductForm = () => {
             <div className="mt-8">
               <button
                 type="submit"
-                className="w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:scale-105"
+                className="w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:scale-105"
               >
                 Save Changes
               </button>

@@ -133,7 +133,9 @@ exports.getToolByIdForMange = catchAsync(async (req, res, next) => {
     const features = new Apifeature(Tool.find({ _id: toolId }), req.query).populate().filter().sort().fields().pagination();
 
 
+
     const products = await features.query;
+    console.log(products);
     res.status(200).send({
         status: "success",
         products: products[0]

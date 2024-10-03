@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import CreateProductForm from "./AddProduct";
 import EditProductForm from "./EditProduct";
+import DeleteProduct from "./Products/DeleteProduct";
 
 const ProductActions = () => {
   const [activeComponent, setActiveComponent] = useState("create");
@@ -59,13 +60,6 @@ const ProductActions = () => {
     </>
   );
 };
-
-const DeleteProduct = () => (
-  <div className="text-gray-800">
-    <h3 className="text-2xl font-semibold mb-4">Delete Product</h3>
-    <p>Are you sure you want to delete this product?</p>
-  </div>
-);
 
 const HideProduct = () => (
   <div className="text-gray-800">

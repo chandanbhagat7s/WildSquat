@@ -23,10 +23,12 @@ const ToolProductAction = ({ docid }) => {
   async function getDataOfTool() {
     try {
       const res = await axios.get(
-        `/api/v1/admin/getToolByIdManage/${docid}?fields=name,_id,products,shortDescription&populate=products&populateField=name,price,_id,coverImage`
+        `/api/v1/admin/getToolByIdManage/${docid}?fields=name,_id,products,shortDescription&populate=products&populateField=name,price,_id,coverImage&populateLimit=20&page=1`
       );
       setSelectedItem({ ...res.data.products });
-    } catch (e) {}
+    } catch (e) {
+      dispatch(error({ message: "something Went wrong" }));
+    }
   }
 
   const toggleProductSelection = (productId) => {

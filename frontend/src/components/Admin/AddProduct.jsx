@@ -234,8 +234,8 @@ const CreateProductForm = () => {
   return (
     <>
       <div className=" min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 py-6 px-1 lg:px-8">
-          <h1 className=" text-2xl lg:text-4xl font-extrabold text-white font-serif">
+        <div className="text-indigo-500 py-6 px-1 lg:px-8">
+          <h1 className=" text-2xl lg:text-4xl font-extrabold  font-serif">
             Create New Product
           </h1>
         </div>

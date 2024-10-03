@@ -27,14 +27,14 @@ const SimilarColorProducts = ({ similarProducts, setSimilarProducts }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-xl p-6 max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">
+    <div className="bg-white rounded-lg shadow-xl p-2 lg:p-6 max-w-4xl mx-auto">
+      <h2 className="text-xl text-center font-bold mb-6 text-gray-800">
         Similar Color Products
       </h2>
       <div className="mb-10">
         <ProductSearch setSelectedProduct={setsearchedProductOnClick} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <AnimatePresence>
           {similarProducts?.length > 0 &&
             similarProducts?.map((product) => (
@@ -53,7 +53,7 @@ const SimilarColorProducts = ({ similarProducts, setSimilarProducts }) => {
                     className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   <div
-                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2  transition-opacity duration-300"
                     onClick={() => onRemove(product._id)}
                   >
                     <FaTimes />
