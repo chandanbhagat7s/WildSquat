@@ -1,6 +1,6 @@
 import React from "react";
 
-const DataTable = ({ data, additon }) => {
+const DataTable = ({ data, additon, edit = false, incategory }) => {
   // Group data by name
   const groupedData = data.reduce((acc, item) => {
     if (!acc[item.name]) {
@@ -21,13 +21,24 @@ const DataTable = ({ data, additon }) => {
             <div className="space-y-2">
               {items.map((item) => (
                 <div key={item._id} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={item._id}
-                    className="form-checkbox h-5 w-5 text-blue-600 rounded"
-                    value={item.label}
-                    onChange={() => additon(item._id)}
-                  />
+                  {edit ? (
+                    <input
+                      type="checkbox"
+                      id={item._id}
+                      className="form-checkbox h-5 w-5 text-blue-600 rounded"
+                      value={item.label}
+                      onChange={() => additon(item._id)}
+                      checked={incategory?.find((el) => el._id == item._id)}
+                    />
+                  ) : (
+                    <input
+                      type="checkbox"
+                      id={item._id}
+                      className="form-checkbox h-5 w-5 text-blue-600 rounded"
+                      value={item.label}
+                      onChange={() => additon(item._id)}
+                    />
+                  )}
                   <label
                     htmlFor={item._id}
                     className="ml-2 text-gray-700 cursor-pointer"

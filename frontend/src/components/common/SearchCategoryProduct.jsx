@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
 
-const SearchCategoryProduct = () => {
+const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -63,10 +63,18 @@ const SearchCategoryProduct = () => {
     setIsOpen(false);
   };
 
-  const handleProductSelect = (productId) => {
-    navigate(`/productDetails/${productId}`);
-    setSearchTerm("");
-    setIsOpen(false);
+  const handleProductSelect = (product) => {
+    if (!nonevigate) {
+      navigate(`/productDetails/${product._id}`);
+      setSearchTerm("");
+      setIsOpen(false);
+    } else {
+      addToSelected({
+        id: product._id,
+        name: product.name,
+        coverImage: product.coverImage,
+      });
+    }
   };
 
   return (
@@ -122,7 +130,7 @@ const SearchCategoryProduct = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: i * 0.05 }}
-                        onClick={() => handleProductSelect(product._id)}
+                        onClick={() => handleProductSelect(product)}
                         className="flex items-center space-x-4 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition duration-200 ease-in-out"
                       >
                         <img

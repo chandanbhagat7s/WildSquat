@@ -128,6 +128,18 @@ exports.getToolById = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.getToolByIdForMange = catchAsync(async (req, res, next) => {
+    const toolId = req.params.toolId;
+    const features = new Apifeature(Tool.find({ _id: toolId }), req.query).populate().filter().sort().fields().pagination();
+
+
+    const products = await features.query;
+    res.status(200).send({
+        status: "success",
+        products: products[0]
+    })
+})
+
 
 
 exports.getTools = catchAsync(async (req, res, next) => {

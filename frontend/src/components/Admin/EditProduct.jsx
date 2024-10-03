@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { error, message, success } from "../../redux/slices/errorSlice";
 import AddSimillar from "./AddSimillar";
 import SimilarColorProducts from "./SimilarColorProduct";
+import DataTable from "./DataTable";
 const EditProductForm = () => {
   const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -151,37 +152,55 @@ const EditProductForm = () => {
   return (
     <div className="mb-60">
       <div className="mb-20">
-        <div className=" mx-2 my-3 font-bold text-2xl ">Edit Product</div>
+        <div className="mx-2 my-3 font-bold text-3xl text-indigo-500 bg-clip-text ">
+          Edit Product
+        </div>
         <ProductSearch setSelectedProduct={setSelectedProduct} />
       </div>
       {editedProduct?.name && (
         <>
           <form
             onSubmit={handleSubmit}
-            className="max-w-4xl mx-auto space-y-8   p-8 rounded-2xl shadow-2xl bg-gray-100"
+            className="max-w-4xl mx-auto p-10 space-y-8 rounded-3xl shadow-2xl bg-white border border-gray-200"
           >
             <div className="text-center">
-              <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
+              <h2 className="text-4xl font-extrabold text-gray-800 mb-2">
                 Edit Product
               </h2>
-              <p className="text-xl text-indigo-600 font-semibold">
+              <p className="text-2xl text-blue-500 font-semibold">
                 {editedProduct.name}
               </p>
             </div>
 
+            {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               {/* Name */}
-              <div className="col-span-1 md:col-span-2">
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
-                  Name
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-1">
+                  Product Name
                 </label>
                 <input
                   type="text"
                   name="name"
                   value={editedProduct.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 ease-in-out"
                 />
+              </div>
+              <div>
+                <label className=" block text-xl font-medium text-gray-900 mb-1">
+                  Price
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <input
+                    type="number"
+                    name="price"
+                    value={editedProduct.price}
+                    onChange={handleChange}
+                    className="w-full pl-7 pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+                    placeholder="0.00"
+                  />
+                </div>
               </div>
 
               {/* Short Description */}
@@ -212,28 +231,7 @@ const EditProductForm = () => {
                 ></textarea>
               </div>
 
-              {/* Price */}
-              <div>
-                <label className=" block text-xl font-medium text-gray-900 mb-1">
-                  Price
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500 sm:text-sm">$</span>
-                  </div>
-                  <input
-                    type="number"
-                    name="price"
-                    value={editedProduct.price}
-                    onChange={handleChange}
-                    className="w-full pl-7 pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-                    placeholder="0.00"
-                  />
-                </div>
-              </div>
-
-              {/* Color Category */}
-              <div>
+              <div className="col-span-1 md:col-span-2">
                 <label className=" block text-xl font-medium text-gray-900 mb-1">
                   Category
                 </label>
@@ -243,7 +241,7 @@ const EditProductForm = () => {
                       <input
                         type="checkbox"
                         checked={editedProduct.category.find(
-                          (el) => el == category._id
+                          (el) => el._id == category._id
                         )}
                         key={category._id}
                         value={category.label}
@@ -253,6 +251,13 @@ const EditProductForm = () => {
                       <span className="ml-3 font-bold">({category.name})</span>
                     </div>
                   ))}
+
+                  <DataTable
+                    data={categoryName}
+                    additon={handleCategoryChanges}
+                    edit={true}
+                    incategory={editedProduct.category}
+                  />
                 </div>
               </div>
 

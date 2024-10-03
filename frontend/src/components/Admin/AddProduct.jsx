@@ -232,37 +232,37 @@ const CreateProductForm = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
-      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 py-6 px-8">
-          <h1 className="text-3xl font-bold text-white">Create New Product</h1>
+    <>
+      <div className=" min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 py-6 px-1 lg:px-8">
+          <h1 className=" text-2xl lg:text-4xl font-extrabold text-white font-serif">
+            Create New Product
+          </h1>
         </div>
-        <form onSubmit={handleSubmit} className="py-8 px-8 space-y-6">
-          <div className="mb-20">
-            <div className=" mx-2 my-3 font-bold text-2xl ">
-              Auto Fill Product
-            </div>
-            <ProductSearch setSelectedProduct={handleClickSelectedProduct} />
+
+        {/* Product Search Section */}
+        <div className="mb-10">
+          <div className="mx-auto text-center my-1 font-bold text-xl">
+            Auto Fill Product
           </div>
-          <div className="flex justify-around">
-            <div className="title font-bold ">Select Gender First</div>
-            <select
-              name=""
-              id=""
-              className="rounded"
-              onChange={(e) => {
-                setProduct({
-                  ...product,
-                  gender: e.target.value,
-                });
-              }}
-            >
-              <option value="">Select</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <ProductSearch setSelectedProduct={handleClickSelectedProduct} />
+        </div>
+
+        {/* Select Gender */}
+        <div className="flex justify-center space-x-3 items-center p-1">
+          <label className="title font-bold text-lg">Select Gender First</label>
+          <select
+            className="rounded-lg border-2 border-indigo-500 focus:ring-2 focus:ring-purple-600 p-2"
+            onChange={(e) => setProduct({ ...product, gender: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <form onSubmit={handleSubmit} className="py-8 p-1 lg:px-8 space-y-6">
+          <div className="grid grid-cols-1 gap-1 lg:gap-6 sm:grid-cols-2">
             <div>
               <label
                 htmlFor="name"
@@ -358,7 +358,7 @@ const CreateProductForm = () => {
                   {product.sizes.find((item) => item.size == size.size) && (
                     <input
                       type="number"
-                      placeholder={`Price for ${size.size}`}
+                      placeholder={`No of avai.. pices ${size.size}`}
                       className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       onChange={(e) => handleSizeChange(size, e.target.value)}
                     />
@@ -580,51 +580,37 @@ const CreateProductForm = () => {
                 htmlFor="stock"
                 className="block text-sm font-medium text-gray-700"
               >
-                stock
-              </label>
-              <input
-                type="text"
-                id="stock"
-                name="stock"
-                value={product.stock}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="stock"
-                className="block text-sm font-medium text-gray-700"
-              >
                 Dimension (in cm)
               </label>
-              <input
-                type="text"
-                id="Dimension"
-                name="Dimension"
-                placeholder="Length"
-                value={product?.dimension[0] || ""}
-                onChange={(e) => handleDimension(e.target.value * 1, 0)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <input
-                type="text"
-                id="Dimension"
-                name="Dimension"
-                placeholder="breadth"
-                value={product?.dimension[1] || ""}
-                onChange={(e) => handleDimension(e.target.value * 1, 1)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <input
-                type="text"
-                id="Dimension"
-                name="Dimension"
-                placeholder="Height"
-                value={product?.dimension[2] || ""}
-                onChange={(e) => handleDimension(e.target.value * 1, 2)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
+              <div className="flex space-x-1">
+                <input
+                  type="text"
+                  id="Dimension"
+                  name="Dimension"
+                  placeholder="Length"
+                  value={product?.dimension[0] || ""}
+                  onChange={(e) => handleDimension(e.target.value * 1, 0)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                <input
+                  type="text"
+                  id="Dimension"
+                  name="Dimension"
+                  placeholder="breadth"
+                  value={product?.dimension[1] || ""}
+                  onChange={(e) => handleDimension(e.target.value * 1, 1)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                <input
+                  type="text"
+                  id="Dimension"
+                  name="Dimension"
+                  placeholder="Height"
+                  value={product?.dimension[2] || ""}
+                  onChange={(e) => handleDimension(e.target.value * 1, 2)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
             </div>
           </div>
 
@@ -665,6 +651,7 @@ const CreateProductForm = () => {
                 onChange={handleInputChange}
                 value={product.weight || ""}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="0.5 Kg"
               />
             </div>
           </div>
@@ -681,7 +668,7 @@ const CreateProductForm = () => {
           </div>
         </form>
       </div>
-    </div>
+    </>
   );
 };
 

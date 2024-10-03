@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
   return (
     <motion.div
       key={product?._id}
-      className=" bg-gray-100 rounded-3xl shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      className=" bg-gray-200 font-semibold rounded shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

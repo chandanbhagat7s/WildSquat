@@ -33,6 +33,7 @@ const ProductListing = () => {
       } catch (e) {
         console.error("Error fetching products:", e);
       } finally {
+        console.log("done false");
         setIsLoading(false);
       }
     }
@@ -66,44 +67,33 @@ const ProductListing = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-4xl lg:text-6xl font-bold text-gray-800 mb-12 text-center"
+          className="text-4xl lg:text-6xl  text-gray-800 mb-12 text-center font-semibold"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Discover Our{" "}
-          <span className="block md:inline-block bg-black text-white px-3 py-2 rounded-md">
+          <span className="block md:inline-block font-bold bg-black text-white px-3 py-2 rounded-md">
             Premium Collection
           </span>
         </motion.h2>
 
         <div className="relative mt-16">
           <AnimatePresence mode="wait">
-            {isLoading ? (
-              <motion.div
-                key="loading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex justify-center items-center h-96"
-              >
-                <div className="w-16 h-16 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="products"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
-              >
-                {products.map((product) => (
+            <motion.div
+              // key={products}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2"
+            >
+              {products.length > 0 &&
+                products.map((product) => (
                   <motion.div key={product._id} variants={itemVariants}>
                     <ProductCard product={product} />
                   </motion.div>
                 ))}
-              </motion.div>
-            )}
+            </motion.div>
           </AnimatePresence>
 
           <motion.button

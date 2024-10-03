@@ -26,19 +26,9 @@ const ThinkingCard = ({ product, index }) => {
           <img
             src={`${url}Tools/${product?.coverImage}`}
             alt={product?.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:animate-pulse"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover"
           />
         </motion.div>
-      </div>
-
-      {/* Action buttons */}
-      <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <button className="p-2 bg-white rounded-full shadow hover:bg-gray-100">
-          <FaShoppingBag className="text-gray-800" />
-        </button>
-        <button className="p-2 bg-white rounded-full shadow hover:bg-gray-100">
-          <FaRegHeart className="text-red-500" />
-        </button>
       </div>
 
       {/* Product name and price */}

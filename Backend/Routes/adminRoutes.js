@@ -2,7 +2,7 @@ const express = require('express');
 const { createProduct, uploadImages, resizeImage, editProduct, hideProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, actionOnTool, deletTool, addOtherSimillarColorProduct } = require('../Controllers/adminController');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const giveAccess = require('../Middleware/giveAccessTo');
-const { getToolById } = require('../Controllers/toolControllers');
+const { getToolById, getToolByIdForMange } = require('../Controllers/toolControllers');
 const adminRouter = express.Router()
 
 // adminRouter.use(isLoggedIn, giveAccess("ADMIN"))
@@ -27,6 +27,7 @@ adminRouter.delete("/actionOnTool/:toolId", deletTool)
 adminRouter.post("/createCategory", uploadImages, resizeToolImage, createCategory)
 adminRouter.get("/getAllMyTools/:gender", getAllMyTools)
 adminRouter.get("/getToolById/:toolId", getToolById)
+adminRouter.get("/getToolByIdManage/:toolId", getToolByIdForMange)
 
 
 

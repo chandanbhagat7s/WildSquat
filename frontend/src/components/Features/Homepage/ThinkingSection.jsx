@@ -21,7 +21,7 @@ const ThinkingSection = () => {
           `/api/v1/tools/getTool/POSTER?gender=${gender}&page=${page}&limit=10&fields=name,label,coverImage,_id`
         );
 
-        if (res.data.products == 0) {
+        if (res.data.products === 0) {
           setPage(1);
           return;
         }
@@ -35,37 +35,39 @@ const ThinkingSection = () => {
 
   return (
     <motion.section
-      className=" bg-white  py-16"
+      className="bg-gray-100 py-16 px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
+        {/* Title Section */}
         <motion.h2
-          className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
+          className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 mb-10 text-center"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Thinking Will Be
-          <span className="block md:inline-block bg-black text-white p-1 md:p-2">
-            Present Hear
+          Thoughtful Products, <br />
+          <span className="text-black px-4 py-2 inline-block mt-2 font-bold">
+            Delivered to You
           </span>
         </motion.h2>
 
+        {/* Products Section */}
         <div className="relative">
           <button
             onClick={() => {
-              page >= 2 && setPage(page - 1);
+              page > 1 && setPage(page - 1);
             }}
-            className="absolute left-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
-           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+            className="absolute left-0 top-[50%] -translate-y-1/2 z-10 p-2 bg-gray-300 rounded-full shadow hover:bg-gray-400"
+            disabled={page === 1}
           >
-            <IoIosArrowBack />
+            <IoIosArrowBack className="text-2xl" />
           </button>
 
           <motion.div
-            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"
+            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
@@ -76,28 +78,29 @@ const ThinkingSection = () => {
                   key={product._id}
                   product={product}
                   index={index}
+                  className="hover:scale-105 transform transition duration-300"
                 />
               ))}
           </motion.div>
+
           <button
-            onClick={() => {
-              setPage(page + 1);
-            }}
-            className="absolute right-0 top-[50%] -translate-y-1/2 z-10 h-[10%] md:h-[30%] bg-gray-500 text-white 
-           hover:bg-gray-100 hover:text-black  hover:border hover:border-black px-2 rounded shadow-lg font-extrabold text-3xl"
+            onClick={() => setPage(page + 1)}
+            className="absolute right-0 top-[50%] -translate-y-1/2 z-10 p-2 bg-gray-300 rounded-full shadow hover:bg-gray-400"
           >
-            <GrFormNext />
+            <GrFormNext className="text-2xl" />
           </button>
         </div>
-        <div className="flex justify-center">
+
+        {/* Explore More Button */}
+        <div className="flex justify-center mt-10">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 mt-10"
+            className="inline-flex items-center px-8 py-3 bg-gray-700 text-white rounded-full font-bold text-lg shadow-lg hover:bg-black transition-all duration-300"
             onClick={() => nevigate(`/categoryLists/POSTER`)}
           >
-            Explore more...
-            <FaArrowTrendUp className="ml-3 animate-ping" size={24} />
+            Explore More
+            <FaArrowTrendUp className="ml-3 text-2xl animate-bounce" />
           </motion.button>
         </div>
       </div>

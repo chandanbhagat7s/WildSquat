@@ -8,6 +8,7 @@ import LoadingSpinner from "../../common/Spinner";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 import CategoryCard from "../Common/Cards/CategoryCard";
+import ThinkingCard from "../Common/Cards/ThinkingCard";
 
 const BulkListLayoutCard = ({ tool }) => {
   const dispatch = useDispatch();
@@ -88,12 +89,7 @@ const BulkListLayoutCard = ({ tool }) => {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
             {products.length > 0 &&
               products.map((card) => (
-                <CategoryCard
-                  key={card._id}
-                  id={card._id}
-                  image={card.coverImage}
-                  title={card.label}
-                />
+                <ThinkingCard key={card._id} product={card} />
               ))}
           </div>
         </InfiniteScroll>

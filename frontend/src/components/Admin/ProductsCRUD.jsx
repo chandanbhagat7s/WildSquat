@@ -30,15 +30,15 @@ const ProductActions = () => {
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 ">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {buttons.map((button) => (
           <motion.button
             key={button.action}
             onClick={() => setActiveComponent(button.action)}
-            className={`flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition duration-300 ${
+            className={`flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition duration-300 ${
               activeComponent === button.action
-                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
-                : "bg-gray-100 text-gray-800 hover:bg-indigo-100"
+                ? "bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg"
+                : "bg-gray-100 text-gray-700 hover:bg-blue-100"
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -52,7 +52,7 @@ const ProductActions = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="bg-gray-50 rounded-xl p-1 "
+        className="bg-white rounded-xl p-1 lg:p-4 shadow-md"
       >
         {renderActiveComponent()}
       </motion.div>
@@ -63,21 +63,14 @@ const ProductActions = () => {
 const DeleteProduct = () => (
   <div className="text-gray-800">
     <h3 className="text-2xl font-semibold mb-4">Delete Product</h3>
-    <p>Confirmation dialog for product deletion goes here.</p>
+    <p>Are you sure you want to delete this product?</p>
   </div>
 );
 
 const HideProduct = () => (
   <div className="text-gray-800">
     <h3 className="text-2xl font-semibold mb-4">Hide Product</h3>
-    <p>Options to hide/unhide products go here.</p>
-  </div>
-);
-
-const EditProduct = () => (
-  <div className="text-gray-800">
-    <h3 className="text-2xl font-semibold mb-4">Edit Product</h3>
-    <p>Form to edit an existing product goes here.</p>
+    <p>Would you like to hide or unhide this product?</p>
   </div>
 );
 
