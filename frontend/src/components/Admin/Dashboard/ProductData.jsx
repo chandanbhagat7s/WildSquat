@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import BarGraph from "./Bar/BargraphforViewProduct";
-import ChartData from "./Bar/ChartData";
+import BarGraph from "../Bar/BargraphforViewProduct";
+import ChartData from "../Bar/ChartData";
 
 const VerticalCardList = ({ data }) => {
   return (

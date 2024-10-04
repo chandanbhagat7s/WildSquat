@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import CreateProductForm from "./AddProduct";
+import CreateProductForm from "../AddProduct";
 import EditProductForm from "./EditProduct";
-import DeleteProduct from "./Products/DeleteProduct";
+import DeleteProduct from "./DeleteProduct";
 
 const ProductActions = () => {
   const [activeComponent, setActiveComponent] = useState("create");

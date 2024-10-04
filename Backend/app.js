@@ -22,6 +22,7 @@ const toolRouter = require('./Routes/toolsRouter');
 
 const { syncViewCounts } = require('./Redis/syncViewCounts');
 const shipRouter = require('./Routes/shipRoutes');
+const orderRoutes = require('./Routes/orderRoutes');
 
 
 const app = express()
@@ -114,6 +115,7 @@ mongoose.connect(process.env.DATABASE_URL, {
 
 app.use('/api/v1/tools', toolRouter)
 app.use('/api/v1/auth', authRoute)
+app.use('/api/v1/orders', orderRoutes)
 app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/product', productRouter)
 app.use('/api/v1/review', reviewRouter)

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { FiUpload, FiType, FiAlignLeft } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import { error, success } from "../../redux/slices/errorSlice";
+import { error, success } from "../../../redux/slices/errorSlice";
 
 const CreateCategory = () => {
   const [coverImage, setCoverImage] = useState(null);

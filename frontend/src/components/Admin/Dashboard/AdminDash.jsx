@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductActions from "./ProductsCRUD";
-import GetAllOrdersPending from "./GetAllOrdersPending";
+import GetAllOrdersPending from "../GetAllOrdersPending";
 import ManageTools from "./ManageTools";
 import CreateCategory from "./CreateCatefory";
 import ProductData from "./ProductData";

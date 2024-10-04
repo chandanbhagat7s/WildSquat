@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaPlus } from "react-icons/fa";
-import url from "../../assets/url";
+import url from "../../../assets/url";
 import ProductSearch from "./SearchProduct";
 import { useDispatch } from "react-redux";
-import { warning } from "../../redux/slices/errorSlice";
+import { warning } from "../../../redux/slices/errorSlice";
 
 const SimilarColorProducts = ({ similarProducts, setSimilarProducts }) => {
   const dispatch = useDispatch();

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import ProductSearch from "./SearchProduct";
+import ProductSearch from "../SearchProduct";
 import axios from "axios";
 import { FaMinus, FaPlus } from "react-icons/fa";
 
 import { useDispatch, useSelector } from "react-redux";
-import { error, message, success } from "../../redux/slices/errorSlice";
+import { error, message, success } from "../../../redux/slices/errorSlice";
 import AddSimillar from "./AddSimillar";
-import SimilarColorProducts from "./SimilarColorProduct";
+import SimilarColorProducts from "../Common/SimilarColorProduct";
 import DataTable from "./DataTable";
 const EditProductForm = () => {
   const dispatch = useDispatch();
