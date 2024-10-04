@@ -19,12 +19,10 @@ const cacheMiddleware = async (req, res, next) => {
             // Send cached data
             console.log("SENDED CACHEd");
 
-            return res.status(200).send({
-                status: "success",
-                products: JSON.parse(cachedData)
-            });
+            return res.status(200).send(JSON.parse(cachedData));
         }
         console.log("PASSED");
+        req.cacheKey = cacheKey;
 
 
         next();  // Proceed if no cached data

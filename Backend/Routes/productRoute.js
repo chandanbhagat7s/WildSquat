@@ -19,7 +19,7 @@ productRouter.get("/getAllSimmilarProducts/:productName", getProductByName)
 
 productRouter.get("/getAllCategory", getAllCategory)
 productRouter.get("/getAllPosters", getAllPosters)
-productRouter.get("/getAllTrendingProducts", getTrending)
+productRouter.get("/getAllTrendingProducts", cacheMiddleware, getTrending)
 productRouter.get("/getAllCardProducts", getAllCardProducts)
 
 

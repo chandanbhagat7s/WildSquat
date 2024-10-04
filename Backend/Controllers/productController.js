@@ -44,7 +44,9 @@ exports.getProductById = catchAsync(async (req, res, next) => {
 
 
     const product = await Product.findById(productId).populate([{
-        path: "colors"
+        path: "colors",
+        // ref: "SimilarProduct"
+
     }, {
         path: "category",
         select: "products name"
@@ -210,38 +212,18 @@ exports.getAllCategory = factory.getAll(Tool)
 
 exports.getTrending = catchAsync(async (req, res, next) => {
 
-    const generateCacheKey = (req) => {
-        const baseUrl = req.originalUrl.split('?')[0];
-        const queryString = JSON.stringify(req.query);  // Capture all query parameters
-        return `${baseUrl}:${queryString}`;
-    };
-    const cacheKey = generateCacheKey(req);
 
-
-    const cachedData = await redisClient.get(cacheKey);
-
-    if (cachedData) {
-        // Send cached data
-        console.log("SENDED CACHEd of trending");
-
-
-
-        return res.status(200).send({
-            status: "success",
-            id: JSON.parse(cachedData)[0]?._id,
-            products: JSON.parse(cachedData)[0]?.products
-        });
-    } else {
-
-    }
 
     const features = new Apifeature(Tool.find({ name: "Trending" }), req.query).populate().filter().sort().fields().pagination();
 
 
     const products = await features.query;
-    await redisClient.set(cacheKey, JSON.stringify(products), {
-        EX: 5 * 3600  // Cache expires in 5 hour
-    });
+
+    await createCache(req, {
+        status: "success",
+        id: products[0]?._id,
+        products: products[0]?.products
+    })
 
 
 

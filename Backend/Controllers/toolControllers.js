@@ -2,6 +2,7 @@ const Tool = require("../Models/Tools");
 const createCache = require("../Redis/createCache");
 const Apifeature = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
+const redisClient = require("../Redis/redisClient")
 
 exports.getNevigationListItems = catchAsync(async (req, res, next) => {
     const { gender } = req.params;
@@ -115,11 +116,20 @@ exports.getNevigationListItems = catchAsync(async (req, res, next) => {
 })
 exports.getToolById = catchAsync(async (req, res, next) => {
     const toolId = req.params.toolId;
+
+
+
+
     const features = new Apifeature(Tool.find({ _id: toolId }), req.query).populate().filter().sort().fields().pagination();
 
 
     const products = await features.query;
 
+
+    await createCache(req, {
+        status: "success",
+        products: products[0]?.products
+    })
 
 
     res.status(200).send({
@@ -165,7 +175,10 @@ exports.getTools = catchAsync(async (req, res, next) => {
 
     const products = await features.query;
 
-    await createCache(req, products)
+    await createCache(req, {
+        status: "success",
+        products: products
+    })
 
 
     res.status(200).send({

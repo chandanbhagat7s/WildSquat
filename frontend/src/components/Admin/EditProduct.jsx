@@ -12,7 +12,9 @@ const EditProductForm = () => {
   const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState("");
 
-  const { categoryName } = useSelector((state) => state.product);
+  const [categoryName, setCategoryName] = useState([]);
+  console.log("cateory name", categoryName);
+
   const [editedProduct, setEditedProduct] = useState({
     name: "",
   });
@@ -117,9 +119,14 @@ const EditProductForm = () => {
         const res = await axios.get(
           `/api/v1/product/getProduct/${selectedProduct}`
         );
+        const tool = await axios.get(
+          `/api/v1/admin/getAllMyTools/${res.data?.product?.gender}`
+        );
+        setCategoryName(tool.data.allToolsdata);
 
         setEditedProduct({
           ...res?.data?.product,
+          category: res?.data?.product?.category.map((el) => el._id),
         });
         res?.data?.product?.colors?.simillarProducts?.length > 0 &&
           setSimilarProducts([...res?.data?.product?.colors?.simillarProducts]);
@@ -148,6 +155,9 @@ const EditProductForm = () => {
   useEffect(() => {
     bringProductInfo();
   }, [selectedProduct]);
+  useEffect(() => {
+    console.log(editedProduct.category);
+  });
 
   return (
     <div className="mb-60">
@@ -231,33 +241,37 @@ const EditProductForm = () => {
                 ></textarea>
               </div>
 
-              <div className="col-span-1 md:col-span-2">
+              <div className="col-span-1 md:col-span-2 ">
                 <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Category
                 </label>
-                <div className="flex flex-col">
-                  {/* {categoryName.map((category) => (
+                <div className="flex flex-col space-y-1 justify-center mx-auto ">
+                  {categoryName.map((category) => (
                     <div className="flex  items-center" key={category._id}>
                       <input
                         type="checkbox"
-                        checked={editedProduct.category.find(
-                          (el) => el._id == category._id
+                        checked={editedProduct?.category?.includes(
+                          category._id
                         )}
                         key={category._id}
                         value={category.label}
                         onChange={() => handleCategoryChanges(category._id)}
                       />
+                      {console.log(
+                        editedProduct?.category?.includes(category._id),
+                        category._id
+                      )}
                       {category.label}
                       <span className="ml-3 font-bold">({category.name})</span>
                     </div>
-                  ))} */}
+                  ))}
 
-                  <DataTable
+                  {/* <DataTable
                     data={categoryName}
                     additon={handleCategoryChanges}
                     edit={true}
                     incategory={editedProduct.category}
-                  />
+                  /> */}
                 </div>
               </div>
 

@@ -7,7 +7,7 @@ const cacheMiddleware = require('../Redis/cacheMiddleware');
 const toolRouter = express.Router()
 
 
-toolRouter.get("/getToolById/:toolId", getToolById)
+toolRouter.get("/getToolById/:toolId", cacheMiddleware, getToolById)
 toolRouter.get("/getTool/:tool", cacheMiddleware, getTools)
 toolRouter.get("/getNavigationData/:gender", getNevigationListItems)
 

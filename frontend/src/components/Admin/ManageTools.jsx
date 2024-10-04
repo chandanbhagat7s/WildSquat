@@ -152,7 +152,7 @@ const ContentCard = ({ item, openDialog, setBtn }) => {
         </h3>
         <div className="mt-2 flex items-center text-sm text-indigo-500">
           <FiTag className="mr-1" />
-          <span>{item.products.length} products</span>
+          {/* <span>{item.products.length} products</span> */}
         </div>
         <p className="mt-3 text-sm text-gray-600 line-clamp-2">
           <FiFileText className="mr-1 inline" />

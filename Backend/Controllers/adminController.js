@@ -8,6 +8,7 @@ const appError = require("../utils/appError");
 const Booked = require("../Models/BookedProduct");
 const Tool = require("../Models/Tools");
 const SimilarPrduct = require("../Models/SimilarProduct");
+const { saveCountAndClearCache } = require("../Redis/syncViewCounts");
 
 
 
@@ -150,7 +151,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
     const tool = await Tool.updateMany(filter, update)
 
-
+    await saveCountAndClearCache()
 
     res.status(200).send({
         status: "success",
@@ -265,6 +266,8 @@ exports.editProduct = catchAsync(async (req, res, next) => {
         return next(new appError("Please try again ", 500))
     }
 
+    await saveCountAndClearCache()
+
 
 
 
@@ -355,6 +358,8 @@ exports.removeThisProductFromSimillarColor = catchAsync(async (req, res, next) =
 
 exports.deleteProduct = catchAsync(async (req, res, next) => {
     const { productIds } = req.body;
+    await saveCountAndClearCache()
+
 
     if (!productIds || productIds.length === 0) {
         return next(new appError("Please provide products to delete", 400));
@@ -390,6 +395,7 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
 
     // Delete products from database
     await Product.deleteMany({ _id: { $in: productIds } });
+
 
     res.status(200).send({
         status: "success",
@@ -550,7 +556,7 @@ exports.updateSlider = catchAsync(async (req, res, next) => {
 
 exports.getAllMyTools = catchAsync(async (req, res, next) => {
     const { gender } = req.params;
-    const allToolsdata = await Tool.find({ name: { $ne: "HOTPRODUCTS" }, gender: gender })
+    const allToolsdata = await Tool.find({ name: { $ne: "HOTPRODUCTS" }, gender: gender }, "-products -__v")
 
     res.status(200).send({
         status: "success",
