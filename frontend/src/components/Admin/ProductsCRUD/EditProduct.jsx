@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductSearch from "../SearchProduct";
+import ProductSearch from "../Common/SearchProduct";
 import axios from "axios";
 import { FaMinus, FaPlus } from "react-icons/fa";
 

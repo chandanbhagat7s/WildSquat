@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import ProductActions from "./ProductsCRUD";
-import GetAllOrdersPending from "../GetAllOrdersPending";
-import ManageTools from "./ManageTools";
-import CreateCategory from "./CreateCatefory";
+import ProductActions from "./../ProductsCRUD/ProductsCRUD";
+import ManageTools from "./../Tools/ManageTools";
+import CreateCategory from "./../Tools/CreateCatefory";
 import ProductData from "./ProductData";
+import Main from "../OrderCRUD/Main";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -38,7 +38,7 @@ const AdminPanel = () => {
       case "dashboard":
         return <ProductData />;
       case "orders":
-        return <GetAllOrdersPending />;
+        return <Main />;
       case "tools":
         return <CreateCategory />;
       case "manage-tools":

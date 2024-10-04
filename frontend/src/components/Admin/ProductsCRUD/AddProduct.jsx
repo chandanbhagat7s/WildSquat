@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { FiUpload, FiX } from "react-icons/fi";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { error, success } from "../../redux/slices/errorSlice";
-import { getAllCateogyNames } from "../../redux/slices/productSlice";
-import ProductSearch from "./SearchProduct";
+import { getAllCateogyNames } from "../../../redux/slices/productSlice";
+import ProductSearch from "./../Common/SearchProduct";
 import DataTable from "./DataTable";
+import { error, success } from "../../../redux/slices/errorSlice";
 
 const CreateProductForm = () => {
   const dispatch = useDispatch();

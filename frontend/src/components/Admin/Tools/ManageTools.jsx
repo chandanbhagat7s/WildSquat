@@ -2,12 +2,12 @@ import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { FiTag, FiFileText } from "react-icons/fi";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { error, success } from "../../../redux/slices/errorSlice";
-import url from "../../../assets/url";
 import FullScreenDialog from "../../common/FullScreenDialog";
-import ToolProductAction from "../ToolProductAction";
+import ToolProductAction from "./ToolProductAction";
+import url from "../../../assets/url";
 
 export default function ManageTools() {
   const dispatch = useDispatch();

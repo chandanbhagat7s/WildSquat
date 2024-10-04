@@ -3,7 +3,7 @@ import axios from "axios";
 import { useDebounce } from "use-debounce";
 
 import { FaSearch, FaSpinner } from "react-icons/fa";
-import url from "../../assets/url";
+import url from "../../../assets/url";
 
 const ProductSearch = ({ setSelectedProduct }) => {
   const [searchTerm, setSearchTerm] = useState("");

@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import SearchCategoryProduct from "../common/SearchCategoryProduct";
-import url from "../../assets/url";
+import SearchCategoryProduct from "./../../common/SearchCategoryProduct";
 import { FiX } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import {
-  error,
-  message,
-  success,
-  warning,
-} from "../../redux/slices/errorSlice";
 import axios from "axios";
+import url from "../../../assets/url";
+import { error, success, warning } from "../../../redux/slices/errorSlice";
 
 const AddSimillar = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);

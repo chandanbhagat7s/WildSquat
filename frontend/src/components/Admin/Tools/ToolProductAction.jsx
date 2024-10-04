@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import url from "../../assets/url";
 import { useDispatch } from "react-redux";
-import { error, success } from "../../redux/slices/errorSlice";
-import ProductSearch from "./SearchProduct";
+import ProductSearch from "./../Common/SearchProduct";
+import url from "../../../assets/url";
+import { error, success } from "../../../redux/slices/errorSlice";
 
 const ToolProductAction = ({ docid }) => {
   const [selectedItem, setSelectedItem] = useState({});

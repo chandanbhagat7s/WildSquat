@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import EditProductForm from "./EditProduct";
-import DeleteProduct from "./DeleteProduct";
-import CreateProductForm from "./AddProduct";
+import { MdOutlinePending } from "react-icons/md";
+import UnshippedTableComponent from "./UnshippedTableComponent";
 
-const ProductActions = () => {
+const Main = () => {
   const [activeComponent, setActiveComponent] = useState("create");
 
   const buttons = [
-    { name: "Create Product", action: "create", icon: "➕" },
+    { name: "Un-Shipped", action: "unship", icon: <MdOutlinePending /> },
     { name: "Delete", action: "delete", icon: "🗑️" },
     { name: "Hide", action: "hide", icon: "👁️" },
     { name: "Edit Product", action: "edit", icon: "✏️" },
@@ -16,14 +15,14 @@ const ProductActions = () => {
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
-      case "create":
-        return <CreateProductForm />;
+      case "unship":
+        return <UnshippedTableComponent />;
       case "delete":
-        return <DeleteProduct />;
+        return <></>;
       case "hide":
-        return <HideProduct />;
+        return <></>;
       case "edit":
-        return <EditProductForm />;
+        return <></>;
       default:
         return null;
     }
@@ -68,4 +67,4 @@ const HideProduct = () => (
   </div>
 );
 
-export default ProductActions;
+export default Main;

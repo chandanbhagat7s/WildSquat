@@ -17,6 +17,23 @@ exports.getOrderDetails = catchAsync(async (req, res, next) => {
         orders
     })
 })
+exports.getShipmentDetailsPinToPin = catchAsync(async (req, res, next) => {
+    const { systemId } = req.params;
+
+    const fetchCoriers = await axios.get(`https://appapinew.bigship.in/api/OrderShipment/Servicibility/CourierList/6393440/${systemId}`, {
+        headers: {
+
+            'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+        }
+    });
+
+    res.status(200).send({
+        status: "success",
+        ship: fetchCoriers?.data?.data
+    })
+
+
+})
 
 
 
