@@ -1,41 +1,39 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import url from "../../../../assets/url";
-import { FaShoppingBag } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaShoppingBag, FaRegHeart, FaChevronRight } from "react-icons/fa";
 
 const ThinkingCard = ({ product, index }) => {
   const navigate = useNavigate();
 
   return (
     <motion.div
-      className="group relative bg-white border border-gray-300 rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+      className="relative overflow-hidden rounded-lg shadow-lg cursor-pointer"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: index * 0.1 }}
+      onClick={() => navigate(`/productList/${product?._id}`)}
     >
-      <div
-        className="relative cursor-pointer"
-        onClick={() => navigate(`/productList/${product?._id}`)}
-      >
-        <motion.div
-          className="overflow-hidden aspect-w-3 aspect-h-4"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
-        >
-          <img
-            src={`${url}Tools/${product?.coverImage}`}
-            alt={product?.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover"
-          />
-        </motion.div>
-      </div>
-
-      {/* Product name and price */}
-      <div className="py-4 px-6 text-center">
-        <h3 className="font-semibold text-gray-800 text-lg">
-          {product?.label}
-        </h3>
+      <div className="relative h-72 lg:h-96 w-full">
+        <img
+          src={`${url}Tools/${product?.coverImage}`}
+          alt={product?.name}
+          className="w-full h-full object-cover object-top"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-30 hover:bg-opacity-15 text-white hover:font-extrabold" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 flex justify-between items-center lg:text-2xl text-xl">
+          <h3 className="  font-bold uppercase text-white">
+            {" "}
+            {product?.label}
+          </h3>
+          <motion.div
+            className="text-white"
+            whileHover={{ x: 5 }}
+            transition={{ duration: 0.2 }}
+          >
+            <FaChevronRight className="text-xl" />
+          </motion.div>
+        </div>
       </div>
     </motion.div>
   );

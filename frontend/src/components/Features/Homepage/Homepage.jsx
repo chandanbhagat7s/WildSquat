@@ -3,14 +3,17 @@ import CategoryList from "./CategoryList";
 import ThinkingSection from "./ThinkingSection";
 import PresentSection from "./PresentSection";
 import Slider from "./Slider";
+import Banner from "./Banner";
 
 export default function Homepage() {
   return (
     <>
       <Slider />
       <ProductListing />
+      <Banner />
       <CategoryList />
       <PresentSection />
+      <Banner />
       <ThinkingSection />
     </>
   );

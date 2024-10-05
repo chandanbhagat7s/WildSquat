@@ -35,7 +35,7 @@ const ThinkingSection = () => {
 
   return (
     <motion.section
-      className="bg-gray-100 py-16 px-4"
+      className="bg-gray-100 py-16 px-1 lg:px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -43,14 +43,14 @@ const ThinkingSection = () => {
       <div className="container mx-auto">
         {/* Title Section */}
         <motion.h2
-          className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 mb-10 text-center"
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-700 mb-12 text-center leading-snug"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          Thoughtful Products, <br />
-          <span className="text-black px-4 py-2 inline-block mt-2 font-bold">
-            Delivered to You
+          Exceptional Quality, <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-gray-600 to-black px-6 py-3 font-bold animate-pulse">
+            Tailored for You
           </span>
         </motion.h2>
 
@@ -67,7 +67,7 @@ const ThinkingSection = () => {
           </button>
 
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 px-4"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
@@ -94,13 +94,17 @@ const ThinkingSection = () => {
         {/* Explore More Button */}
         <div className="flex justify-center mt-10">
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{
+              scale: 1.1,
+              backgroundColor: "linear-gradient(90deg, #4f46e5, #6b21a8)",
+              boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
+            }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center px-8 py-3 bg-gray-700 text-white rounded-full font-bold text-lg shadow-lg hover:bg-black transition-all duration-300"
+            className="inline-flex items-center px-10 py-4 bg-gradient-to-r from-gray-600 to-black text-white rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
             onClick={() => nevigate(`/categoryLists/POSTER`)}
           >
             Explore More
-            <FaArrowTrendUp className="ml-3 text-2xl animate-bounce" />
+            <FaArrowTrendUp className="ml-3 text-2xl animate-bounce-slow" />
           </motion.button>
         </div>
       </div>

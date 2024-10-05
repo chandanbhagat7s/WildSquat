@@ -25,8 +25,8 @@ const PresentSection = () => {
 
         const data = res.data;
         setCategory([...data.products]);
-        setSelectedCategory(data.products[0]._id);
-        fetchProducts(data.products[0]._id);
+        setSelectedCategory(data.products[0]?._id);
+        fetchProducts(data.products[0]?._id);
       } catch (e) {}
     }
     fetchCategories();
