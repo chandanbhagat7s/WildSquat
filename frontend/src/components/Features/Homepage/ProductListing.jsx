@@ -31,9 +31,7 @@ const ProductListing = () => {
         setProducts(res?.data?.products);
         setId(res?.data?.id);
       } catch (e) {
-        console.error("Error fetching products:", e);
       } finally {
-        console.log("done false");
         setIsLoading(false);
       }
     }

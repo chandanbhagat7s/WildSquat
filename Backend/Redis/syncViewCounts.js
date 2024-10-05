@@ -11,7 +11,6 @@ exports.syncViewCounts = async () => {
             redisClient.del(key);
         }
     } catch (error) {
-        console.error('Error syncing view counts:', error);
     }
 };
 
@@ -30,15 +29,12 @@ exports.saveCountAndClearCache = async () => {
         try {
             // Flush all data
             const result = await redisClient.flushAll();
-            console.log('Redis cache cleared:', result);
         } catch (err) {
-            console.error('Error clearing Redis cache:', err);
         } finally {
             // Disconnect the client
             // client.quit();
         }
     } catch (error) {
-        console.error('Error syncing view counts:', error);
     }
 };
 

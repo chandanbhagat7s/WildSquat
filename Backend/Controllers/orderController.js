@@ -2,8 +2,6 @@ const Booked = require("../Models/BookedProduct");
 const Apifeature = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const axios = require("axios")
-
-const redisClient = require("../Redis/redisClient");
 exports.getOrderDetails = catchAsync(async (req, res, next) => {
 
     // const res = await Booked.find()
@@ -33,7 +31,10 @@ exports.getShipmentDetailsPinToPin = catchAsync(async (req, res, next) => {
             }
         });
     } catch (e) {
-        console.log(e.responce);
+        res.status(400).send({
+            status: "fail",
+            ship: "something went wrong please try again"
+        })
 
     }
 

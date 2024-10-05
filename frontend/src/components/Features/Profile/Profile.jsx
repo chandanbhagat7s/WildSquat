@@ -6,8 +6,6 @@ import UserCart from "./UserCart";
 import ProductOrdredList from "./ProductOrdredList";
 
 const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
-  console.log("data is ", data);
-
   const TabButton = ({ label, icon, isActive, onClick }) => (
     <motion.button
       whileHover={{ scale: 1.05 }}

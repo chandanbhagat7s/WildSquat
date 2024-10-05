@@ -17,17 +17,14 @@ const cacheMiddleware = async (req, res, next) => {
 
         if (cachedData) {
             // Send cached data
-            console.log("SENDED CACHEd");
 
             return res.status(200).send(JSON.parse(cachedData));
         }
-        console.log("PASSED");
         req.cacheKey = cacheKey;
 
 
         next();  // Proceed if no cached data
     } catch (error) {
-        console.error('Cache Error:', error);
         next();  // Proceed without cache if an error occurs
     }
 };

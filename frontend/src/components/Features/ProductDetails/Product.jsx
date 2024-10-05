@@ -20,7 +20,6 @@ const Product = () => {
 
       if (res?.data?.status == "success") {
         setLoading(false);
-        console.log(res?.data?.categoryid);
 
         res?.data?.categoryid && setCategory(res?.data?.categoryid);
         setProduct({ ...res?.data?.product });

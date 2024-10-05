@@ -17,7 +17,6 @@ const sendSMS = async (userName, apiKey, templateId, senderName, to, message) =>
         const result = await response.text();
         return result;
     } catch (error) {
-        console.error('Error:', error);
         return null;
     }
 };
@@ -60,7 +59,7 @@ const createTokenSendRes = (id, res, statusCode, data) => {
 exports.login = catchAsync(async (req, res, next) => {
 
     const { email, password } = req.body;
-    console.log();
+
 
 
     if (!email || !password) {
@@ -74,7 +73,7 @@ exports.login = catchAsync(async (req, res, next) => {
         user = await User.findOne({ mobile: email }).select('+password')
 
     }
-    console.log("USEr", user);
+
 
 
 

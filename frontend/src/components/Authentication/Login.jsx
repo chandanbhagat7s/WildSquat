@@ -76,7 +76,6 @@ const LoginPage = () => {
       const mobileNumberRegex = /^[6-9][0-9]{9}$/;
 
       const isValid = mobileNumberRegex.test(formData.email);
-      console.log(isValid, formData.email);
 
       if (!isValid) {
         return dispatch(
@@ -92,15 +91,12 @@ const LoginPage = () => {
       const res = await dispatch(loginForm(formData));
       if (loginForm.fulfilled.match(res)) {
         if (res?.payload?.data?.role == "ADMIN") {
-          console.log("nevigating");
-
           navigate("/adminDash");
           // location.assign("/adminDash");
         } else {
           navigate("/");
         }
         dispatch(success({ message: "Logged in successfully" }));
-        console.log(res, res?.payload?.data?.role);
       } else {
         dispatch(
           error({
@@ -109,8 +105,6 @@ const LoginPage = () => {
         );
       }
     } catch (err) {
-      console.log(err);
-
       dispatch(error({ message: "Please Check Your internet connection" }));
     }
   };
@@ -137,8 +131,6 @@ const LoginPage = () => {
         setIsResendDisabled(true);
       }
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:

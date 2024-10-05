@@ -16,7 +16,6 @@ const sendSMS = async (userName, apiKey, templateId, senderName, to, message) =>
         const result = await response.text();
         return result;
     } catch (error) {
-        console.error('Error:', error);
         return null;
     }
 };
@@ -71,7 +70,6 @@ exports.getOrderStatuses = async (req, res) => {
 
                 // Check if the status was updated more than 4 hours ago
                 if (!order.statusUpdatedAt || now - order.statusUpdatedAt > FOUR_HOURS) {
-                    console.log(`Status outdated for order: ${order.shipOrderId}, requesting from API`);
 
                     // Make the API request
                     const response = await axios.get(
@@ -92,12 +90,10 @@ exports.getOrderStatuses = async (req, res) => {
 
                     return shipmentInfo.orderStatus; // Return the orderStatus
                 } else {
-                    console.log(`Status is up-to-date for order: ${order.shipOrderId}`);
                     return order.orderStatus; // Use the cached status from the database
                 }
             })
         );
-        console.log(orders.Ordred);
 
 
         res.status(200).send({
@@ -105,7 +101,6 @@ exports.getOrderStatuses = async (req, res) => {
             orders: orders.Ordred,
         });
     } catch (err) {
-        console.error(err);
         res.status(500).send({
             status: "error",
             message: "Failed to fetch order statuses",
@@ -186,7 +181,6 @@ exports.changeNumber = catchAsync(async (req, res, next) => {
 
 
 exports.verifyOtpChangeNumber = catchAsync(async (req, res, next) => {
-    console.log(req.body);
 
     const number = req.body.number * 1;
     const otp = req.body.otp;

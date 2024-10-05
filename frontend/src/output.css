@@ -2137,6 +2137,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.py-60 {
+  padding-top: 15rem;
+  padding-bottom: 15rem;
+}
+
 .pb-10 {
   padding-bottom: 2.5rem;
 }
@@ -2235,6 +2240,14 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-60 {
+  padding-bottom: 15rem;
+}
+
+.pb-96 {
+  padding-bottom: 24rem;
 }
 
 .text-left {

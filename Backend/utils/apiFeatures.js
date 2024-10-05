@@ -28,7 +28,6 @@ class Apifeature {
         if (this.queryStr.sort) {
 
             let str = this.queryStr.sort.split(',').join(" ");
-            console.log("came", str);
             this.query = this.query.sort(str)
         }
         return this;
@@ -36,7 +35,6 @@ class Apifeature {
 
     fields() {
         if (this.queryStr.fields) {
-            console.log(this.queryStr.fields);
 
 
             let str = this.queryStr.fields.split(',').join(" ");

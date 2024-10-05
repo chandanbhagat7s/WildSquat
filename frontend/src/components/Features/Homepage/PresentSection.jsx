@@ -27,9 +27,7 @@ const PresentSection = () => {
         setCategory([...data.products]);
         setSelectedCategory(data.products[0]._id);
         fetchProducts(data.products[0]._id);
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) {}
     }
     fetchCategories();
   }, [gender]);
@@ -43,9 +41,7 @@ const PresentSection = () => {
         setPage(1);
       }
       setProducts(response.data.products);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   const handleCategoryClick = (categoryId) => {
@@ -56,8 +52,6 @@ const PresentSection = () => {
 
   useEffect(() => {
     // fetchProducts(category);
-    console.log(selectedCategory);
-
     // fetchProducts(selectedCategory);
   }, [page]);
 

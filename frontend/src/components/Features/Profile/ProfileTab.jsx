@@ -18,8 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../../../redux/slices/authSlice";
 
 const ProfileTab = ({ data, setLoad, load }) => {
-  console.log("DATA", data, data.name, load);
-
   const dispatch = useDispatch();
   const nevigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -32,7 +30,6 @@ const ProfileTab = ({ data, setLoad, load }) => {
     pinCode: data.pinCode || 0,
     addressLine1: data.addressLine1 || "",
   });
-  console.log("FD", formData);
 
   const [otpBox, setOtpBox] = useState({
     otpId: "",
@@ -96,7 +93,6 @@ const ProfileTab = ({ data, setLoad, load }) => {
       const mobileNumberRegex = /^[6-9][0-9]{9}$/;
 
       const isValid = mobileNumberRegex.test(formData.mobile);
-      console.log(isValid, formData.mobile);
 
       if (!isValid) {
         return dispatch(
@@ -141,7 +137,6 @@ const ProfileTab = ({ data, setLoad, load }) => {
           withCredentials: true,
         }
       );
-      console.log("edited", res);
 
       if (res?.data?.status == "success") {
         dispatch(

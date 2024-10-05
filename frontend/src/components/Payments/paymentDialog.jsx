@@ -7,8 +7,6 @@ import { error, success } from "../../redux/slices/errorSlice";
 import { FiMinus, FiPlus } from "react-icons/fi";
 
 const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
-  console.log(products);
-
   const [productData, setProductData] = useState(
     products?.map((el) => {
       let obj = {
@@ -28,9 +26,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
     })
   );
 
-  useEffect(() => {
-    console.log(productData);
-  }, [productData]);
+  useEffect(() => {}, [productData]);
   function handleSizeClick(id, size) {
     const newData = productData.map((el) => {
       if (el._id == id) {
@@ -93,7 +89,6 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   const handlePayment = async (amount) => {
     try {
       // Step 1: Create an order on your server
-      console.log("TOPAY", amount);
 
       const orderResponse = await axios.post("/api/v1/payment/createOrder", {
         amount: 1, // Razorpay expects amount in paise
@@ -109,7 +104,6 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
         order_id: orderResponse.data.order_id,
         handler: function (response) {
           // Handle successful payment
-          console.log("data is ", response);
 
           handleStatus(response);
           // You should verify the payment signature on your server here

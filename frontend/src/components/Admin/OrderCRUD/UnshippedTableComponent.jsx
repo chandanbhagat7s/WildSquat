@@ -15,12 +15,10 @@ const UnshippedTableComponent = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(
-          "/api/v1/orders/getOrderDetails?phase[lt]=3&populate=byuser"
+          "/api/v1/orders/getOrderDetails?phase[lt]=3&populate=byuser&cancledShipment=false"
         );
         setOrders(res.data.orders);
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) {}
     };
     fetchOrders();
   }, []);
@@ -40,12 +38,9 @@ const UnshippedTableComponent = () => {
         orderId: selectedOrder.order,
         courierId: courierId,
       });
-      console.log(res);
 
       // setOrders(res.data.orders);
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   }
 
   return (
@@ -101,7 +96,9 @@ const UnshippedTableComponent = () => {
             ))}
         </tbody>
       </table>
-      <div className="p-2 bg-gray-200">No orders failed shipping</div>
+      {orders.length == 0 && (
+        <div className="p-2 bg-gray-200">No orders failed shipping</div>
+      )}
 
       {/* Full-Screen Dialog */}
       {isDialogOpen && (

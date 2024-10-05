@@ -13,7 +13,6 @@ export const signupForm = createAsyncThunk('/signup/user', async (data) => {
             withCredentials: true
         })
         if (res) {
-            //console.log("res is ", res);
             return res
 
 
@@ -41,7 +40,6 @@ export const loginForm = createAsyncThunk('/login/user', async (data, { rejectWi
 
         }
     } catch (e) {
-        console.log(e);
 
         return rejectWithValue(e?.response?.data?.msg || "Please check Your internet connection");
     }
@@ -93,7 +91,6 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(signupForm.fulfilled, (state, action) => {
-            console.log(action);
             if (action.payload.data.status == "success") {
                 localStorage.setItem("isLoggedIn", JSON.stringify(true))
                 localStorage.setItem("data", JSON.stringify(action?.payload?.data?.data))
@@ -103,7 +100,6 @@ const authSlice = createSlice({
 
 
         }).addCase(loginForm.fulfilled, (state, action) => {
-            console.log(action);
             if (action?.payload?.status == "success") {
                 localStorage.setItem("isLoggedIn", JSON.stringify(true))
                 localStorage.setItem("data", JSON.stringify(action?.payload?.data))

@@ -13,7 +13,6 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
     if (token) {
         token = JSON.parse(token).data.token
     }
-    console.log("token in get", token);
 
     if (!token || Date.now() >= tokenExpiryTime) {
 
@@ -33,15 +32,13 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
         // Handle non-OK responses
         if (!response.ok) {
-            return console.log(response);
-
+            next(new appError("something went wrong please try again later", 500));
         }
 
         const data = await response.json(); // Parse JSON response
 
 
         // token = data.token;  // Save the token if needed
-        console.log("Token is", data?.data?.token);
         token = data?.data?.token;
 
         await redisClient.set("token", JSON.stringify(data), {
@@ -49,7 +46,6 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
         });
 
         const cachedData = await redisClient.get("token");
-        console.log("token", cachedData);
 
         req.shippingToken = data?.data?.token;
 
@@ -104,7 +100,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             price: 0,
 
         }
-        console.log("oop", order.productData, order);
 
         let orderDetails = order.productData.map((el) => {
 
@@ -124,7 +119,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             return obj
 
         })
-        console.log("calculation", calculation);
 
 
 
@@ -206,7 +200,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
 
         // "system_order_id is 1002443475" , now further manifasting it 
-        console.log("data is ", shippingpart1.data);
 
         let systemId = shippingpart1?.data?.data
         systemId = systemId.length > 0 ? systemId.split(" ") : false
@@ -215,7 +208,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
         if (systemId) {
             order.system_order_id = systemId;
-            console.log("menifistingby", systemId);
 
             // we will now fetch all the courier id and then form that mimium one will be seleted
 
@@ -228,7 +220,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                     'Authorization': `Bearer ${token}` // Authorization header with Bearer token
                 }
             });
-            console.log("available courers", fetchCoriers?.data?.data);
 
             // if (!fetchCoriers?.data?.success) {
             //     order.phase = 1
@@ -258,7 +249,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 return (prev.courierCharge < current.courierCharge) ? prev : current;
             });
 
-            console.log(lowestChargeCourier, lowestChargeCourier.courierId);
 
             lowestChargeCourier.courierId = 100
 
@@ -275,7 +265,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 });
 
             // now we are getting awb and other details
-            console.log("data is sp2 ", shippingpart2.data);
             if (!shippingpart2?.data?.success) {
                 order.phase = 1;
                 await order.save()
@@ -311,7 +300,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
 
 
-            console.log("data of final ", final.data);
             /*
             data is  {
 data: 'system_order_id is 1002443557',
@@ -346,7 +334,6 @@ responseCode: 200
             order.phase = 3
 
             await order.save()
-            console.log("pase2 is ", shippingpart2.data, final.data);
 
             res.status(200).send({
                 status: "success",
@@ -361,7 +348,6 @@ responseCode: 200
 
 
     } catch (e) {
-        console.log("error shippingpart1", e?.response?.data, e);
         res.status(400).send({
             status: "fail",
             data: "done"
@@ -374,7 +360,9 @@ responseCode: 200
 
 exports.getAllWarehouse = catchAsync(async (req, res, next) => {
     try {
-        console.log("requesting", token);
+
+
+        const token = req.shippingToken;
 
         const getAllWarehouse = await axios.get("https://appapinew.bigship.in/api/wms/location/get/6393440/1/10?status=true", {
             headers: {
@@ -408,7 +396,7 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
     if (!order) {
         return next(new appError("You have not booked any order", 400))
     }
-    if (order.cancled) {
+    if (order.cancledShipment) {
         return next(new appError("Your order is cancled already", 400))
     }
     // if (order.refunded) {
@@ -424,7 +412,6 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
                 'Authorization': `Bearer ${token}` // Authorization header with Bearer token
             }
         });
-    console.log("cancleShipment", cancledShipment.data);
 
 
     if (!cancledShipment?.data?.success) {
@@ -454,7 +441,6 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
         "receipt": `Receipt No. ${order.orderId}`
     })
     const r = await responce;
-    console.log("responce", responce, r);
     order.refunded = true
     await order.save();
     // await Booked.findByIdAndDelete(order._id)
@@ -491,7 +477,6 @@ exports.shipProductByAdmin = catchAsync(async (req, res, next) => {
 
         systemId = order.system_order_id;
         if (systemId) {
-            console.log("menifistingby", systemId);
 
 
 
@@ -509,7 +494,6 @@ exports.shipProductByAdmin = catchAsync(async (req, res, next) => {
                 });
 
             // now we are getting awb and other details
-            console.log("data is sp2 ", shippingpart2.data);
             if (!shippingpart2?.data?.success) {
                 order.phase = 1;
                 await order.save()
@@ -546,7 +530,6 @@ exports.shipProductByAdmin = catchAsync(async (req, res, next) => {
 
 
 
-            console.log("data of final ", final.data);
             /*
             data is  {
 data: 'system_order_id is 1002443557',
@@ -579,7 +562,6 @@ responseCode: 200
             order.phase = 3
 
             await order.save()
-            console.log("pase2 is ", shippingpart2.data, final.data);
 
             res.status(200).send({
                 status: "success",
@@ -594,7 +576,6 @@ responseCode: 200
 
 
     } catch (e) {
-        console.log("error shippingpart1", e?.response?.data, e);
         res.status(400).send({
             status: "fail",
             data: "done"

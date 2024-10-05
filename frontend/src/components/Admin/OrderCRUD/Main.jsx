@@ -2,27 +2,34 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { MdOutlinePending } from "react-icons/md";
 import UnshippedTableComponent from "./UnshippedTableComponent";
+import { IoMdDoneAll } from "react-icons/io";
+import { CiDeliveryTruck } from "react-icons/ci";
+
+import { GiReturnArrow } from "react-icons/gi";
+import BookedOrders from "./BookedOrders";
+import CanclledOrders from "./CancelledOrders";
+import DeliveredOrders from "./DeliveredOrders";
 
 const Main = () => {
   const [activeComponent, setActiveComponent] = useState("create");
 
   const buttons = [
     { name: "Un-Shipped", action: "unship", icon: <MdOutlinePending /> },
-    { name: "Delete", action: "delete", icon: "🗑️" },
-    { name: "Hide", action: "hide", icon: "👁️" },
-    { name: "Edit Product", action: "edit", icon: "✏️" },
+    { name: "Booked Orders", action: "booked", icon: <CiDeliveryTruck /> },
+    { name: "Returned Orders", action: "returned", icon: <GiReturnArrow /> },
+    { name: "Delivered", action: "Delivered", icon: <IoMdDoneAll /> },
   ];
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
       case "unship":
         return <UnshippedTableComponent />;
-      case "delete":
-        return <></>;
-      case "hide":
-        return <></>;
-      case "edit":
-        return <></>;
+      case "booked":
+        return <BookedOrders />;
+      case "returned":
+        return <CanclledOrders />;
+      case "Delivered":
+        return <DeliveredOrders />;
       default:
         return null;
     }
@@ -59,12 +66,5 @@ const Main = () => {
     </>
   );
 };
-
-const HideProduct = () => (
-  <div className="text-gray-800">
-    <h3 className="text-2xl font-semibold mb-4">Hide Product</h3>
-    <p>Would you like to hide or unhide this product?</p>
-  </div>
-);
 
 export default Main;

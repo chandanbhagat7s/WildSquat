@@ -6,8 +6,8 @@ const shipRouter = express.Router()
 // get all wherehouse
 shipRouter.use(ensureShippingAuth)
 shipRouter.post("/shipProduct", shipProduct)
-shipRouter.get("/getAllWarehouseDetails", getAllWarehouse)
-shipRouter.post("/cancleOrderAndRefund", cancleShpementAndRefund)
+shipRouter.get("/getAllWarehouseDetails", ensureShippingAuth, getAllWarehouse)
+shipRouter.post("/cancleOrderAndRefund", ensureShippingAuth, cancleShpementAndRefund)
 
 
 // Integrating bigShip for shipping

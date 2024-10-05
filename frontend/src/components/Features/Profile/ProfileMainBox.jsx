@@ -16,7 +16,6 @@ export default function ProfileMainBox() {
   async function getData() {
     try {
       const res = await axios.get("/api/v1/user/getCartHeartOrders");
-      console.log("data of profile", res.data);
 
       let temp = res.data;
       if (res?.data?.status == "success") {
