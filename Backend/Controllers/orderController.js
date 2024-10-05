@@ -1,12 +1,14 @@
 const Booked = require("../Models/BookedProduct");
 const Apifeature = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
+const axios = require("axios")
 
+const redisClient = require("../Redis/redisClient");
 exports.getOrderDetails = catchAsync(async (req, res, next) => {
 
     // const res = await Booked.find()
 
-    const features = new Apifeature(Tool.find(), req.query).populate().filter().sort().fields().pagination();
+    const features = new Apifeature(Booked.find(), req.query).filter().sort().fields().pagination().populate();
 
 
     const orders = await features.query;
@@ -20,12 +22,20 @@ exports.getOrderDetails = catchAsync(async (req, res, next) => {
 exports.getShipmentDetailsPinToPin = catchAsync(async (req, res, next) => {
     const { systemId } = req.params;
 
-    const fetchCoriers = await axios.get(`https://appapinew.bigship.in/api/OrderShipment/Servicibility/CourierList/6393440/${systemId}`, {
-        headers: {
+    const token = req.shippingToken;
 
-            'Authorization': `Bearer ${token}` // Authorization header with Bearer token
-        }
-    });
+    let fetchCoriers;
+    try {
+        fetchCoriers = await axios.get(`https://appapinew.bigship.in/api/OrderShipment/Servicibility/CourierList/6393440/${systemId}`, {
+            headers: {
+
+                'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+            }
+        });
+    } catch (e) {
+        console.log(e.responce);
+
+    }
 
     res.status(200).send({
         status: "success",

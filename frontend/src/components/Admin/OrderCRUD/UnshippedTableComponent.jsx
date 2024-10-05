@@ -6,8 +6,10 @@ import CourierDetails from "./CourierDetails";
 const UnshippedTableComponent = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [orders, setOrders] = useState([]);
-  const [shipmentData, setShipmentData] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(0);
+  const [selectedOrder, setSelectedOrder] = useState({
+    order: "",
+    system_order_id: 0,
+  });
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -25,12 +27,25 @@ const UnshippedTableComponent = () => {
 
   const closeDialog = () => {
     setDialogOpen(false);
-    setShipmentData(null); // Reset shipment data when closing
+    // setShipmentData(null); // Reset shipment data when closing
   };
 
-  function openDialog(system_order_id) {
-    setSelectedOrder(system_order_id);
+  function openDialog(obj) {
+    setSelectedOrder(obj);
     setDialogOpen(true);
+  }
+  async function handleShip(courierId) {
+    try {
+      const res = await axios.post("/api/v1/orders/shipProductByAdmin", {
+        orderId: selectedOrder.order,
+        courierId: courierId,
+      });
+      console.log(res);
+
+      // setOrders(res.data.orders);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -44,47 +59,57 @@ const UnshippedTableComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
-            <tr key={order._id} className="border-t">
-              {/* Product Details */}
-              <td className="py-3 px-6">
-                <ul className="list-disc pl-4">
-                  {order.productData.map((product, index) => (
-                    <div key={index} className="flex flex-col">
-                      <li>{product.name}</li>
-                      <li>{product.quantity}</li>
-                      <li>{product.selectedSize}</li>
-                      <li>{product.selectedSize}</li>
-                      <li>{product.weight}</li>
-                    </div>
-                  ))}
-                </ul>
-              </td>
+          {orders?.length > 0 &&
+            orders?.map((order) => (
+              <tr key={order._id} className="border-t">
+                {/* Product Details */}
+                <td className="py-3 px-6">
+                  <ul className="list-disc pl-4">
+                    {order.productData.map((product, index) => (
+                      <div key={index} className="flex flex-col">
+                        <li>{product.name}</li>
+                        <li>{product.quantity}</li>
+                        <li>{product.selectedSize || "M"}</li>
+                        {/* <li>{product.selectedSize}</li> */}
+                        <li>{product.weight}</li>
+                      </div>
+                    ))}
+                  </ul>
+                </td>
 
-              {/* User Details */}
-              <td className="py-3 px-6">
-                <p>Name: {order.byuser.name}</p>
-                <p>Pincode: {order.byuser.pincode}</p>
-              </td>
+                {/* User Details */}
+                <td className="py-3 px-6">
+                  <p>Name: {order.byuser.name}</p>
+                  <p>Pincode: {order.byuser.pinCode}</p>
+                </td>
 
-              {/* Action Button */}
-              <td className="py-3 px-6">
-                <button
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                  onClick={() => openDialog(order.system_order_id)}
-                >
-                  Ship
-                </button>
-              </td>
-            </tr>
-          ))}
+                {/* Action Button */}
+                <td className="py-3 px-6">
+                  <button
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                    onClick={() =>
+                      openDialog({
+                        order: order._id,
+                        system_order_id: order.system_order_id,
+                      })
+                    }
+                  >
+                    Ship
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
+      <div className="p-2 bg-gray-200">No orders failed shipping</div>
 
       {/* Full-Screen Dialog */}
       {isDialogOpen && (
         <FullScreenDialog isOpen={isDialogOpen} onClose={closeDialog}>
-          <CourierDetails shipmentData={shipmentData} />
+          <CourierDetails
+            shipmentData={selectedOrder}
+            handleShip={handleShip}
+          />
         </FullScreenDialog>
       )}
     </div>

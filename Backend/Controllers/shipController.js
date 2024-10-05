@@ -3,19 +3,17 @@ const Booked = require("../Models/BookedProduct");
 const User = require("../Models/User");
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const axios = require("axios")
-let token = "";
-let tokenExpiryTime;
-// Function to login and fetch token
-async function loginAndGetToken() {
+const axios = require("axios");
+const redisClient = require("../Redis/redisClient");
 
-}
-
-
-// If you're using Node.js version below 18
 
 exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
+    let token = await redisClient.get("token");
+    if (token) {
+        token = JSON.parse(token).data.token
+    }
+    console.log("token in get", token);
 
     if (!token || Date.now() >= tokenExpiryTime) {
 
@@ -45,6 +43,14 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
         // token = data.token;  // Save the token if needed
         console.log("Token is", data?.data?.token);
         token = data?.data?.token;
+
+        await redisClient.set("token", JSON.stringify(data), {
+            EX: 11 * 3600  // Cache expires in 5 hour
+        });
+
+        const cachedData = await redisClient.get("token");
+        console.log("token", cachedData);
+
         req.shippingToken = data?.data?.token;
 
         tokenExpiryTime = Date.now() + 12 * 60 * 60 * 1000; // Set token expiry for 12 hours
@@ -76,6 +82,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
  "courier_id": 26,
         */
         const { orderId } = req.body;
+        const token = req.shippingToken;
 
 
         if (!orderId) {
@@ -205,7 +212,9 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
         systemId = systemId.length > 0 ? systemId.split(" ") : false
         systemId = systemId[systemId.length - 1]
 
+
         if (systemId) {
+            order.system_order_id = systemId;
             console.log("menifistingby", systemId);
 
             // we will now fetch all the courier id and then form that mimium one will be seleted
@@ -251,7 +260,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
             console.log(lowestChargeCourier, lowestChargeCourier.courierId);
 
-            lowestChargeCourier.courierId = 1
+            lowestChargeCourier.courierId = 100
 
 
             const shippingpart2 = await axios.post("https://api.bigship.in/api/order/manifest/single", {
@@ -339,15 +348,16 @@ responseCode: 200
             await order.save()
             console.log("pase2 is ", shippingpart2.data, final.data);
 
-
+            res.status(200).send({
+                status: "success",
+                data: "done"
+            })
+            return
         }
 
 
 
-        res.status(200).send({
-            status: "success",
-            data: "done"
-        })
+        next(new appError("Please try again", 400))
 
 
     } catch (e) {
@@ -455,7 +465,145 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
 
 
 
+exports.shipProductByAdmin = catchAsync(async (req, res, next) => {
+    // we are requesting thirdpatry api so in case of shipping we are storing it in db 
+    try {
 
+        const { orderId, courierId } = req.body;
+
+        const token = req.shippingToken;
+
+
+        if (!orderId || !courierId) {
+            return next(new appError("Please try again ", 400));
+        }
+
+        // get the details of user form order id 
+        const order = await Booked.findById(orderId).populate("byuser")
+        // order.phase = 0;
+        if (!order) {
+            return next(new appError("please validate order Id", 400))
+        }
+
+
+
+
+
+        systemId = order.system_order_id;
+        if (systemId) {
+            console.log("menifistingby", systemId);
+
+
+
+
+
+            const shippingpart2 = await axios.post("https://api.bigship.in/api/order/manifest/single", {
+                "system_order_id": order.system_order_id,
+                "courier_id": courierId
+            }
+                , {
+                    headers: {
+
+                        'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+                    }
+                });
+
+            // now we are getting awb and other details
+            console.log("data is sp2 ", shippingpart2.data);
+            if (!shippingpart2?.data?.success) {
+                order.phase = 1;
+                await order.save()
+                res.status(400).send({
+                    status: "fail",
+                    msg: "faild with selected courier / It may not be available please try another one"
+
+                })
+                return
+            }
+
+
+
+            const final = await axios.post(`https://api.bigship.in/api/shipment/data?shipment_data_id=1&system_order_id=${systemId}`, {
+
+            }
+                , {
+                    headers: {
+
+                        'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+                    }
+                });
+
+            if (!final?.data?.success) {
+                order.phase = 2;
+                order.shipOrderId =
+                    await order.save()
+                res.status(200).send({
+                    status: "success",
+                    msg: "order is set for courier but it is not menifested"
+                })
+                return
+            }
+
+
+
+            console.log("data of final ", final.data);
+            /*
+            data is  {
+data: 'system_order_id is 1002443557',
+success: true,
+message: 'Order Added Successfully !!!',
+responseCode: 200
+}
+menifistingby 1002443557
+pase2 is  {
+data: null,
+success: true,
+message: 'Successfully Waybill Generated',
+responseCode: 200
+} {
+data: {
+courier_id: '24',
+courier_name: 'Amazon 0.5Kg',
+lr_number: null,
+master_awb: '344251253229'
+},
+success: true,
+message: 'Successfully Completed',
+responseCode: 200
+}
+            */
+            order.system_order_id = systemId;
+            order.courier_id = courierId;
+            order.master_awb = final.data?.data?.master_awb
+            order.ordredPlaced = true;
+            order.phase = 3
+
+            await order.save()
+            console.log("pase2 is ", shippingpart2.data, final.data);
+
+            res.status(200).send({
+                status: "success",
+                data: "done"
+            })
+            return
+        }
+
+
+
+        next(new appError("Please try again", 400))
+
+
+    } catch (e) {
+        console.log("error shippingpart1", e?.response?.data, e);
+        res.status(400).send({
+            status: "fail",
+            data: "done"
+        })
+    }
+
+
+
+})
 
 
 
