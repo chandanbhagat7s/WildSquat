@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IoReorderFour } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { FiTag, FiFileText } from "react-icons/fi";
@@ -8,6 +9,7 @@ import { error, success } from "../../../redux/slices/errorSlice";
 import FullScreenDialog from "../../common/FullScreenDialog";
 import ToolProductAction from "./ToolProductAction";
 import url from "../../../assets/url";
+import ChangeOrder from "./ChangeOrder";
 
 export default function ManageTools() {
   const dispatch = useDispatch();
@@ -86,10 +88,14 @@ export default function ManageTools() {
 
 const ContentDisplay = ({ tools }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpenChange, setIsDialogOpenChange] = useState(false);
   const [btn, setBtn] = useState("");
 
   const openDialog = () => setIsDialogOpen(true);
   const closeDialog = () => setIsDialogOpen(false);
+
+  const openDialogChange = () => setIsDialogOpenChange(true);
+  const closeDialogChange = () => setIsDialogOpenChange(false);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -104,6 +110,7 @@ const ContentDisplay = ({ tools }) => {
                 key={item._id}
                 item={item}
                 openDialog={openDialog}
+                openDialogChange={openDialogChange}
                 setBtn={setBtn}
               />
             ))}
@@ -115,11 +122,19 @@ const ContentDisplay = ({ tools }) => {
           <ToolProductAction docid={btn} />
         </FullScreenDialog>
       )}
+      {isDialogOpenChange && (
+        <FullScreenDialog
+          isOpen={isDialogOpenChange}
+          onClose={closeDialogChange}
+        >
+          <ChangeOrder docid={btn} onClose={closeDialogChange} />
+        </FullScreenDialog>
+      )}
     </div>
   );
 };
 
-const ContentCard = ({ item, openDialog, setBtn }) => {
+const ContentCard = ({ item, openDialog, setBtn, openDialogChange }) => {
   const dispatch = useDispatch();
 
   async function deleteThisTool(toolid) {
@@ -168,6 +183,16 @@ const ContentCard = ({ item, openDialog, setBtn }) => {
           >
             <MdOutlinePublishedWithChanges className="mr-2" />
             Make Changes
+          </button>
+          <button
+            className=" bg-green-600 text-white py-2 rounded-lg flex items-center justify-center hover:bg-green-700 transition-all duration-300 w-full"
+            onClick={() => {
+              setBtn(item._id);
+              openDialogChange();
+            }}
+          >
+            <IoReorderFour className="mr-2" />
+            ChangeOrder
           </button>
           <button
             className=" bg-red-600 text-white py-2 rounded-lg flex items-center justify-center hover:bg-red-700 transition-all duration-300 w-full"

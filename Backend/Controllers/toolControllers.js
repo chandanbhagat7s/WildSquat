@@ -192,6 +192,25 @@ exports.getTools = catchAsync(async (req, res, next) => {
 })
 
 
+exports.rearrangeProducts = catchAsync(async (req, res, next) => {
+
+
+    const { newProductOrder } = req.body;
+    const docid = req.params.docid;
+
+    // Update the products array in the tool document
+    const updatedTool = await Tool.findByIdAndUpdate(
+        docid,
+        { products: newProductOrder },
+        { new: true }
+    )
+
+    res.status(200).send({
+        status: "success",
+
+    })
+})
+
 
 
 
