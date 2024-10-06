@@ -21,7 +21,7 @@ const ProductListing = () => {
       setIsLoading(true);
       try {
         const res = await axios.get(
-          `/api/v1/product/getAllTrendingProducts?gender=${gender}&populate=products&populateField=gender,name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
+          `/api/v1/product/getAllTrendingProducts?gender=${gender}&populate=products&populateField=gender,name,price,_id,coverImage&populateLimit=4&populatPage=${page}`
         );
 
         if (res.data.products == 0) {
@@ -58,32 +58,38 @@ const ProductListing = () => {
 
   return (
     <motion.div
-      className="py-24 bg-gradient-to-b bg-gray-100"
+      className="py-16  bg-white"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          className="text-4xl lg:text-6xl  text-gray-800 mb-12 text-center font-semibold"
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          Discover Our{" "}
-          <span className="block md:inline-block font-bold bg-black text-white px-3 py-2 rounded-md">
-            Premium Collection
-          </span>
-        </motion.h2>
+      <div className="max-w-7xl mx-auto px-2 lg:px-6">
+        <div className="text-center mt-12 mb-8 px-4 md:px-0">
+          <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 animate-fadeIn">
+            Elevate Your Style
+          </h2>
+          <h3 className="text-3xl font-semibold text-gray-700 tracking-wider mb-6">
+            Discover Unmatched Elegance
+          </h3>
 
-        <div className="relative mt-16">
+          <div className="mt-6">
+            <motion.span
+              initial={{ width: 0 }}
+              animate={{ width: "100px" }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="inline-block w-0 h-1 bg-gradient-to-r from-gray-800 to-gray-400 rounded-full"
+            ></motion.span>
+          </div>
+        </div>
+
+        <div className="relative mt-10">
           <AnimatePresence mode="wait">
             <motion.div
               // key={products}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2"
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"
             >
               {products.length > 0 &&
                 products.map((product) => (
@@ -116,7 +122,7 @@ const ProductListing = () => {
       </div>
 
       <motion.div
-        className="mt-24 text-center"
+        className="mt-10 text-center"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.8 }}

@@ -32,9 +32,9 @@ const CategoryList = () => {
   }, [gender, page]);
 
   return (
-    <div className="min-h-screen py-12 p-2 lg:px-4   bg-gray-100 flex flex-col justify-center items-center space-y-10 lg:space-y-16 pb-20">
+    <div className="min-h-screen py-12 p-2 lg:px-4 bg-white flex flex-col justify-center items-center space-y-10 lg:space-y-16 pb-20">
       {/* Title Section */}
-      <div className="text-center my-10">
+      <div className="text-center mt-10 mb-5">
         <h2 className="text-4xl font-bold text-gray-800 tracking-wide mb-2">
           Discover Your Style
         </h2>
@@ -68,7 +68,7 @@ const CategoryList = () => {
             boxShadow: "0px 0px 15px rgba(0,0,0,0.4)",
           }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center px-12 py-4 bg-gradient-to-r from-gray-900 to-gray-700 text-white rounded-full font-bold text-lg shadow-lg hover:bg-gray-700 transition-all duration-300 ease-in-out"
+          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white rounded-full font-bold text-lg shadow-lg hover:bg-gray-700 transition-all duration-300 ease-in-out"
           onClick={() => navigate("/categoryLists/CATEGORY")}
         >
           View All Categories

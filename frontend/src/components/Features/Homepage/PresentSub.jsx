@@ -55,9 +55,9 @@ const CategorySelector = ({
           {categories.map((c) => (
             <button
               key={c._id}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap ${
+              className={`flex items-center space-x-2 px-2 py-2 rounded-full transition-all duration-300 whitespace-nowrap ${
                 c._id === selectedCategory
-                  ? "bg-black text-white font-bold shadow-lg scale-105"
+                  ? "bg-black text-white font-bold shadow-lg scale-110 "
                   : "bg-gray-200 text-gray-800 hover:bg-gray-300"
               }`}
               onClick={() => handleCategoryClick(c._id)}

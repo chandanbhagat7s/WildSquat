@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { FiUpload, FiType, FiAlignLeft } from "react-icons/fi";
+import { FiUpload, FiType, FiAlignLeft, FiX } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { error, success } from "../../../redux/slices/errorSlice";
 
@@ -13,12 +13,23 @@ const CreateCategory = () => {
   const [shortDescription, setShortDescription] = useState("");
   const [gender, setGender] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+  const [images, setImages] = useState([]);
+
+  const removeImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages([...newImages]);
+  };
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
       setCoverImage(URL.createObjectURL(e.target.files[0]));
     }
+  };
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setImages([...images, ...files]);
   };
 
   const handleSubmit = async (e) => {
@@ -30,6 +41,10 @@ const CreateCategory = () => {
       fd.append("label", label);
       fd.append("shortDescription", shortDescription);
       fd.append("gender", gender);
+      selectedValue == "SERIES" &&
+        images.map((el) => {
+          fd.append("images", el);
+        });
       const data = await axios.post("/api/v1/admin/createCategory", fd);
 
       dispatch(success({ message: data.data.msg || "something went wrong" }));
@@ -76,9 +91,8 @@ const CreateCategory = () => {
             <option value="">Select an option</option>
             <option value="SLIDER">SLIDER</option>
             <option value="CATEGORY">CATEGORY</option>
-            <option value="CARDS">CARDS</option>
             <option value="POSTER">POSTER</option>
-            <option value="X-MULTIPLE">X-MULTIPLE</option>
+            <option value="SERIES">SERIES</option>
             <option value="custom">Custom</option>
           </select>
         </div>
@@ -109,41 +123,93 @@ const CreateCategory = () => {
         )}
 
         {/* Cover Image */}
-        <div>
-          <label className="block text-lg font-medium text-gray-800 mb-2">
-            Cover Image
-          </label>
-          <div className="mt-1 flex justify-center items-center px-6 py-5 border-2 border-dashed rounded-lg transition-all duration-150 hover:border-indigo-600">
-            <div className="text-center">
-              {coverImage ? (
-                <img
-                  src={coverImage}
-                  alt="Cover"
-                  className="h-64 w-64 object-cover rounded-lg mx-auto"
-                />
-              ) : (
-                <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
-              )}
-              <div className="flex text-sm text-gray-600 mt-2">
-                <label
-                  htmlFor="file-upload"
-                  className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  <span>Upload a file</span>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="sr-only"
-                    onChange={handleImageChange}
-                    accept="image/*"
+        {selectedValue != "SERIES" ? (
+          <div>
+            <label className="block text-lg font-medium text-gray-800 mb-2">
+              Cover Image
+            </label>
+            <div className="mt-1 flex justify-center items-center px-6 py-5 border-2 border-dashed rounded-lg transition-all duration-150 hover:border-indigo-600">
+              <div className="text-center">
+                {coverImage ? (
+                  <img
+                    src={coverImage}
+                    alt="Cover"
+                    className="h-64 w-64 object-cover rounded-lg mx-auto"
                   />
-                </label>
-                <p className="pl-1">or drag and drop</p>
+                ) : (
+                  <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
+                )}
+                <div className="flex text-sm text-gray-600 mt-2">
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                    <span>Upload a file</span>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="sr-only"
+                      onChange={handleImageChange}
+                      accept="image/*"
+                    />
+                  </label>
+                  <p className="pl-1">or drag and drop</p>
+                </div>
+                <p className="text-xs text-gray-500">
+                  PNG, JPG, GIF up to 10MB
+                </p>
               </div>
-              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
             </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Images
+            </label>
+            <div className="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <div className="space-y-1 text-center">
+                <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
+                <div className="flex text-sm text-gray-600">
+                  <label
+                    htmlFor="images"
+                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                  >
+                    <span>Upload images</span>
+                    <input
+                      id="images"
+                      name="images"
+                      type="file"
+                      className="sr-only"
+                      multiple
+                      onChange={handleImageUpload}
+                    />
+                  </label>
+                </div>
+                <p className="text-xs text-gray-500">
+                  PNG, JPG, GIF up to 10MB
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              {images.map((image, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`Product ${index + 1}`}
+                    className="h-24 w-24 object-cover rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                  >
+                    <FiX className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Label */}
         <div>

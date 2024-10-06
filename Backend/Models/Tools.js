@@ -22,12 +22,14 @@ const toolSchema = new mongoose.Schema(({
         required: [true, "must provide short description "]
     },
     coverImage: {
-        type: String,
-        required: [true, "must provide cover image "]
+        type: String
     },
     gender: {
         type: String,
         required: [true, "must provide gender"]
+    },
+    images: {
+        type: [String]
     }
 }))
 

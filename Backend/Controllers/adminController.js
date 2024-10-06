@@ -47,8 +47,10 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 
 
 exports.resizeToolImage = catchAsync(async (req, res, next) => {
+    console.log(req.files.images);
 
-    if (!req.files.coverImage) {
+
+    if (!req.files.coverImage && !req.files.images) {
         return next(new appError("please upload a file", 400))
     }
 
@@ -58,6 +60,14 @@ exports.resizeToolImage = catchAsync(async (req, res, next) => {
         await sharp(req.files.coverImage[0].buffer).toFormat('jpeg').toFile(`./Public/Tools/${req.body.coverImage}`)
         next()
         return
+    }
+    if (req.files.images) {
+        req.body.Images = []
+        await Promise.all(req.files.images.map(async (el, i) => {
+            const fileName = `toolCover${req.body.label}-${Math.random()}-${i}.jpeg`
+            await sharp(el.buffer).toFormat('jpeg').toFile(`./Public/Tools/${fileName}`)
+            req.body.Images.push(fileName);
+        }))
     }
 
 
@@ -453,9 +463,10 @@ exports.createCategory = catchAsync(async (req, res, next) => {
     const category = await Tool.create({
         name,
         label,
-        coverImage: req.body.coverImage,
+        coverImage: req.body?.coverImage || "",
         shortDescription,
-        gender
+        gender,
+        images: req.body?.Images || []
     })
 
 

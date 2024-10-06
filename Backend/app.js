@@ -169,6 +169,7 @@ admin side week,day,month updation of product
 booked order list graph,chart 
 offer section , 
 series section (offer,sport,gym)
+manage tool products ordering
 
 */
 

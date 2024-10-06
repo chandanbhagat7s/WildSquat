@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
   return (
     <motion.div
       key={product?._id}
-      className=" bg-gray-200 font-semibold rounded shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      className=" bg-gray-200 font-semibold  shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-sm "
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -61,11 +61,11 @@ const ProductCard = ({ product }) => {
           </motion.button>
         </div>
       </div>
-      <div className="p-6 text-center">
-        <h3 className=" font-bold lg:font-semibold  text-gray-800 mb-2">
+      <div className="p-6 text-center ">
+        <h3 className=" font-bold lg:font-semibold  text-gray-600 mb-2">
           {product?.name}
         </h3>
-        <p className="text-2xl font-bold text-gray-600">₹{product?.price}</p>
+        <p className="text-2xl font-bold text-gray-800">₹{product?.price}</p>
       </div>
     </motion.div>
   );

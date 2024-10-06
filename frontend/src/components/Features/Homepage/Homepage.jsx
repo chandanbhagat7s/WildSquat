@@ -10,11 +10,11 @@ export default function Homepage() {
     <>
       <Slider />
       <ProductListing />
-      <Banner />
       <CategoryList />
-      <PresentSection />
       <Banner />
+      <PresentSection />
       <ThinkingSection />
+      <Banner />
     </>
   );
 }

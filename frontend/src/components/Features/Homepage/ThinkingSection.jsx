@@ -35,7 +35,7 @@ const ThinkingSection = () => {
 
   return (
     <motion.section
-      className="bg-gray-100 py-16 px-1 lg:px-4"
+      className="bg-white py-16 px-1 lg:px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
