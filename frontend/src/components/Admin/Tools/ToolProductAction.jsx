@@ -12,10 +12,18 @@ const ToolProductAction = ({ docid }) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const dispatch = useDispatch();
   const [searchedProduct, setsearchedProduct] = useState([]);
+  const [discountProduct, setDiscountProduct] = useState({});
 
   function setsearchedProductOnClick(id, el) {
     if (![...searchedProduct].includes(id)) {
       setsearchedProduct([...searchedProduct, id]);
+      setDiscountProduct({
+        ...discountProduct,
+        [id]: {
+          discount: 0,
+          newPrice: 0,
+        },
+      });
       setData([...data, el]);
     }
   }
@@ -41,11 +49,21 @@ const ToolProductAction = ({ docid }) => {
 
   async function addProductsToTool() {
     try {
-      const res = await axios.patch("/api/v1/admin/actionOnTool", {
-        action: "ADD",
-        toolId: selectedItem._id,
-        ids: searchedProduct,
-      });
+      let res;
+      if (selectedItem.name == "SERIES") {
+        res = await axios.patch("/api/v1/admin/actionOnTool", {
+          action: "ADDANDUPDATE",
+          toolId: selectedItem._id,
+          ids: searchedProduct,
+          discountProduct,
+        });
+      } else {
+        res = await axios.patch("/api/v1/admin/actionOnTool", {
+          action: "ADD",
+          toolId: selectedItem._id,
+          ids: searchedProduct,
+        });
+      }
 
       if (res?.data?.status === "success") {
         dispatch(success({ message: res?.data?.msg || "Products added!" }));
@@ -84,6 +102,19 @@ const ToolProductAction = ({ docid }) => {
     setSelectedProducts([]);
   };
 
+  function handleChangeDiscount(e, id) {
+    const { name, value } = e.target;
+    console.log("ID is ", id);
+
+    setDiscountProduct({
+      ...discountProduct,
+      [id]: {
+        ...discountProduct[id],
+        [name]: value,
+      },
+    });
+  }
+
   useEffect(() => {
     getDataOfTool();
   }, []);
@@ -118,6 +149,56 @@ const ToolProductAction = ({ docid }) => {
                       className="h-28 w-full object-contain mb-2 rounded-lg"
                     />
                     <p className="text-gray-700 font-semibold">{el.name}</p>
+                    <p className="text-gray-700 font-semibold">{el.price}</p>
+                    {selectedItem?.name == "SERIES" && (
+                      <div className="flex flex-col space-y-4">
+                        {/* New Price Input */}
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="newPrice"
+                            className="text-sm font-medium text-gray-700 mb-1"
+                          >
+                            New Price
+                          </label>
+                          <input
+                            type="number"
+                            id="newPrice"
+                            placeholder="Enter new price"
+                            className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="newPrice"
+                            value={discountProduct[el.id]?.newPrice || 0}
+                            onChange={(e) => handleChangeDiscount(e, el.id)}
+                          />
+                        </div>
+
+                        {/* Discount Input */}
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="discount"
+                            className="text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Discount (%)
+                          </label>
+                          <input
+                            type="number"
+                            id="discount"
+                            placeholder="Enter discount percentage"
+                            className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="discount"
+                            value={discountProduct[el.id]?.discount || 0}
+                            onChange={(e) => handleChangeDiscount(e, el.id)}
+                          />
+                        </div>
+
+                        {/* Calculated Price */}
+                        <p className="p-3 text-lg font-semibold text-gray-900">
+                          Rs.{" "}
+                          {discountProduct[el.id]?.newPrice -
+                            (discountProduct[el.id]?.newPrice / 100) *
+                              discountProduct[el.id]?.discount}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

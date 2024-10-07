@@ -69,7 +69,9 @@ const ProductSearch = ({ setSelectedProduct }) => {
                   setSearchTerm("");
                   setSelectedProduct(product._id, {
                     name: product?.name,
-                    coverImage: product.coverImage,
+                    coverImage: product?.coverImage,
+                    price: product?.price,
+                    id: product._id,
                   });
                 }}
               >

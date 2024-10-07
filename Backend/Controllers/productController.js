@@ -118,7 +118,7 @@ exports.getSearchedProduct = catchAsync(async (req, res, next) => {
             { name: { $regex: search, $options: 'i' } },
             { description: { $regex: search, $options: 'i' } }
         ]
-    }, "_id name coverImage")
+    }, "_id name coverImage price")
 
     const category = await Tool.find({
         $or: [

@@ -585,7 +585,7 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
         return next(new appError("please provide all the fields too perform an action ", 400))
 
     }
-    if (action !== "ADD" && action !== "REMOVE") {
+    if (action !== "ADD" && action !== "REMOVE" && action !== "ADDANDUPDATE") {
         return next(new appError("please perform valid action on product ", 400))
 
     }
@@ -611,7 +611,47 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
         }, {
             new: true
         })
-    } else {
+    } else if (action == "ADDANDUPDATE") {
+        const { discountProduct } = req.body;
+        console.log(discountProduct);
+
+
+
+        for (const productId in discountProduct) {
+            if (discountProduct.hasOwnProperty(productId)) {
+                const { discount } = discountProduct[productId];
+                await Product.findByIdAndUpdate(
+                    productId,
+                    { discount }, // Only updating the discount field
+                    { new: true } // Option to return the updated document
+                );
+                console.log(`Updated discount for product ${productId} to ${discount}`);
+            }
+        }
+
+
+
+
+
+        ids = ids.map((el) => {
+            if (existingTool.products.includes(el)) {
+                //
+            } else {
+                return el
+            }
+        })
+
+        if (ids.length == 0) {
+            return next(new appError("selected product was already added ", 400))
+        }
+
+        updatedTool = await Tool.findByIdAndUpdate(toolId, {
+            $push: { products: { $each: ids } }
+        }, {
+            new: true
+        })
+    }
+    else {
 
         if (existingTool?.products?.length == 0) {
             return next(new appError("nothing found in list", 400))

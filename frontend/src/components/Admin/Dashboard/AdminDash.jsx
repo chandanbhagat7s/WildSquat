@@ -1,4 +1,15 @@
 import { useState, useEffect } from "react";
+import {
+  FaChartPie,
+  FaUsers,
+  FaBox,
+  FaClipboardList,
+  FaChartLine,
+  FaTools,
+  FaCogs,
+  FaFileAlt,
+  FaQuestionCircle,
+} from "react-icons/fa";
 import ProductActions from "./../ProductsCRUD/ProductsCRUD";
 import ManageTools from "./../Tools/ManageTools";
 import CreateCategory from "./../Tools/CreateCatefory";
@@ -20,15 +31,15 @@ const AdminPanel = () => {
   }, []);
 
   const tabs = [
-    { id: "dashboard", label: "Dashboard", icon: "📊" },
-    { id: "users", label: "Users", icon: "👥" },
-    { id: "products", label: "Products", icon: "🛍️" },
-    { id: "orders", label: "Orders", icon: "📦" },
-    { id: "analytics", label: "Analytics", icon: "📈" },
-    { id: "tools", label: "Tools", icon: "🔧" },
-    { id: "manage-tools", label: "Manage Tools", icon: "⚙️" },
-    { id: "reports", label: "Reports", icon: "📊" },
-    { id: "help", label: "Help", icon: "❓" },
+    { id: "dashboard", label: "Dashboard", icon: <FaChartPie /> },
+    { id: "users", label: "Users", icon: <FaUsers /> },
+    { id: "products", label: "Products", icon: <FaBox /> },
+    { id: "orders", label: "Orders", icon: <FaClipboardList /> },
+    { id: "analytics", label: "Analytics", icon: <FaChartLine /> },
+    { id: "tools", label: "Tools", icon: <FaTools /> },
+    { id: "manage-tools", label: "Manage Tools", icon: <FaCogs /> },
+    { id: "reports", label: "Reports", icon: <FaFileAlt /> },
+    { id: "help", label: "Help", icon: <FaQuestionCircle /> },
   ];
 
   const renderTabContent = () => {
@@ -49,16 +60,16 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 ">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
       <nav
         className={`bg-white shadow-lg transition-all duration-300 ${
           isSticky ? "fixed top-0 left-0 right-0 z-50" : ""
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 lg:py-5">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <h1 className="text-2xl font-extrabold text-indigo-700">
+              <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">
                 Admin Panel
               </h1>
             </div>
@@ -67,7 +78,7 @@ const AdminPanel = () => {
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
-                    className={`px-4 py-2 rounded-full text-sm font-semibold shadow-lg transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 shadow-md ${
                       activeTab === tab.id
                         ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
                         : "text-gray-600 hover:bg-blue-100 hover:text-blue-600"
@@ -83,7 +94,7 @@ const AdminPanel = () => {
             <div className="-mr-2 flex md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                className="p-2 rounded-md text-gray-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               >
                 <span className="sr-only">Open main menu</span>
                 {!isMobileMenuOpen ? (
@@ -93,7 +104,6 @@ const AdminPanel = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -109,7 +119,6 @@ const AdminPanel = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -149,8 +158,8 @@ const AdminPanel = () => {
         )}
       </nav>
 
-      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-xl p-6">
+      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 py-1">
+        <div className="bg-white rounded-lg shadow-xl py-4">
           {renderTabContent()}
         </div>
       </div>
