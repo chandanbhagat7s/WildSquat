@@ -4,6 +4,7 @@ import ThinkingSection from "./ThinkingSection";
 import PresentSection from "./PresentSection";
 import Slider from "./Slider";
 import Banner from "./Banner";
+import Offer from "./Offer";
 
 export default function Homepage() {
   return (
@@ -11,7 +12,7 @@ export default function Homepage() {
       <Slider />
       <ProductListing />
       <CategoryList />
-      <Banner />
+      <Offer />
       <PresentSection />
       <ThinkingSection />
       <Banner />

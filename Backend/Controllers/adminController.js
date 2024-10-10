@@ -490,7 +490,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
 
 exports.updateTools = catchAsync(async (req, res, next) => {
 
-    const { ids, tag, name, id } = req.body;
+    const { ids, tag, id } = req.body;
 
     if (tag !== "ADD" && tag !== "REMOVE") {
         return next(new appError("please mention weather you want to add or remove products", 400))
@@ -585,7 +585,7 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
         return next(new appError("please provide all the fields too perform an action ", 400))
 
     }
-    if (action !== "ADD" && action !== "REMOVE" && action !== "ADDANDUPDATE") {
+    if (action !== "ADD" && action !== "REMOVE" && action !== "ADDANDUPDATE" && action !== "REMOVEANDUPDATE") {
         return next(new appError("please perform valid action on product ", 400))
 
     }
@@ -650,8 +650,29 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
         }, {
             new: true
         })
-    }
-    else {
+    } else if ("REMOVEANDUPDATE") {
+
+
+        if (existingTool?.products?.length == 0) {
+            return next(new appError("nothing found in list", 400))
+
+        }
+        for (let index = 0; index < ids.length; index++) {
+            const element = ids[index];
+            await Product.findByIdAndUpdate(element, {
+                $set: { discount: 0 }
+            })
+
+        }
+
+
+
+        updatedTool = await Tool.findByIdAndUpdate(toolId, {
+            $pull: { products: { $in: ids } }
+        }, {
+            new: true
+        })
+    } else {
 
         if (existingTool?.products?.length == 0) {
             return next(new appError("nothing found in list", 400))

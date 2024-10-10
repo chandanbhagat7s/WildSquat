@@ -158,7 +158,7 @@ const AdminPanel = () => {
         )}
       </nav>
 
-      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 py-1">
+      <div className="w-full mx-auto px-1 py-1">
         <div className="bg-white rounded-lg shadow-xl py-4">
           {renderTabContent()}
         </div>

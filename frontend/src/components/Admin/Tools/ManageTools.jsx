@@ -2,7 +2,7 @@ import axios from "axios";
 import { IoReorderFour } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { MdOutlinePublishedWithChanges } from "react-icons/md";
-import { FiTag, FiFileText } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { error, success } from "../../../redux/slices/errorSlice";
@@ -19,7 +19,7 @@ export default function ManageTools() {
     category: [],
     posters: [],
     cards: [],
-    multiple: [],
+    offer: [],
   });
 
   async function getAllTools() {
@@ -31,18 +31,18 @@ export default function ManageTools() {
         posters = [],
         cards = [],
         custom = [],
-        multiple = [];
+        offer = [];
 
       data.forEach((el) => {
         if (el.name === "SLIDER") sliders.push(el);
         else if (el.name === "CATEGORY") category.push(el);
         else if (el.name === "CARDS") cards.push(el);
         else if (el.name === "POSTER") posters.push(el);
-        else if (el.name === "X-MULTIPLE") multiple.push(el);
+        else if (el.name === "OFFER") offer.push(el);
         else custom.push(el);
       });
 
-      setTools({ sliders, category, posters, cards, multiple, custom });
+      setTools({ sliders, category, posters, cards, offer, custom });
     } catch (e) {
       dispatch(
         error({ message: e?.response?.data?.msg || "Something went wrong" })
@@ -149,26 +149,23 @@ const ContentCard = ({ item, openDialog, setBtn, openDialogChange }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden  hover:bg-gray-200">
       <div className="relative pb-72 overflow-hidden">
         <img
-          className="absolute inset-0 h-full w-full object-cover transform hover:scale-110 transition-transform duration-300"
+          className="absolute inset-0 h-96 object-cover transform hover:scale-110 transition-transform duration-300"
           src={`${url}tools/${item.coverImage}`}
           alt={item.name}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
       </div>
-      <div className="p-6">
+      <div className="p-3">
         <div className="text-xs uppercase tracking-wider font-semibold text-indigo-600">
           {item.name}
         </div>
         <h3 className="mt-2 text-lg font-semibold text-gray-800 leading-tight truncate">
           {item.label}
         </h3>
-        <div className="mt-2 flex items-center text-sm text-indigo-500">
-          <FiTag className="mr-1" />
-          {/* <span>{item.products.length} products</span> */}
-        </div>
+
         <p className="mt-3 text-sm text-gray-600 line-clamp-2">
           <FiFileText className="mr-1 inline" />
           {item.shortDescription}

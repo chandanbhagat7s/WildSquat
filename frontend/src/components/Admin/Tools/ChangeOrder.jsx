@@ -59,7 +59,7 @@ const ChangeOrder = ({ docid, onClose }) => {
   if (!tool) return <div>Loading...</div>;
 
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-300 text-gray-900 py-20 px-8">
+    <div className="bg-gradient-to-br from-gray-100 to-gray-300 text-gray-900 py-20 px-2 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold mb-10 text-center">
           Reorder Products for {tool.label}
@@ -89,7 +89,7 @@ const ChangeOrder = ({ docid, onClose }) => {
                           <img
                             src={`${url}img/${product.coverImage}`}
                             alt={product.name}
-                            className="w-20 h-20 object-cover rounded-lg"
+                            className="w-20 h-20 object-cover rounded-lg object-top"
                           />
                           <div>
                             <h3 className="text-xl font-semibold">

@@ -15,7 +15,7 @@ const FullScreenDialog = ({ isOpen, onClose, children }) => {
             <FiX className="h-8 w-8" />
           </button>
         </div>
-        <div className="flex-grow overflow-y-auto p-4">{children}</div>
+        <div className="flex-grow overflow-y-auto p-2 lg:p-4 ">{children}</div>
       </div>
     </div>
   );

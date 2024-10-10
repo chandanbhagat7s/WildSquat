@@ -50,7 +50,7 @@ const ToolProductAction = ({ docid }) => {
   async function addProductsToTool() {
     try {
       let res;
-      if (selectedItem.name == "SERIES") {
+      if (selectedItem.name == "OFFER") {
         res = await axios.patch("/api/v1/admin/actionOnTool", {
           action: "ADDANDUPDATE",
           toolId: selectedItem._id,
@@ -88,16 +88,27 @@ const ToolProductAction = ({ docid }) => {
 
   const removeSelectedProducts = async () => {
     try {
-      const res = await axios.patch("/api/v1/admin/actionOnTool", {
-        toolId: selectedItem._id,
-        ids: selectedProducts,
-        action: "REMOVE",
-      });
+      let res;
+      if (selectedItem.name == "OFFER") {
+        res = await axios.patch("/api/v1/admin/actionOnTool", {
+          toolId: selectedItem._id,
+          ids: selectedProducts,
+          action: "REMOVEANDUPDATE",
+        });
+      } else {
+        res = await axios.patch("/api/v1/admin/actionOnTool", {
+          toolId: selectedItem._id,
+          ids: selectedProducts,
+          action: "REMOVE",
+        });
+      }
       if (res?.data?.status === "success") {
         dispatch(success({ message: res?.data?.msg }));
       }
     } catch (e) {
-      dispatch(error({ message: e?.response?.msg || "Something went wrong." }));
+      dispatch(
+        error({ message: e?.response?.data?.msg || "Something went wrong." })
+      );
     }
     setSelectedProducts([]);
   };
@@ -122,7 +133,7 @@ const ToolProductAction = ({ docid }) => {
   return (
     <>
       {selectedItem?.name && (
-        <div className="bg-white rounded-xl shadow-lg p-6 max-w-5xl mx-auto my-8">
+        <div className="bg-white rounded-xl shadow-lg p-2 lg:p-6 max-w-5xl mx-auto my-8">
           <h2 className="text-3xl font-bold mb-6 text-center">
             {selectedItem.name}
           </h2>
@@ -150,7 +161,7 @@ const ToolProductAction = ({ docid }) => {
                     />
                     <p className="text-gray-700 font-semibold">{el.name}</p>
                     <p className="text-gray-700 font-semibold">{el.price}</p>
-                    {selectedItem?.name == "SERIES" && (
+                    {selectedItem?.name == "OFFER" && (
                       <div className="flex flex-col space-y-4">
                         {/* New Price Input */}
                         <div className="flex flex-col">
@@ -213,7 +224,7 @@ const ToolProductAction = ({ docid }) => {
             </div>
           )}
 
-          <div className="mb-6 mt-10 flex justify-between items-center">
+          <div className="mb-6 mt-10 flex md:flex-row flex-col md:space-y-0 space-y-2  justify-between items-center">
             <h3 className="text-xl font-bold">Products in Tool</h3>
             <div className="flex space-x-4">
               <button
@@ -235,8 +246,8 @@ const ToolProductAction = ({ docid }) => {
             <table className="min-w-full bg-white shadow-md rounded-lg">
               <thead className="bg-gray-200">
                 <tr>
-                  <th className="py-3 px-6 text-left">Select</th>
                   <th className="py-3 px-6 text-left">Sr. No.</th>
+                  <th className="py-3 px-6 text-left">Select</th>
                   <th className="py-3 px-6 text-left">Name</th>
                   <th className="py-3 px-6 text-left">Image</th>
                   <th className="py-3 px-6 text-left">Price</th>
@@ -248,6 +259,7 @@ const ToolProductAction = ({ docid }) => {
                     key={product._id}
                     className="hover:bg-gray-100 transition-colors"
                   >
+                    <td className="py-3 px-6 border-t">{index + 1}</td>
                     <td className="py-3 px-6 border-t">
                       <input
                         type="checkbox"
@@ -256,16 +268,17 @@ const ToolProductAction = ({ docid }) => {
                         className="form-checkbox h-5 w-5 text-blue-600"
                       />
                     </td>
-                    <td className="py-3 px-6 border-t">{index + 1}</td>
-                    <td className="py-3 px-6 border-t">{product.name}</td>
+                    <td className="py-3 px-6 border-t text-sm ">
+                      {product.name}
+                    </td>
                     <td className="py-3 px-6 border-t">
                       <img
                         src={`${url}/img/${product.coverImage}`}
                         alt={product.name}
-                        className="h-12 w-12 object-cover rounded-lg"
+                        className="h-12 w-12 object-cover rounded-lg object-top"
                       />
                     </td>
-                    <td className="py-3 px-6 border-t">${product.price}</td>
+                    <td className="py-3 px-6 border-t">{product.price}</td>
                   </tr>
                 ))}
               </tbody>

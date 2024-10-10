@@ -93,6 +93,7 @@ const CreateCategory = () => {
             <option value="CATEGORY">CATEGORY</option>
             <option value="POSTER">POSTER</option>
             <option value="SERIES">SERIES</option>
+            <option value="OFFER">OFFER</option>
             <option value="custom">Custom</option>
           </select>
         </div>
@@ -123,7 +124,7 @@ const CreateCategory = () => {
         )}
 
         {/* Cover Image */}
-        {selectedValue != "SERIES" ? (
+        {selectedValue != "OFFER" ? (
           <div>
             <label className="block text-lg font-medium text-gray-800 mb-2">
               Cover Image
