@@ -10,6 +10,7 @@ const User = require("../Models/User");
 
 // (process.env.PORT);
 exports.createOrder = catchAsync(async (req, res, next) => {
+    console.log("fetch", req.courier);
 
     const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
     const razorpayInstance = new Razorpay({

@@ -5,8 +5,12 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { error, success } from "../../redux/slices/errorSlice";
 import { FiMinus, FiPlus } from "react-icons/fi";
+import { CiLocationOn } from "react-icons/ci";
 
 const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
+  const { data } = useSelector((state) => state.auth);
+  console.log("data is ", data);
+
   const [productData, setProductData] = useState(
     products?.map((el) => {
       let obj = {
@@ -138,8 +142,9 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4 ">
       <div className="bg-gray-100 rounded-lg p-6 w-full  max-w-4xl shadow-xl">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex  justify-between items-center mb-1">
           <h2 className="text-3xl font-bold text-gray-800">Confirm Purchase</h2>
+
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 transition duration-300"
@@ -147,6 +152,9 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
             <IoMdClose className="h-8 w-8" />
           </button>
         </div>
+        <p className="text-gray-600 flex space-x-1 items-center mb-1 ">
+          <CiLocationOn /> {data?.addressLine1} ,{data?.pinCode}
+        </p>
 
         <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
           {productData.map((product, index) => (

@@ -20,14 +20,14 @@ const ThinkingCard = ({ product, index }) => {
           alt={product?.name}
           className="w-full h-full object-cover object-top"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-30 hover:bg-opacity-15 text-white hover:font-extrabold" />
+        <div className="absolute inset-0 bg-black bg-opacity-25 hover:bg-opacity-15 text-white hover:font-extrabold " />
         <div className="absolute bottom-0 left-0 right-0 p-6 flex justify-between items-center lg:text-2xl text-xl">
-          <h3 className="  font-bold uppercase text-white">
+          <h3 className="  font-bold uppercase text-white ">
             {" "}
             {product?.label}
           </h3>
           <motion.div
-            className="text-white"
+            className="text-white "
             whileHover={{ x: 5 }}
             transition={{ duration: 0.2 }}
           >

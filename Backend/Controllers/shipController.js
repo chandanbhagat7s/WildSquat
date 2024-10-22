@@ -7,14 +7,85 @@ const axios = require("axios");
 const redisClient = require("../Redis/redisClient");
 
 
+
+exports.checkForExpressBeeMiddlewareAvaibility = catchAsync(async (req, res, next) => {
+
+    const r = await axios.post("https://shipment.xpressbees.com/api/courier/serviceability", {
+
+        origin: "500016",
+        destination: req.user.pinCode,
+        payment_type: "prepaid",
+        order_amount: "999",
+        weight: "400",
+        length: "30",
+        breadth: "20",
+        height: "2"
+
+    }, {
+        headers: {
+
+            'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
+        }
+    })
+
+    if (r?.data?.status) {
+        let courersOption = r?.data?.data;
+        console.log(r.data.data);
+
+        if (courersOption.length > 0) {
+            let obj = courersOption.reduce((lowest, shipment) => {
+                return shipment?.total_charges < lowest.total_charges ? shipment : lowest;
+            });
+
+            req.courier = obj;
+            req.expressBee = true;
+        }
+    }
+
+    next()
+})
+
+
+
 exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
     let token = await redisClient.get("token");
+    let expressToken = await redisClient.get("expressToken");
+    console.log("token before redis", token, expressToken);
+
     if (token) {
         token = JSON.parse(token).data.token
+
+        console.log("seted big", token);
+    }
+    if (expressToken) {
+        expressToken = JSON.parse(expressToken).data.token
+        console.log("seted ex[p", expressToken);
+
     }
 
-    if (!token || Date.now() >= tokenExpiryTime) {
+    if (!expressToken) {
+        const secondresponse = await axios.post("https://shipment.xpressbees.com/api/users/login", {
+            email: process.env.EXPRESS_SHIPEMAIL,
+            password: process.env.EXPRESS_SHIPPASS
+        })
+
+
+
+        const expData = secondresponse?.data?.data || ""
+
+        console.log("for express", expData);
+
+
+        await redisClient.set("expressToken", JSON.stringify(expData), {
+            EX: 5 * 3600
+        });
+        expressToken = expData;
+        req.expressToken = expData;
+
+    }
+
+    if (!token) {
 
 
         // Making the POST request with fetch
@@ -30,34 +101,163 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
             })
         });
 
+
+
         // Handle non-OK responses
         if (!response.ok) {
             next(new appError("something went wrong please try again later", 500));
         }
 
-        const data = await response.json(); // Parse JSON response
-
-
-        // token = data.token;  // Save the token if needed
+        const data = await response.json();
         token = data?.data?.token;
 
         await redisClient.set("token", JSON.stringify(data), {
-            EX: 11 * 3600  // Cache expires in 5 hour
+            EX: 11 * 3600  // Cache expires in 11 hour
         });
 
-        const cachedData = await redisClient.get("token");
+
 
         req.shippingToken = data?.data?.token;
 
-        tokenExpiryTime = Date.now() + 12 * 60 * 60 * 1000; // Set token expiry for 12 hours
     }
+
+    console.log("token before after", token);
+
     req.shippingToken = token;
+    req.expressToken = expressToken;
+
 
     next(); // Proceed to the next middleware or route handler
 });
 
 
+exports.tryExpressBee = catchAsync(async (req, res, next) => {
+    try {
 
+
+        const { orderId } = req.body;
+        const token = req.expressToken;
+
+
+        if (!orderId) {
+            return next(new appError("Order id not created, please pass OrderId", 400));
+        }
+
+        // get the details of user form order id 
+        const order = await Booked.findById(orderId).populate("byuser")
+        order.phase = 0;
+        if (!order) {
+            return next(new appError("please validate order Id", 400))
+        }
+
+        let calculation = {
+            lengthh: 0,
+            breadth: 0,
+            height: 0,
+            weight: 0,
+            price: 0,
+
+        }
+
+        let orderDetails = order?.productData?.map((el) => {
+
+
+            let dim = el.dimension[0].split(",");
+            let l = dim[0] * 1, b = dim[1] * 1, h = dim[2] * 1;
+            calculation = { ...calculation, lengthh: calculation.lengthh < l ? l : calculation.lengthh, breadth: calculation.breadth < b ? b : calculation.breadth, height: calculation.height + h, weight: calculation.weight + el.weight, price: calculation.price + el.price * el.quantity }
+            let obj = {
+                "name": el.name,
+                "qty": el.quantity,
+                "price": el.price * el.quantity,
+                "sku": ""
+            }
+            return obj;
+
+        })
+        console.log("fetch", req.courier);
+        let courerDetails = req.courier;
+
+        if (!courerDetails.id) {
+            next()
+        }
+
+
+
+        let shipmentDetails = {
+            "order_number": `${Date.now()}`,
+            "unique_order_number": "yes",
+            "shipping_charges": 40,
+            "discount": 0,
+            "cod_charges": 0,
+            "payment_type": "prepaid",
+            "order_amount": calculation.price,
+            "package_weight": calculation.weight,
+            "package_length": calculation.lengthh,
+            "package_breadth": calculation.breadth,
+            "package_height": calculation.height,
+            "request_auto_pickup": "yes",
+            "consignee": {
+                "name": `${order?.byuser?.name}`,
+                "address": order?.byuser?.addressLine1,
+                "address_2": "   ",
+                "city": order?.byuser?.city,
+                "state": order?.byuser?.state,
+                "pincode": order?.byuser?.pinCode,
+                "phone": `${order?.byuser?.mobile}`
+            },
+            "pickup": {
+                "warehouse_name": "Wildsquat down1",
+                "name": "WILD SQUAT",
+                "address": "WILD SQUAT, BEARING NO : 2-3-168, SHOP NO 1, GROUND FLOOR, RAMGOPAL PET, NALLAGUTTA, NALLAGUTTA MASJID ROAD, OPPOSITE BNR TRANSPORT.,  India, ",
+                "address_2": "Near metro station",
+                "city": "HYDERABAD",
+                "state": "telangana",
+                "pincode": "500016",
+                "phone": "8686416102"
+            },
+            "order_items": [
+                ...orderDetails
+            ],
+            "courier_id": courerDetails.id,
+            "collectable_amount": "0"
+        }
+
+        const shippingpart1 = await axios.post("https://shipment.xpressbees.com/api/shipments2", shipmentDetails, {
+            headers: {
+
+                'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
+            }
+        });
+        if (shippingpart1?.data?.status) {
+            let data = shipmentDetails?.data?.data;
+            order.courier_id = data.courier_id;
+            order.charges = courerDetails.total_charges;
+            order.courier_name = data?.courier_name;
+            order.master_awb = data?.awb_number;
+            order.ordredPlaced = true;
+            order.phase = 3
+            order.platform = "expressbee"
+            await order.save()
+
+            res.status(200).send({
+                status: "success",
+                data: "done"
+            })
+            return;
+        }
+
+        next()
+
+
+        res.status(200).send({
+            status: "success"
+        })
+    } catch (e) {
+
+    }
+
+
+})
 
 exports.shipProduct = catchAsync(async (req, res, next) => {
     // we are requesting thirdpatry api so in case of shipping we are storing it in db 
@@ -331,7 +531,9 @@ responseCode: 200
             order.courier_name = final.data?.data?.courier_name
             order.master_awb = final.data?.data?.master_awb
             order.ordredPlaced = true;
-            order.phase = 3
+            order.phase = 3;
+
+            order.platform = "bighship"
 
             await order.save()
 

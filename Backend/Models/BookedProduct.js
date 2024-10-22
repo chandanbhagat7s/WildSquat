@@ -76,6 +76,10 @@ const productSchema = new mongoose.Schema({
   },
   orderStatus: {
     type: String
+  },
+  platform: {
+    type: String,
+    enum: ["bighship", "expressbee"]
   }
 
 

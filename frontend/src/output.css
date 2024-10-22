@@ -1859,8 +1859,8 @@ video {
   --tw-bg-opacity: 0.2;
 }
 
-.bg-opacity-30 {
-  --tw-bg-opacity: 0.3;
+.bg-opacity-25 {
+  --tw-bg-opacity: 0.25;
 }
 
 .bg-opacity-50 {
@@ -2358,6 +2358,10 @@ video {
   padding-top: 0.5rem;
 }
 
+.pt-20 {
+  padding-top: 5rem;
+}
+
 .pt-5 {
   padding-top: 1.25rem;
 }
@@ -2639,8 +2643,8 @@ video {
   opacity: 0;
 }
 
-.opacity-25 {
-  opacity: 0.25;
+.opacity-5 {
+  opacity: 0.05;
 }
 
 .opacity-50 {

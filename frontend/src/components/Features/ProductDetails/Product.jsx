@@ -20,7 +20,6 @@ const Product = () => {
 
       if (res?.data?.status == "success") {
         setLoading(false);
-
         res?.data?.categoryid && setCategory(res?.data?.categoryid);
         setProduct({ ...res?.data?.product });
       }
@@ -37,7 +36,7 @@ const Product = () => {
   }, [id]);
 
   return (
-    <div className="container mx-auto px-1 lg:px-4 py-8">
+    <div className="container mx-auto px-1 lg:px-4 pb-8 pt-20">
       <div className="flex flex-col lg:flex-row">
         {loading ? (
           <div className="mx-auto">
@@ -45,10 +44,8 @@ const Product = () => {
           </div>
         ) : (
           <>
-            {/* Left side - Images */}
             <LeftSide product={product} />
 
-            {/* Right side - Product details */}
             <RightSide product={product} />
           </>
         )}
