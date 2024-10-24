@@ -59,7 +59,7 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
         console.log("seted big", token);
     }
     if (expressToken) {
-        expressToken = JSON.parse(expressToken).data.token
+        expressToken = JSON.parse(expressToken);
         console.log("seted ex[p", expressToken);
 
     }
@@ -136,7 +136,6 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
 
 
         const { orderId } = req.body;
-        const token = req.expressToken;
 
 
         if (!orderId) {
@@ -174,7 +173,7 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
             return obj;
 
         })
-        console.log("fetch", req.courier);
+        console.log("fetch req.courier", req.courier, orderDetails, calculation);
         let courerDetails = req.courier;
 
         if (!courerDetails.id) {
@@ -191,16 +190,16 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
             "cod_charges": 0,
             "payment_type": "prepaid",
             "order_amount": calculation.price,
-            "package_weight": calculation.weight,
-            "package_length": calculation.lengthh,
-            "package_breadth": calculation.breadth,
-            "package_height": calculation.height,
+            "package_weight": calculation.weight * 1000,
+            "package_length": calculation.lengthh * 1,
+            "package_breadth": calculation.breadth * 1,
+            "package_height": calculation.height * 1,
             "request_auto_pickup": "yes",
             "consignee": {
                 "name": `${order?.byuser?.name}`,
                 "address": order?.byuser?.addressLine1,
                 "address_2": "   ",
-                "city": order?.byuser?.city,
+                "city": order?.byuser?.city || "pune",
                 "state": order?.byuser?.state,
                 "pincode": order?.byuser?.pinCode,
                 "phone": `${order?.byuser?.mobile}`
@@ -228,9 +227,11 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
                 'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
             }
         });
+        console.log("ord res", shippingpart1);
+
         if (shippingpart1?.data?.status) {
             let data = shipmentDetails?.data?.data;
-            order.courier_id = data.courier_id;
+            order.courier_id = courerDetails.id;
             order.charges = courerDetails.total_charges;
             order.courier_name = data?.courier_name;
             order.master_awb = data?.awb_number;
@@ -249,11 +250,11 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
         next()
 
 
-        res.status(200).send({
-            status: "success"
-        })
-    } catch (e) {
 
+    } catch (e) {
+        console.log("error is ", e);
+
+        next()
     }
 
 
@@ -604,16 +605,19 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
     // if (order.refunded) {
     //     return next(new appError("Your amount has been refunded already", 400))
     // }
-    // first cancle order 
+    // first cancle order  
+
     const cancledShipment = await axios.put("https://api.bigship.in/api/order/cancel", [
-        order.master_awb * 1
+        order.master_awb
     ]
         , {
             headers: {
 
-                'Authorization': `Bearer ${token}` // Authorization header with Bearer token
+                'Authorization': `Bearer ${req.shippingToken}` // Authorization header with Bearer token
             }
         });
+    console.log(cancledShipment.data);
+
 
 
     if (!cancledShipment?.data?.success) {

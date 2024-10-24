@@ -63,6 +63,8 @@ exports.getOrderStatuses = async (req, res) => {
             path: 'Ordred',
             select: "-__v",
         });
+        console.log(orders);
+
 
         const responses = await Promise.all(
             orders.Ordred.map(async (order) => {
@@ -70,6 +72,7 @@ exports.getOrderStatuses = async (req, res) => {
 
                 // Check if the status was updated more than 4 hours ago
                 if (!order.statusUpdatedAt || now - order.statusUpdatedAt > FOUR_HOURS) {
+                    console.log("with oid", order.shipOrderId);
 
                     // Make the API request
                     const response = await axios.get(
@@ -81,7 +84,11 @@ exports.getOrderStatuses = async (req, res) => {
                         }
                     );
 
+
+
                     const shipmentInfo = response.data?.data?.shipmentInfo;
+                    console.log(response.data, shipmentInfo);
+
 
                     // Update the status and the timestamp in the database
                     order.orderStatus = shipmentInfo.orderStatus;
@@ -101,6 +108,8 @@ exports.getOrderStatuses = async (req, res) => {
             orders: orders.Ordred,
         });
     } catch (err) {
+        console.log(err);
+
         res.status(500).send({
             status: "error",
             message: "Failed to fetch order statuses",
