@@ -66,14 +66,14 @@ exports.getOrderStatuses = async (req, res) => {
         console.log(orders);
 
 
+
+
         const responses = await Promise.all(
             orders.Ordred.map(async (order) => {
                 const now = Date.now();
 
                 // Check if the status was updated more than 4 hours ago
                 if (!order.statusUpdatedAt || now - order.statusUpdatedAt > FOUR_HOURS) {
-                    console.log("with oid", order.shipOrderId);
-
                     // Make the API request
                     const response = await axios.get(
                         `https://appapinew.bigship.in/api/Dashboard/GetShipmentDetails?user_Id=6393440&search_key=order_id&search_value=${order.shipOrderId}`,
@@ -87,7 +87,6 @@ exports.getOrderStatuses = async (req, res) => {
 
 
                     const shipmentInfo = response.data?.data?.shipmentInfo;
-                    console.log(response.data, shipmentInfo);
 
 
                     // Update the status and the timestamp in the database
@@ -108,7 +107,6 @@ exports.getOrderStatuses = async (req, res) => {
             orders: orders.Ordred,
         });
     } catch (err) {
-        console.log(err);
 
         res.status(500).send({
             status: "error",

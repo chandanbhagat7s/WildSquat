@@ -97,6 +97,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
         , pinCode
         , password
         , addressLine1,
+        city,
         otp,
         otpId } = req.body;
 
@@ -109,7 +110,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
         !district ||
         !pinCode ||
         !password ||
-        !addressLine1
+        !addressLine1 ||
+        !city
     ) {
         return next(new appError("Please fill all the fields", 400))
     }
@@ -142,7 +144,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
         , district
         , pinCode
         , addressLine1
-        , password
+        , password,
+        city
     });
     if (!newUser) {
         return next(new appError("something went wrrong  ", 500));

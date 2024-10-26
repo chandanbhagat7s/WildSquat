@@ -34,6 +34,7 @@ const SignUpPage = () => {
     pinCode: "",
     addressLine1: "",
     otpId: 0,
+    city: "",
   });
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
@@ -67,6 +68,9 @@ const SignUpPage = () => {
       return dispatch(
         warning({ message: "Please check password and confirm password" })
       );
+    }
+    if (formData.city.length <= 2 || formData.pinCode.length > 15) {
+      return dispatch(warning({ message: "Please enter valid city name" }));
     }
     if (formData.password.length < 8) {
       return dispatch(
@@ -169,12 +173,7 @@ const SignUpPage = () => {
       placeholder: "Phone Number",
       icon: <FiPhone className="w-5 h-5 text-gray-400" />,
     },
-    {
-      name: "country",
-      type: "text",
-      placeholder: "Country",
-      icon: <FiFlag className="w-5 h-5 text-gray-400" />,
-    },
+
     {
       name: "state",
       type: "text",
@@ -185,6 +184,12 @@ const SignUpPage = () => {
       name: "district",
       type: "text",
       placeholder: "District",
+      icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
+    },
+    {
+      name: "city",
+      type: "text",
+      placeholder: "City",
       icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
     },
     {
@@ -202,13 +207,13 @@ const SignUpPage = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-700 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-4xl bg-gray-300 md:bg-gradient-to-tl from-gray-400 via-gray-300 to-gray-300 shadow-2xl rounded-2xl overflow-hidden capitalize">
-        <div className="px-8 py-12">
-          <h2 className="text-3xl font-bold text-center text-gray-700 mb-2 capitalize animate-pulse">
-            {step === 1 ? "Become Member of Wildsquat" : "Verify OTP"}
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-2 lg:px-8">
+      <div className="w-full max-w-4xl bg-gray-200 shadow-2xl rounded-2xl overflow-hidden capitalize">
+        <div className="px-3 lg:px-8 py-12">
+          <h2 className="text-3xl font-bold text-center text-gray-700 mb-2 capitalize ">
+            {step === 1 ? "Welcome Join Wildsquat" : "Verify OTP"}
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-900 mb-8">
             {step === 1
               ? "Join  Wildsquat Trends"
               : "Enter the OTP sent to your email"}
@@ -218,46 +223,57 @@ const SignUpPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {inputFields.map((field) => (
-                  <div key={field.name} className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      {field.icon}
-                    </div>
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      type={
-                        field.type == "password" && show ? "text" : field.type
-                      }
-                      required
-                      className={`block w-full pl-10 pr-3 py-2 rounded-md leading-5 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-gray-500 ring-1 sm:text-sm  ${
-                        (field.name == "cnfpassword" ||
-                          field.name == "password") &&
-                        (formData.password !== formData.cnfpassword ||
-                          (formData.password.length < 8 &&
-                            formData.password.length > 0))
-                          ? "ring-red-500 ring-1 focus:ring-red-600"
-                          : ""
-                      } `}
-                      placeholder={field.placeholder}
-                      value={formData[field.name]}
-                      onChange={handleChange}
-                      disabled={field.name == "country"}
-                    />
-                    {field.name == "password" && (
-                      <div
-                        className="absolute top-[50%] -translate-y-[50%] end-2"
-                        onClick={() => setShow(!show)}
-                      >
-                        <FaEye className="text-lg" />
+                  <div className="flex flex-col" key={field.name}>
+                    <label htmlFor={field.name}>
+                      <span className="text-sm text-gray-700 font-semibold">
+                        {field.placeholder}
+                      </span>
+                    </label>
+                    <div key={field.name} className="relative">
+                      <div className="flex flex-col space-y-1">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          {field.icon}
+                        </div>
+                        <input
+                          id={field.name}
+                          name={field.name}
+                          type={
+                            field.type == "password" && show
+                              ? "text"
+                              : field.type
+                          }
+                          required
+                          className={`block w-full pl-10 pr-3 py-2 rounded-md leading-5 placeholder-gray-500  focus:border-gray-500 ring-1 sm:text-sm transition-all ease-in bg-gray-50  ${
+                            (field.name == "cnfpassword" ||
+                              field.name == "password") &&
+                            (formData.password !== formData.cnfpassword ||
+                              (formData.password.length < 8 &&
+                                formData.password.length > 0))
+                              ? "ring-red-500 ring-1 focus:ring-red-600"
+                              : "ring-1 ring-gray-300 focus-ring-black"
+                          } `}
+                          placeholder={field.placeholder}
+                          value={formData[field.name]}
+                          onChange={handleChange}
+                          disabled={field.name == "country"}
+                        />
                       </div>
-                    )}
+                      {field.name == "password" && (
+                        <div
+                          className="absolute top-[50%] -translate-y-[50%] end-2"
+                          onClick={() => setShow(!show)}
+                        >
+                          <FaEye className="text-lg" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
               <div>
                 <button
                   type="submit"
-                  className="group relative mx-auto flex justify-center py-2 px-20 border border-transparent text-sm font-medium  text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 rounded-lg"
+                  className="group relative mx-auto flex justify-center py-2 px-20 border border-transparent text-sm font-medium  text-white bg-gray-900 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 rounded-lg hover:scale-110 transition-all ease-in"
                 >
                   Sign Up
                   <FiArrowRight className="ml-2 -mr-1 h-5 w-5" />

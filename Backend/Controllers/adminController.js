@@ -47,7 +47,6 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 
 
 exports.resizeToolImage = catchAsync(async (req, res, next) => {
-    console.log(req.files.images);
 
 
     if (!req.files.coverImage && !req.files.images) {
@@ -613,7 +612,6 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
         })
     } else if (action == "ADDANDUPDATE") {
         const { discountProduct } = req.body;
-        console.log(discountProduct);
 
 
 
@@ -625,7 +623,7 @@ exports.actionOnTool = catchAsync(async (req, res, next) => {
                     { discount }, // Only updating the discount field
                     { new: true } // Option to return the updated document
                 );
-                console.log(`Updated discount for product ${productId} to ${discount}`);
+
             }
         }
 

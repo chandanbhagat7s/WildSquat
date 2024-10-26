@@ -30,7 +30,6 @@ exports.checkForExpressBeeMiddlewareAvaibility = catchAsync(async (req, res, nex
 
     if (r?.data?.status) {
         let courersOption = r?.data?.data;
-        console.log(r.data.data);
 
         if (courersOption.length > 0) {
             let obj = courersOption.reduce((lowest, shipment) => {
@@ -55,12 +54,9 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
     if (token) {
         token = JSON.parse(token).data.token
-
-        console.log("seted big", token);
     }
     if (expressToken) {
         expressToken = JSON.parse(expressToken);
-        console.log("seted ex[p", expressToken);
 
     }
 
@@ -74,7 +70,6 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
         const expData = secondresponse?.data?.data || ""
 
-        console.log("for express", expData);
 
 
         await redisClient.set("expressToken", JSON.stringify(expData), {
@@ -120,8 +115,6 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
         req.shippingToken = data?.data?.token;
 
     }
-
-    console.log("token before after", token);
 
     req.shippingToken = token;
     req.expressToken = expressToken;
@@ -173,7 +166,7 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
             return obj;
 
         })
-        console.log("fetch req.courier", req.courier, orderDetails, calculation);
+
         let courerDetails = req.courier;
 
         if (!courerDetails.id) {
@@ -227,7 +220,7 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
                 'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
             }
         });
-        console.log("ord res", shippingpart1);
+
 
         if (shippingpart1?.data?.status) {
             let data = shipmentDetails?.data?.data;
@@ -616,7 +609,7 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
                 'Authorization': `Bearer ${req.shippingToken}` // Authorization header with Bearer token
             }
         });
-    console.log(cancledShipment.data);
+
 
 
 

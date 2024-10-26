@@ -180,9 +180,15 @@ const LoginPage = () => {
         password: formData.vpassword,
       });
       if (setPassword.data?.status === "success") {
-        dispatch(success({ message: "Password reset successfully" }));
+        dispatch(
+          success({
+            message:
+              "Password reset successfully , now login with your password",
+          })
+        );
         setIsForgotPassword(false);
-        navigate("/");
+
+        navigate("/login");
       }
     } catch (e) {
       dispatch(
@@ -212,7 +218,7 @@ const LoginPage = () => {
                   name="mobile"
                   type="tel"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-sm"
                   placeholder="Enter your mobile number"
                   value={formData.mobile}
                   onChange={handleChange}
@@ -221,7 +227,7 @@ const LoginPage = () => {
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
             >
               Send OTP
             </button>
@@ -238,7 +244,7 @@ const LoginPage = () => {
                     id={`otp-${index}`}
                     type="text"
                     maxLength="1"
-                    className="w-12 h-12 text-center text-2xl border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-12 h-12 text-center text-2xl border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                     value={digit}
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                   />
@@ -248,7 +254,7 @@ const LoginPage = () => {
                 OTP sent to {formData.mobile}.{" "}
                 <button
                   type="button"
-                  className="text-indigo-600 hover:text-indigo-500"
+                  className="text-gray-600 hover:text-gray-500"
                   onClick={() => setStep(1)}
                 >
                   Change number
@@ -256,14 +262,14 @@ const LoginPage = () => {
               </p>
               <button
                 type="button"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 onClick={verifyOTPOfUser}
               >
                 Verify OTP
               </button>
               <button
                 type="button"
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
                 onClick={handleForgotPassword}
                 disabled={isResendDisabled}
               >
@@ -288,7 +294,7 @@ const LoginPage = () => {
                   name="vpassword"
                   type="password"
                   required
-                  className="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                   value={formData.vpassword}
                   onChange={handleChange}
                 />
@@ -305,7 +311,7 @@ const LoginPage = () => {
                   name="vpasswordConfirm"
                   type="password"
                   required
-                  className="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                   value={formData.vpasswordConfirm}
                   onChange={handleChange}
                 />
@@ -313,7 +319,7 @@ const LoginPage = () => {
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
               disabled={formData.vpassword !== formData.vpasswordConfirm}
             >
               Set New Password
@@ -326,9 +332,13 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-700">
-      <div className="bg-gray-100 p-10 rounded-2xl shadow-2xl w-full max-w-md">
-        <h2 className="text-4xl font-bold text-gray-900 text-center mb-8 capitalize">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-700 ">
+      <div
+        className={`bg-gray-100 px-3 lg:px-5 py-10 rounded-2xl shadow-2xl w-full max-w-md ${
+          isForgotPassword && "-translate-y-[50%]"
+        } `}
+      >
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-8 capitalize">
           {isForgotPassword ? "Forgot Password" : "Wildsquat Welcomes You !"}
         </h2>
         {!isForgotPassword ? (
@@ -350,7 +360,7 @@ const LoginPage = () => {
                   type="text"
                   autoComplete="email"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-sm"
                   placeholder="Enter your email/mobile number"
                   value={formData.email}
                   onChange={handleChange}
@@ -374,7 +384,7 @@ const LoginPage = () => {
                   type={show ? "text" : "password"}
                   autoComplete="current-password"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-sm"
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -389,7 +399,7 @@ const LoginPage = () => {
                 }
               </div>
             </div>
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end ">
               <div className="text-sm">
                 <button
                   type="button"
@@ -402,14 +412,14 @@ const LoginPage = () => {
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="w-3/4 mx-auto flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
             >
               <FiLogIn className="mr-2 h-5 w-5" />
               Sign in
             </button>
           </form>
         ) : (
-          <>
+          <div className="">
             {renderForgotPasswordStep()}
             {step !== 1 && (
               <div className="mt-4">
@@ -419,14 +429,14 @@ const LoginPage = () => {
                     setIsForgotPassword(false);
                     setStep(1);
                   }}
-                  className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                  className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
                 >
                   <FiArrowLeft className="mr-2 h-5 w-5" />
                   Back to Login
                 </button>
               </div>
             )}
-          </>
+          </div>
         )}
 
         {!isForgotPassword && (

@@ -87,7 +87,7 @@ const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
           value={searchTerm}
           onChange={handleSearchChange}
           onFocus={() => setIsOpen(true)}
-          className="w-full pl-12 pr-12 py-3 text-lg text-gray-800 bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition duration-300 ease-in-out"
+          className="w-full pl-12 pr-12 py-3 text-lg text-gray-800 bg-white rounded-full ring-1 focus:ring-2 ring-gray-400 focus:ring-blue-500 shadow-lg transition duration-300 ease-in-out"
         />
         {searchTerm && (
           <button

@@ -116,8 +116,8 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden bg-white shadow-lg absolute inset-x-0 top-16 max-h-screen overflow-y-auto z-40">
-          <div className="flex justify-center">
+        <div className="lg:hidden bg-white shadow-lg absolute inset-x-0 top-16 max-h-screen overflow-y-auto z-40 min-h-[50vh]">
+          <div className="flex justify-center mt-1">
             {" "}
             <NavbarActions />
           </div>
@@ -127,7 +127,11 @@ const Navbar = () => {
 
           <div className="py-4 px-4">
             {categories.map((category) => (
-              <MobileNavItem key={category.name} category={category} />
+              <MobileNavItem
+                key={category._id}
+                category={category}
+                setIsMenuOpen={setIsMenuOpen}
+              />
             ))}
           </div>
         </div>
@@ -136,7 +140,7 @@ const Navbar = () => {
   );
 };
 
-const MobileNavItem = ({ category }) => {
+const MobileNavItem = ({ category, setIsMenuOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -160,7 +164,11 @@ const MobileNavItem = ({ category }) => {
           {category.products.map((subItem, index) => (
             <div
               key={index}
-              onClick={() => navigate(`/productDetails/${subItem._id}`)}
+              onClick={() => {
+                setIsOpen(false);
+                setIsMenuOpen((state) => !state);
+                navigate(`/productDetails/${subItem._id}`);
+              }}
               className="py-2 px-4 hover:bg-gray-100 cursor-pointer rounded-md transition-colors duration-200"
             >
               {subItem.name}
