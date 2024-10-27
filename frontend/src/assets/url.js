@@ -1,4 +1,4 @@
-let url = "http://192.168.1.35:4000/"
+let url = "https://www.wildsquat.com/"
 export default url
 
 

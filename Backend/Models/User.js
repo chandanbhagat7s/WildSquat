@@ -74,6 +74,9 @@ const userSchema = new mongoose.Schema({
     district: {
         type: String
     },
+    city: {
+        type: String
+    },
     mobileChangeOTP: Number,
     passwordChangedAt: Date,
     passwordResetOTP: Number,

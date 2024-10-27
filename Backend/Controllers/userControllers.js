@@ -63,7 +63,6 @@ exports.getOrderStatuses = async (req, res) => {
             path: 'Ordred',
             select: "-__v",
         });
-        console.log(orders);
 
 
 
@@ -73,28 +72,53 @@ exports.getOrderStatuses = async (req, res) => {
                 const now = Date.now();
 
                 // Check if the status was updated more than 4 hours ago
-                if (!order.statusUpdatedAt || now - order.statusUpdatedAt > FOUR_HOURS) {
-                    // Make the API request
-                    const response = await axios.get(
-                        `https://appapinew.bigship.in/api/Dashboard/GetShipmentDetails?user_Id=6393440&search_key=order_id&search_value=${order.shipOrderId}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${req.shippingToken}`, // Authorization header with Bearer token
-                            },
-                        }
-                    );
+                if (order?.orderStatus !== "Cancelled" && order?.orderStatus !== "cancelled") {
+                    console.log("fetched order by 3rd praty api");
+
+                    let response;
+                    if (order.platform == "bighship") {
+                        // Make the API request
+                        response = await axios.get(
+                            `https://appapinew.bigship.in/api/Dashboard/GetShipmentDetails?user_Id=6393440&search_key=order_id&search_value=${order.shipOrderId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${req.shippingToken}`, // Authorization header with Bearer token
+                                },
+                            }
+                        );
 
 
 
-                    const shipmentInfo = response.data?.data?.shipmentInfo;
+                        const shipmentInfo = response.data?.data?.shipmentInfo;
 
 
-                    // Update the status and the timestamp in the database
-                    order.orderStatus = shipmentInfo.orderStatus;
+                        // Update the status and the timestamp in the database
+                        order.orderStatus = shipmentInfo.orderStatus;
+                        order.statusUpdatedAt = now;
+                        await order.save();
+
+                        return shipmentInfo.orderStatus; // Return the orderStatus
+                    } else {
+                        // Track Shipment
+
+                        response = await axios.get(
+                            `https://shipment.xpressbees.com/api/shipments2/track/${order.master_awb}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${req.expressToken}`, // Authorization header with Bearer token
+                                },
+                            }
+                        );
+                    }
+                    // console.log("res is ", response);
+
+                    let shipmentInfo = response.data.data;
+
+
+                    order.orderStatus = shipmentInfo.status;
                     order.statusUpdatedAt = now;
                     await order.save();
-
-                    return shipmentInfo.orderStatus; // Return the orderStatus
+                    return order.orderStatus;
                 } else {
                     return order.orderStatus; // Use the cached status from the database
                 }
@@ -107,6 +131,7 @@ exports.getOrderStatuses = async (req, res) => {
             orders: orders.Ordred,
         });
     } catch (err) {
+        console.log(err);
 
         res.status(500).send({
             status: "error",

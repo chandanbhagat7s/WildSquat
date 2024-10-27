@@ -35,7 +35,11 @@ const BookedOrders = () => {
       dataLength={orders.length} // This is important to avoid bugs
       next={fetchOrders}
       hasMore={hasMore}
-      loader={<h4>Loading...</h4>}
+      loader={
+        <div className="my-10">
+          <h4>Loading...</h4>
+        </div>
+      }
       endMessage={<p className="text-center">No more orders to show</p>}
     >
       <div className="overflow-x-auto ">
@@ -47,7 +51,7 @@ const BookedOrders = () => {
               <th className="py-3 px-6 font-semibold text-gray-600">Status</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {orders?.length > 0 &&
               orders?.map((order) => (
                 <tr key={order._id} className="border-t">

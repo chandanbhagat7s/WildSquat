@@ -79,10 +79,21 @@ const productSchema = new mongoose.Schema({
   },
   platform: {
     type: String,
-    enum: ["bighship", "expressbee"]
+    enum: ["bigship", "expressbee"]
   }
-
-
+  ,
+  reverseBooking: {
+    type: Boolean
+  },
+  reverseAWB: {
+    type: String
+  },
+  reverseShipmentId: {
+    type: String
+  },
+  reverseOrderId: {
+    type: String
+  }
 
 
 

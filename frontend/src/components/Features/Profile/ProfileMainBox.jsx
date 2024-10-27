@@ -29,7 +29,8 @@ export default function ProfileMainBox() {
     }
   }
   useEffect(() => {
-    !product.name && getData();
+    // !product.name && getData();
+    load == true && getData();
   }, [load]);
   useEffect(() => {
     window.scrollTo(0, 0);

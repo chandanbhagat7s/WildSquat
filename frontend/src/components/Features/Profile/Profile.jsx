@@ -12,7 +12,7 @@ const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
       whileTap={{ scale: 0.95 }}
       className={`flex justify-center items-center px-6 py-3 rounded-full transition duration-300 ${
         isActive
-          ? "bg-gray-600 text-white shadow-lg"
+          ? "bg-black text-white shadow-lg"
           : "bg-white text-gray-600 hover:bg-gray-100 border border-black"
       }`}
       onClick={onClick}
@@ -23,8 +23,8 @@ const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <div className=" grid grid-cols-2 lg:grid-cols-4 gap-2 my-10">
+    <div className="max-w-7xl mx-auto p-6  min-h-screen">
+      <div className=" grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 md:gap-3 mt-3 md:mt-6 lg:mt-10">
         <TabButton
           label="Profile"
           icon={<FaUser className="text-xl" />}

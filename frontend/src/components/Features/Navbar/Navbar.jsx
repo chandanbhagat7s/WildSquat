@@ -76,8 +76,8 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={logo} alt="Wild Squat Logo" className="scale-125 h-12" />
-            <span className="font-bold text-lg text-gray-800 font-serif first-letter:text-2xl first-letter:font-bold ">
-              WILD<span className="text-gray-500">SQUAT</span>{" "}
+            <span className="font-bold text-lg text-gray-800 font-serif ">
+              WILDSQUAT
             </span>
           </Link>
 

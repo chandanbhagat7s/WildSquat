@@ -24,9 +24,9 @@ const ProfileTab = ({ data, setLoad, load }) => {
     name: data.name || "",
     email: data.email || "",
     mobile: data.mobile || "",
-    country: data.country || "",
     state: data.state || "",
     district: data.district || "",
+    city: data.city || "",
     pinCode: data.pinCode || 0,
     addressLine1: data.addressLine1 || "",
   });
@@ -127,6 +127,21 @@ const ProfileTab = ({ data, setLoad, load }) => {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (Object.values(formData).some((field) => field === "")) {
+      return dispatch(warning({ message: "Please enter all the details" }));
+    }
+    if (formData.pinCode.length < 6 || formData.pinCode.length > 7) {
+      return dispatch(warning({ message: "Please enter valid pin code" }));
+    }
+    if (formData.city.length <= 2 || formData.pinCode.length > 15) {
+      return dispatch(warning({ message: "Please enter valid city name" }));
+    }
+
+    if (formData.addressLine1.length < 6 || formData.addressLine1.length > 45) {
+      return dispatch(
+        warning({ message: "Please describe your address in 10 to 40 words" })
+      );
+    }
     try {
       const res = await axios.patch(
         "/api/v1/user/editProfile",
@@ -181,13 +196,6 @@ const ProfileTab = ({ data, setLoad, load }) => {
       placeholder: "Email address",
       icon: <FiMail className="w-5 h-5 text-gray-400" />,
     },
-
-    {
-      name: "country",
-      type: "text",
-      placeholder: "Country",
-      icon: <FiFlag className="w-5 h-5 text-gray-400" />,
-    },
     {
       name: "state",
       type: "text",
@@ -207,6 +215,12 @@ const ProfileTab = ({ data, setLoad, load }) => {
       icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
     },
     {
+      name: "city",
+      type: "text",
+      placeholder: "City",
+      icon: <FiMapPin className="w-5 h-5 text-gray-400" />,
+    },
+    {
       name: "addressLine1",
       type: "text",
       placeholder: "Address Line 1",
@@ -216,7 +230,7 @@ const ProfileTab = ({ data, setLoad, load }) => {
   return (
     <>
       {load == false && (
-        <div className="bg-white rounded-xl shadow-lg p-8 md:w-[80vw] mx-auto">
+        <div className="bg-white rounded-xl shadow-lg py-5 px-3 lg:p-8 md:w-[80vw] mx-auto">
           <div className="flex flex-col items-center justify-center mb-6 space-y-2">
             <img
               src="https://i1.rgstatic.net/ii/profile.image/1142222359674881-1649338440466_Q512/Ab-Cd-120.jpg"
@@ -229,7 +243,7 @@ const ProfileTab = ({ data, setLoad, load }) => {
             <span className="text-xl">{formData.email}</span>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {inputFields.map((field) => (
                 <div key={field.name} className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -251,7 +265,7 @@ const ProfileTab = ({ data, setLoad, load }) => {
             <div>
               <button
                 type="submit"
-                className="group relative mx-auto flex justify-center items-center py-2 px-20 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                className="group relative mx-auto flex justify-center items-center py-2 px-20 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
                 Submit
                 <FiArrowRight className="ml-2 -mr-1 h-5 w-5" />

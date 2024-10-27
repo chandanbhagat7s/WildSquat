@@ -86,9 +86,9 @@ const SignUpPage = () => {
       return dispatch(warning({ message: "Please enter valid pin code" }));
     }
 
-    if (formData.addressLine1.length < 6) {
+    if (formData.addressLine1.length < 6 || formData.addressLine1.length > 45) {
       return dispatch(
-        warning({ message: "Please describe your address in more details" })
+        warning({ message: "Please describe your address in 10 to 40 words" })
       );
     }
     const statusOtp = await dispatch(
