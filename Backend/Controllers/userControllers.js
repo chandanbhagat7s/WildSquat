@@ -70,9 +70,10 @@ exports.getOrderStatuses = async (req, res) => {
         const responses = await Promise.all(
             orders.Ordred.map(async (order) => {
                 const now = Date.now();
+                let newUpdate = new Date(order.statusUpdatedAt).getMilliseconds() + 4 * 60 * 60 * 1000;
 
                 // Check if the status was updated more than 4 hours ago
-                if (order?.orderStatus !== "Cancelled" && order?.orderStatus !== "cancelled") {
+                if ((order?.orderStatus !== "Cancelled" && order?.orderStatus !== "cancelled") || order?.fetch || now > newUpdate) {
                     console.log("fetched order by 3rd praty api");
 
                     let response;
@@ -95,6 +96,7 @@ exports.getOrderStatuses = async (req, res) => {
                         // Update the status and the timestamp in the database
                         order.orderStatus = shipmentInfo.orderStatus;
                         order.statusUpdatedAt = now;
+                        order.fetch = false;
                         await order.save();
 
                         return shipmentInfo.orderStatus; // Return the orderStatus

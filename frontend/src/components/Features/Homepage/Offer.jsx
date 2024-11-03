@@ -33,7 +33,7 @@ const Offer = ({ order = 0 }) => {
   };
 
   return (
-    <div className="container mx-auto px-1 lg:px-4 py-16 relative bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="container mx-auto px-1 lg:px-4 py-16 relative bg-white">
       {product?.label && (
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -54,7 +54,7 @@ const Offer = ({ order = 0 }) => {
           </motion.div>
 
           {/* Grid Layout Section */}
-          <div className="md:w-1/2 grid grid-cols-2 gap-1 lg:gap-6">
+          <div className="md:w-1/2 grid grid-cols-2 gap-1 lg:gap-3">
             {[0, 1, 2, 3].map((index) => (
               <motion.div
                 key={index}
@@ -80,7 +80,7 @@ const Offer = ({ order = 0 }) => {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-base font-bold mb-3 uppercase tracking-widest text-gray-800"
             >
-              {product?.label}
+              {product?.label.replaceAll("$", "\n")}
             </motion.h2>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -88,7 +88,7 @@ const Offer = ({ order = 0 }) => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl md:text-4xl font-bold mb-6 leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-800 to-gray-500"
             >
-              {product?.shortDescription}
+              {product?.shortDescription.replaceAll("$", "\n")}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

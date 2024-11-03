@@ -13,14 +13,21 @@ const PremiumNavbar = ({ categories }) => {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ul className="flex justify-between py-2">
           {categories.map((category, i) => (
-            <Link key={i} to={`/productList/${category._id}`}>
+            <div
+              key={i}
+              onClick={() =>
+                navigate(`/productList/${category._id}`, {
+                  state: { reset: true },
+                })
+              }
+            >
               <NavItem
                 category={category}
                 isActive={activeCategory === i}
                 setActive={() => setActiveCategory(i)}
                 clearActive={() => setActiveCategory(null)}
               />
-            </Link>
+            </div>
           ))}
         </ul>
       </nav>

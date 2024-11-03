@@ -7,7 +7,7 @@ import { error } from "../../../redux/slices/errorSlice";
 import LoadingSpinner from "../../common/Spinner";
 import ProductCard from "../Common/Cards/ProductCard";
 import { FaArrowTrendUp } from "react-icons/fa6";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const BulkListLayoutProduct = ({ toolId }) => {
   const dispatch = useDispatch();
@@ -17,6 +17,10 @@ const BulkListLayoutProduct = ({ toolId }) => {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
+
+  const location = useLocation();
+  let state = location?.state?.reset || false;
+  console.log(location);
 
   const fetchProducts = async () => {
     try {
@@ -54,8 +58,10 @@ const BulkListLayoutProduct = ({ toolId }) => {
     console.log("TRIGRED", params.id, page);
 
     window.scrollTo(0, 0);
-    // setPage((page) => page - page);
-    // setProducts(() => []);
+    if (state) {
+      setPage((page) => page - page);
+      setProducts(() => []);
+    }
     console.log("page", page);
 
     fetchProducts();
@@ -71,7 +77,7 @@ const BulkListLayoutProduct = ({ toolId }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {!toolId ? (
           <>
-            <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 animate-fadeIn">
+            <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 py-2 animate-fadeIn">
               Explore And get
             </h2>
             <h3 className="text-3xl font-semibold text-gray-700 tracking-wider mb-6">

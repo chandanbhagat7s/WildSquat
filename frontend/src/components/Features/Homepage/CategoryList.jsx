@@ -32,14 +32,14 @@ const CategoryList = () => {
   }, [gender, page]);
 
   return (
-    <div className="min-h-screen py-12 p-2 lg:px-4 bg-white flex flex-col justify-center items-center space-y-10 lg:space-y-16 pb-20">
+    <div className="min-h-screen pt-10 lg:px-4 bg-white flex flex-col justify-center items-center space-y-10 lg:space-y-16 pb-10">
       {/* Title Section */}
-      <div className="text-center mt-10 mb-5">
-        <h2 className="text-4xl font-bold text-gray-800 tracking-wide mb-2">
-          Discover Your Style
+      <div className="text-center mt-5 mb-2">
+        <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 animate-fadeIn">
+          All You Need is Hear
         </h2>
-        <h3 className="text-2xl font-semibold text-gray-600">
-          Find What Complements You
+        <h3 className="text-3xl font-semibold text-gray-700 tracking-wider mb-6">
+          Discover Unmatched Elegance
         </h3>
         <div className="mt-4">
           <span className="inline-block w-24 h-1 bg-gradient-to-r from-gray-700 to-gray-400 rounded"></span>
