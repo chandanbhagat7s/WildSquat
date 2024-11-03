@@ -82,14 +82,14 @@ const Navbar = () => {
           </Link>
 
           {/* Search Bar */}
-          <div className="hidden md:flex md:flex-1 mx-8">
-            <div className="relative w-full ">
+          <div className="hidden lg:flex  mx-8">
+            <div className="relative w-[40vw] ">
               <SearchCategoryProductAndItem />
             </div>
           </div>
 
           {/* Navbar Actions */}
-          <div className="hidden md:flex">
+          <div className="hidden lg:flex">
             <NavbarActions />
           </div>
 

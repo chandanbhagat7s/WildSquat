@@ -1,8 +1,28 @@
+import { useEffect, useState } from "react";
 import logo from "./../../../assets/logo.jpeg";
 import { FaInstagram, FaFacebookF, FaYoutube } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const [categories, setCategories] = useState([]);
+
+  const { gender } = useSelector((state) => state.auth);
+  async function getData() {
+    try {
+      const res = await axios.get(
+        `/api/v1/tools/getTool/CATEGORY?gender=${gender}&limit=6&page=1&fields=label,_id`
+      );
+
+      setCategories([...res?.data?.products]);
+    } catch (e) {}
+  }
+
+  useEffect(() => {
+    getData();
+  }, [gender]);
   return (
     <footer className="bg-white text-gray-700 py-12 border-t border-gray-200">
       <div className="container mx-auto px-4">
@@ -31,36 +51,19 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Shop</h3>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-blue-900">
-                  New Arrivals 🔥
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-900">
-                  Offers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-900">
-                  T-shirts
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-900">
-                  Stringers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-900">
-                  Shorts
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-900">
-                  Innerwear
-                </a>
-              </li>
+              {categories.length > 0 &&
+                categories.map((el) => {
+                  return (
+                    <li key={el._id}>
+                      <Link
+                        to={`/productList/${el._id}`}
+                        className="hover:text-blue-900"
+                      >
+                        {el.label}
+                      </Link>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
           <div className="text-sm">
@@ -91,10 +94,10 @@ export default function Footer() {
             <p className="text-sm mb-4">
               Email Us:{" "}
               <a
-                href="mailto:wildsquat.kk@gmail.com"
+                href="mailto:info@wildsquat.com"
                 className="text-blue-900 hover:underline"
               >
-                wildsquat.kk@gmail.com
+                info@wildsquat.com
               </a>
             </p>
             <div className="flex space-x-4">

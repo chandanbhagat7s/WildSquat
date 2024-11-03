@@ -23,11 +23,11 @@ const BulkListLayoutProduct = ({ toolId }) => {
       let res;
       if (toolId) {
         res = await axios.get(
-          `/api/v1/tools/getToolById/${toolId}?populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
+          `/api/v1/tools/getToolById/${toolId}?populate=products&populateField=name,price,_id,coverImage&populateLimit=8&populatPage=${page}`
         );
       } else {
         res = await axios.get(
-          `/api/v1/tools/getToolById/${params.id}?populate=products&populateField=name,price,_id,coverImage&populateLimit=6&populatPage=${page}`
+          `/api/v1/tools/getToolById/${params.id}?populate=products&populateField=name,price,_id,coverImage&populateLimit=8&populatPage=${page}`
         );
       }
 
@@ -40,48 +40,53 @@ const BulkListLayoutProduct = ({ toolId }) => {
       } else {
         setHasMore(false);
       }
+      if (newProducts?.length < 8) {
+        setHasMore(false);
+      }
     } catch (e) {
+      console.log(e);
+
       dispatch(error({ message: "Failed to load products" }));
     }
   };
 
   useEffect(() => {
+    console.log("TRIGRED", params.id, page);
+
     window.scrollTo(0, 0);
+    // setPage((page) => page - page);
+    // setProducts(() => []);
+    console.log("page", page);
+
     fetchProducts();
-  }, [gender]);
+  }, [gender, params.id]);
 
   return (
     <motion.div
-      className="py-24"
+      className="mt-16"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {!toolId ? (
-          <motion.h2
-            className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Discover Our{" "}
-            <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
-              Premium Collection
-            </span>
-          </motion.h2>
+          <>
+            <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 animate-fadeIn">
+              Explore And get
+            </h2>
+            <h3 className="text-3xl font-semibold text-gray-700 tracking-wider mb-6">
+              Discover Unmatched Elegance
+            </h3>
+          </>
         ) : (
-          <motion.h2
-            className="text-4xl lg:text-5xl font-bold text-gray-500 mb-12 text-center"
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            You May also like{" "}
-            <span className="block md:inline-block bg-black text-white p-1 md:p-2 animate-pulse">
-              Simillar Collection
-            </span>
-          </motion.h2>
+          <>
+            <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 animate-fadeIn">
+              Elevate Your Style
+            </h2>
+            <h3 className="text-3xl font-semibold text-gray-700 tracking-wider mb-6">
+              Discover Unmatched Elegance
+            </h3>
+          </>
         )}
 
         <InfiniteScroll

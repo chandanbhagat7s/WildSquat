@@ -7,7 +7,6 @@ import { error } from "../../../redux/slices/errorSlice";
 import LoadingSpinner from "../../common/Spinner";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
-import CategoryCard from "../Common/Cards/CategoryCard";
 import ThinkingCard from "../Common/Cards/ThinkingCard";
 
 const BulkListLayoutCard = ({ tool }) => {
@@ -22,7 +21,7 @@ const BulkListLayoutCard = ({ tool }) => {
   const fetchProducts = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/tools/getTool/${params.tool}?gender=${gender}&page=${page}&limit=6&fields=name,label,coverImage,_id`
+        `/api/v1/tools/getTool/${params.tool}?gender=${gender}&page=${page}&limit=8&fields=name,label,coverImage,_id`
       );
 
       const newProducts = res?.data?.products;
@@ -32,6 +31,9 @@ const BulkListLayoutCard = ({ tool }) => {
         setProducts((prevProducts) => [...prevProducts, ...newProducts]);
         setPage((prevPage) => prevPage + 1);
       } else {
+        setHasMore(false);
+      }
+      if (newProducts?.length < 8) {
         setHasMore(false);
       }
     } catch (e) {

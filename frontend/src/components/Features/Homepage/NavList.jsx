@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiBox } from "react-icons/fi";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
@@ -7,19 +7,20 @@ import url from "../../../assets/url";
 
 const PremiumNavbar = ({ categories }) => {
   const [activeCategory, setActiveCategory] = useState(null);
-
+  const navigate = useNavigate();
   return (
     <div className="relative bg-white border-b border-gray-200 shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ul className="flex justify-between py-4">
+        <ul className="flex justify-between py-2">
           {categories.map((category, i) => (
-            <NavItem
-              key={i}
-              category={category}
-              isActive={activeCategory === i}
-              setActive={() => setActiveCategory(i)}
-              clearActive={() => setActiveCategory(null)}
-            />
+            <Link key={i} to={`/productList/${category._id}`}>
+              <NavItem
+                category={category}
+                isActive={activeCategory === i}
+                setActive={() => setActiveCategory(i)}
+                clearActive={() => setActiveCategory(null)}
+              />
+            </Link>
           ))}
         </ul>
       </nav>
@@ -36,7 +37,6 @@ const PremiumNavbar = ({ categories }) => {
 };
 
 const NavItem = ({ category, isActive, setActive, clearActive }) => {
-  const navigate = useNavigate();
   const Icon = FiBox;
 
   return (

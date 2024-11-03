@@ -5,6 +5,7 @@ export default function LeftSide({ product }) {
   const [selectedImage, setSelectedImage] = useState(0); // Track selected image
   const [zoomedImage, setZoomedImage] = useState(null); // Track the image that is zoomed
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [touchStart, setTouchStart] = useState(0); // Track touch start position for swipe detection
 
   // Handle mouse movement to adjust zoom origin
   const handleMouseMove = (e, index) => {
@@ -24,6 +25,29 @@ export default function LeftSide({ product }) {
       setZoomedImage(null); // Unzoom if the same image is clicked again
     } else {
       setZoomedImage(index); // Zoom in the clicked image
+    }
+  };
+
+  // Track the start of a touch event
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  // Detect the end of a swipe and change the image based on the swipe direction
+  const handleTouchEnd = (e) => {
+    const touchEnd = e.changedTouches[0].clientX;
+    const swipeDistance = touchEnd - touchStart;
+
+    if (swipeDistance > 50) {
+      // Swipe right
+      setSelectedImage((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : product.images.length - 1
+      );
+    } else if (swipeDistance < -50) {
+      // Swipe left
+      setSelectedImage((prevIndex) =>
+        prevIndex < product.images.length - 1 ? prevIndex + 1 : 0
+      );
     }
   };
 
@@ -64,6 +88,8 @@ export default function LeftSide({ product }) {
           className="image-container relative"
           onMouseMove={(e) => handleMouseMove(e, selectedImage)}
           onClick={() => handleZoomToggle(selectedImage)}
+          onTouchStart={handleTouchStart} // Track touch start for swipe
+          onTouchEnd={handleTouchEnd} // Detect swipe direction
         >
           <img
             src={`${url}/img/${product.images[selectedImage]}`}

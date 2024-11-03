@@ -10,7 +10,14 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { msg } = useSelector((state) => state.product);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
   async function ATC(id) {
+    if (!isLoggedIn) {
+      dispatch(info({ message: "Please Login first" }));
+      navigate("/login");
+      return;
+    }
     try {
       const res = await dispatch(addToCart(id));
       if (addToCart.fulfilled.match(res)) {

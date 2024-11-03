@@ -13,12 +13,14 @@ import { MdLocalLaundryService } from "react-icons/md";
 import BuyNowPopup from "../../Payments/paymentDialog";
 import OrderProcessingPage from "../../Instruction/OrderProcessing";
 import { useDispatch, useSelector } from "react-redux";
-import { error, info } from "../../../redux/slices/errorSlice";
+import { error, info, message } from "../../../redux/slices/errorSlice";
 import { addToCart } from "../../../redux/slices/productSlice";
 export default function RightSide({ product }) {
   const dispatch = useDispatch();
   const { msg } = useSelector((state) => state.product);
   const nevigate = useNavigate();
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
   let [orderProcessing, setOrderProcessing] = useState(false);
   const [openSection, setOpenSection] = useState("features");
   const [showPopup, setShowPopup] = useState(false);
@@ -26,6 +28,11 @@ export default function RightSide({ product }) {
     setOpenSection(openSection === section ? null : section);
   };
   async function ATC() {
+    if (!isLoggedIn) {
+      dispatch(info({ message: "Please Login first" }));
+      nevigate("/login");
+      return;
+    }
     try {
       const res = await dispatch(addToCart(product._id));
 
@@ -78,14 +85,16 @@ export default function RightSide({ product }) {
         />
       )}
 
-      <div className="lg:w-1/3 lg:pl-8">
-        <h1 className="text-3xl font-bold mb-4 text-gray-700 capitalize">
+      <div className="lg:w-1/3 px-2 lg:pl-8">
+        <h1 className="text-3xl font-bold mb-4 text-gray-700 capitalize text-center">
           {product.name}
         </h1>
-        <p className="text-2xl font-semibold mb-4 text-gray-500">
-          {product.price}
+        <p className="text-xl font-semibold mb-4 text-gray-500 text-center">
+          Rs <span className="text-2xl font-bold"> {product.price}</span>
         </p>
-        <p className="mb-4 text-gray-400">{product.shortDescription}</p>
+        <p className="mb-4 text-gray-400">
+          {product.shortDescription.replaceAll("$", "\n")}
+        </p>
 
         <div className="mb-4">
           <h2 className="font-semibold mb-2">Size</h2>
@@ -114,6 +123,11 @@ export default function RightSide({ product }) {
           <button
             className="flex-1 bg-black text-white py-2 px-4 rounded hover:bg-gray-700"
             onClick={() => {
+              if (!isLoggedIn) {
+                dispatch(info({ message: "Please Login first" }));
+                nevigate("/login");
+                return;
+              }
               setShowPopup(true);
             }}
           >
@@ -164,7 +178,9 @@ export default function RightSide({ product }) {
               isOpen={openSection === "shipping"}
               toggle={() => toggleSection("shipping")}
             >
-              <p className="text-gray-700">{product.shippingDetails}</p>
+              <p className="text-gray-700">
+                {product.shippingDetails.replaceAll("$", "\n")}
+              </p>
             </AccordionItem>
 
             <AccordionItem
@@ -173,7 +189,9 @@ export default function RightSide({ product }) {
               isOpen={openSection === "returns"}
               toggle={() => toggleSection("returns")}
             >
-              <p className="text-gray-700">{product.returnDetails}</p>
+              <p className="text-gray-700">
+                {product.returnDetails.replaceAll("$", "\n")}
+              </p>
             </AccordionItem>
 
             <AccordionItem
@@ -182,7 +200,9 @@ export default function RightSide({ product }) {
               isOpen={openSection === "care"}
               toggle={() => toggleSection("care")}
             >
-              <p className="text-gray-700">{product.careInstructions}</p>
+              <p className="text-gray-700">
+                {product.careInstructions.replaceAll("$", "\n")}
+              </p>
             </AccordionItem>
 
             <AccordionItem
@@ -191,7 +211,9 @@ export default function RightSide({ product }) {
               isOpen={openSection === "description"}
               toggle={() => toggleSection("description")}
             >
-              <p className="text-gray-700">{product.longDescription}</p>
+              <p className="text-gray-700">
+                {product.longDescription.replaceAll("$", "\n")}
+              </p>
             </AccordionItem>
           </div>
         </div>

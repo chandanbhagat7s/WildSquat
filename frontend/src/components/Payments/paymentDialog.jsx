@@ -3,13 +3,14 @@ import { IoMdClose } from "react-icons/io";
 import url from "../../assets/url";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { error, success } from "../../redux/slices/errorSlice";
+import { defaulta, error, info, success } from "../../redux/slices/errorSlice";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { CiLocationOn } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
-  const { data } = useSelector((state) => state.auth);
-  console.log("data is ", data);
+  const { isLoggedIn, data } = useSelector((state) => state.auth);
+  const nevigate = useNavigate();
 
   const [productData, setProductData] = useState(
     products?.map((el) => {
@@ -21,6 +22,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
         coverImage: el.coverImage,
         dimension: el.dimension,
         sizes: el.sizes,
+        maxProductInSize: 0,
         selectedSize: "",
         stockPlace: el.stockPlace,
         weight: el.weight,
@@ -31,10 +33,11 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   );
 
   useEffect(() => {}, [productData]);
-  function handleSizeClick(id, size) {
+  function handleSizeClick(id, size, max) {
     const newData = productData.map((el) => {
       if (el._id == id) {
         el.selectedSize = size;
+        el.maxProductInSize = max;
       }
       return el;
     });
@@ -45,9 +48,22 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
     const newData = productData.map((el) => {
       if (el._id == id) {
         if (to == "ADD") {
-          el.quantity = el.quantity + 1;
+          if (el.maxProductInSize == el.quantity) {
+            dispatch(defaulta({ message: "" }));
+            dispatch(
+              info({
+                message: `We Have only ${el.maxProductInSize} products Only `,
+              })
+            );
+          } else {
+            el.quantity = el.quantity + 1;
+          }
         } else {
-          el.quantity = el.quantity - 1;
+          if (el.quantity == 1) {
+            //do nothing
+          } else {
+            el.quantity = el.quantity - 1;
+          }
         }
       }
       return el;
@@ -91,6 +107,11 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   };
 
   const handlePayment = async (amount) => {
+    if (!isLoggedIn) {
+      dispatch(info({ message: "Please Login first" }));
+      nevigate("/login");
+      return;
+    }
     try {
       // Step 1: Create an order on your server
 
@@ -172,25 +193,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
                   {product.name}
                 </h3>
                 <p className="text-gray-600 mb-2">Rs. {product.price}</p>
-                <div className="flex items-center">
-                  <button
-                    // onClick={() => updateQuantity(index, -1)}
-                    onClick={() => updateProductCartData(product._id, "SUB")}
-                    className="bg-gray-200 text-gray-800 p-2 rounded-l hover:bg-gray-300 transition duration-300"
-                  >
-                    <FiMinus />
-                  </button>
-                  <span className="bg-gray-100 px-4 py-2 font-semibold">
-                    {product.quantity}
-                  </span>
-                  <button
-                    // onClick={() => updateQuantity(index, 1)}
-                    onClick={() => updateProductCartData(product._id, "ADD")}
-                    className="bg-gray-200 text-gray-800 p-2 rounded-r hover:bg-gray-300 transition duration-300"
-                  >
-                    <FiPlus />
-                  </button>
-                </div>
+
                 <div className="flex space-x-2">
                   {product?.sizes?.map((size) => (
                     <button
@@ -200,13 +203,40 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
                         "border-gray-500 bg-white border-2 scale-110"
                       } `}
                       disabled={size.price * 1 == 0}
-                      onClick={() => handleSizeClick(product._id, size.size)}
+                      onClick={() =>
+                        handleSizeClick(product._id, size.size, size.price * 1)
+                      }
                     >
                       <span className="text-lg font-semibold text-indigo-800">
                         {size.price * 1 != 0 && size.size}
                       </span>
                     </button>
                   ))}
+                  {product.selectedSize && (
+                    <div className="flex items-center">
+                      <button
+                        // onClick={() => updateQuantity(index, -1)}
+                        onClick={() =>
+                          updateProductCartData(product._id, "SUB")
+                        }
+                        className="bg-gray-200 text-gray-800 p-2 rounded-l hover:bg-gray-300 transition duration-300"
+                      >
+                        <FiMinus />
+                      </button>
+                      <span className="bg-gray-100 px-4 py-2 font-semibold">
+                        {product.quantity}
+                      </span>
+                      <button
+                        // onClick={() => updateQuantity(index, 1)}
+                        onClick={() =>
+                          updateProductCartData(product._id, "ADD")
+                        }
+                        className="bg-gray-200 text-gray-800 p-2 rounded-r hover:bg-gray-300 transition duration-300"
+                      >
+                        <FiPlus />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
               <p className="text-xl font-bold text-gray-800 ml-4">

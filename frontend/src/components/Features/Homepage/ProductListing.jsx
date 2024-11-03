@@ -89,7 +89,7 @@ const ProductListing = () => {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-2"
             >
               {products.length > 0 &&
                 products.map((product) => (

@@ -93,7 +93,12 @@ const productSchema = new mongoose.Schema({
   },
   reverseOrderId: {
     type: String
+  },
+  fetch: {
+    type: Boolean,
+    default: false
   }
+
 
 
 

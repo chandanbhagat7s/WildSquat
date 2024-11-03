@@ -67,7 +67,7 @@ const Slider = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex items-center justify-center lg:h-[70vh] md:h-[60vh] h-[40vh]"
         >
           <img
             src={`${url}Tools/${slider[currentIndex]?.coverImage}`}
@@ -76,28 +76,28 @@ const Slider = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r md:from-black via-transparent md:to-black opacity-5" />
 
-          <div className="absolute inset-0 flex flex-col justify-center items-start p-12 md:p-24 space-y-6">
+          <div className="absolute inset-0 flex flex-col justify-center md:justify-end items-center md:p-24 space-y-6">
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl md:text-6xl font-bold tracking-tight"
+              className="text-2xl md:text-6xl font-bold tracking-tight"
             >
               {slider[currentIndex]?.label}
             </motion.h2>
-            <motion.p
+            {/* <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
               className="text-lg md:text-xl max-w-2xl"
             >
               {slider[currentIndex]?.shortDescription}
-            </motion.p>
+            </motion.p> */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex items-center space-x-4 md:flex-row flex-col md:space-x-2 space-y-2"
+              className="flex items-center space-x-4 md:flex-row flex-col md:space-x-2 space-y-2 "
             >
               <button
                 onClick={() =>
@@ -108,10 +108,6 @@ const Slider = () => {
                 <FaInfoCircle />
                 <span>Explore It</span>
               </button>
-              <div className="flex items-center space-x-2">
-                <IoMdTime className="text-2xl" />
-                <span>Limited Time Offer</span>
-              </div>
             </motion.div>
           </div>
         </motion.div>

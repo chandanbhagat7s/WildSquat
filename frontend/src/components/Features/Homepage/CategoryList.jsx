@@ -16,7 +16,7 @@ const CategoryList = () => {
     async function getData() {
       try {
         const res = await axios.get(
-          `/api/v1/tools/getTool/CATEGORY?gender=${gender}&page=${page}&limit=8&fields=name,label,coverImage,_id`
+          `/api/v1/tools/getTool/CATEGORY?gender=${gender}&page=${page}&limit=4&fields=name,label,coverImage,_id`
         );
 
         if (res.data.products === 0) {
@@ -48,7 +48,7 @@ const CategoryList = () => {
 
       {/* Category Grid */}
       <div className="relative w-full max-w-screen-xl">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 lg:gap-2">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 lg:gap-2">
           {product.length > 0 &&
             product.map((card, i) => <ThinkingCard product={card} key={i} />)}
         </div>

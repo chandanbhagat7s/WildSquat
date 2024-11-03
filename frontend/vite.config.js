@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     proxy: {
-      "/api": "https://www.wildsquat.com",
+      "/api": "http://192.168.1.39:4000",
     }
   },
 })

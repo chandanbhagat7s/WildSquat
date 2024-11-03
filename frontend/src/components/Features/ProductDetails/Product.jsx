@@ -36,7 +36,7 @@ const Product = () => {
   }, [id]);
 
   return (
-    <div className="container mx-auto px-1 lg:px-4 pb-8 pt-20">
+    <div className="container mx-auto px-1 lg:px-4 pb-8 pt-1 lg:pt-20">
       <div className="flex flex-col lg:flex-row">
         {loading ? (
           <div className="mx-auto">
