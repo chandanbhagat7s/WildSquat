@@ -30,7 +30,7 @@ export default function Footer() {
           <div>
             {/* <h2 className="font-bold text-2xl mb-4 text-gray-900">WILDSQUAT</h2> */}
             <span className="font-bold  text-gray-800 font-serif first-letter:text-2xl first-letter:font-bold text-2xl ">
-              WILD<span className="text-gray-500">SQUAT</span>{" "}
+              WILDSQUAT
             </span>
             <div className="my-2">
               {" "}
@@ -40,7 +40,7 @@ export default function Footer() {
                 className="scale-125 h-20 "
               />
             </div>
-            <h3 className="font-semibold text-lg mb-2">Who we are?</h3>
+            <h3 className="font-semibold text-lg mb-2">About As..</h3>
             <p className="text-sm leading-relaxed">
               We are a dedicated team of enthusiasts passionate about creating
               high-quality athleisure wear that seamlessly blends style and

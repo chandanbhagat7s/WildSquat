@@ -25,6 +25,8 @@ const PresentSection = () => {
         );
 
         const data = res.data;
+        console.log(data);
+
         setCategory([...data.products]);
         setSelectedCategory(data.products[0]?._id);
         fetchProducts(data.products[0]?._id);
@@ -53,7 +55,7 @@ const PresentSection = () => {
 
   useEffect(() => {
     // fetchProducts(category);
-    // fetchProducts(selectedCategory);
+    selectedCategory && fetchProducts(selectedCategory);
   }, [page]);
 
   return (

@@ -67,7 +67,7 @@ const Slider = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="absolute inset-0 flex items-center justify-center lg:h-[70vh] md:h-[60vh] h-[40vh]"
+          className="absolute inset-0 flex items-center justify-center "
         >
           <img
             src={`${url}Tools/${slider[currentIndex]?.coverImage}`}

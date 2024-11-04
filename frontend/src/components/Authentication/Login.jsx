@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock, FiLogIn, FiArrowLeft, FiPhone } from "react-icons/fi";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
-
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const LoginPage = () => {
   const [timer, setTimer] = useState(180);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-
+  let [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -86,6 +86,7 @@ const LoginPage = () => {
     if (formData.password.length < 5) {
       return dispatch(warning({ message: "Please enter email or password" }));
     }
+    setLoading((state) => !state);
 
     try {
       const res = await dispatch(loginForm(formData));
@@ -107,6 +108,7 @@ const LoginPage = () => {
     } catch (err) {
       dispatch(error({ message: "Please Check Your internet connection" }));
     }
+    setLoading((state) => !state);
   };
 
   const handleForgotPassword = async (e) => {
@@ -413,8 +415,13 @@ const LoginPage = () => {
             <button
               type="submit"
               className="w-3/4 mx-auto flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
+              disabled={loading}
             >
-              <FiLogIn className="mr-2 h-5 w-5" />
+              {loading ? (
+                <AiOutlineLoading3Quarters className="mr-2 animate-spin text-white font-bold text-2xl" />
+              ) : (
+                <FiLogIn className="mr-2 h-5 w-5" />
+              )}
               Sign in
             </button>
           </form>

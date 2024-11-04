@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { defaulta } from "../../redux/slices/errorSlice";
+import { removeAlert } from "../../redux/slices/errorSlice";
 import {
   FaCheckCircle,
   FaInfoCircle,
@@ -50,32 +50,28 @@ const Alert = ({ status, message }) => {
 };
 
 export const AlertBox = () => {
-  const error = useSelector((state) => state.error);
+  const { message } = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (error.status !== "") {
+    if (message.length > 0) {
       const timer = setTimeout(() => {
-        dispatch(defaulta({ message: "" }));
+        dispatch(removeAlert()); // Removes the oldest alert
       }, 4000);
 
       return () => clearTimeout(timer);
     }
-  }, [error, dispatch]);
+  }, [message, dispatch]);
 
   return (
     <div
-      className="fixed inset-0 flex items-start justify-center pointer-events-none my-2"
+      className="fixed inset-0 flex flex-col items-center space-y-2 pointer-events-none my-2"
       style={{ zIndex: 1000000 }}
     >
       <AnimatePresence>
-        {error.status !== "" && (
-          <Alert
-            key={error.status}
-            status={error.status}
-            message={error.message}
-          />
-        )}
+        {message.map((alert) => (
+          <Alert key={alert.id} status={alert.status} message={alert.message} />
+        ))}
       </AnimatePresence>
     </div>
   );

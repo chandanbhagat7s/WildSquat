@@ -13,7 +13,12 @@ import { MdLocalLaundryService } from "react-icons/md";
 import BuyNowPopup from "../../Payments/paymentDialog";
 import OrderProcessingPage from "../../Instruction/OrderProcessing";
 import { useDispatch, useSelector } from "react-redux";
-import { error, info, message } from "../../../redux/slices/errorSlice";
+import {
+  error,
+  info,
+  message,
+  warning,
+} from "../../../redux/slices/errorSlice";
 import { addToCart } from "../../../redux/slices/productSlice";
 export default function RightSide({ product }) {
   const dispatch = useDispatch();
@@ -34,12 +39,12 @@ export default function RightSide({ product }) {
       return;
     }
     try {
-      const res = await dispatch(addToCart(product._id));
+      const res = await dispatch(addToCart(product?._id));
 
       if (addToCart.fulfilled.match(res)) {
         dispatch(info({ message: "product added to cart" }));
       } else {
-        dispatch(error({ message: msg || "failed to add " }));
+        dispatch(warning({ message: "Product already added to your cart" }));
       }
     } catch (e) {
       dispatch(

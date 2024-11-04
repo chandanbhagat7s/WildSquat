@@ -209,14 +209,14 @@ const SignUpPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-2 lg:px-8">
       <div className="w-full max-w-4xl bg-gray-200 shadow-2xl rounded-2xl overflow-hidden capitalize">
-        <div className="px-3 lg:px-8 py-12">
+        <div className="px-3 lg:px-8 py-12 capitalize">
           <h2 className="text-3xl font-bold text-center text-gray-700 mb-2 capitalize ">
             {step === 1 ? "Welcome Join Wildsquat" : "Verify OTP"}
           </h2>
-          <p className="text-center text-gray-900 mb-8">
+          <p className="text-center text-gray-900 mb-8 ">
             {step === 1
               ? "Join  Wildsquat Trends"
-              : "Enter the OTP sent to your email"}
+              : "Please Enter OTP , sent to your mobile.no"}
           </p>
 
           {step === 1 ? (

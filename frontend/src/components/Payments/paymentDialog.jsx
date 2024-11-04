@@ -112,6 +112,10 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
       nevigate("/login");
       return;
     }
+    if (productData.find((el) => el.selectedSize == "")) {
+      dispatch(info({ message: "Please select Size and quantity " }));
+      return;
+    }
     try {
       // Step 1: Create an order on your server
 
@@ -174,44 +178,57 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
           </button>
         </div>
         <p className="text-gray-600 flex space-x-1 items-center mb-1 ">
-          <CiLocationOn /> {data?.addressLine1} ,{data?.pinCode}
+          <CiLocationOn /> {data?.addressLine1} , {data?.pinCode}
         </p>
 
-        <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+        <div className="space-y-4 mb-6 max-h-96 overflow-y-auto text-sm lg:text-xl">
           {productData.map((product, index) => (
             <div
               key={product._id}
-              className="flex items-center bg-white p-4 rounded-lg shadow"
+              className="flex justify-around bg-white p-4 rounded-lg shadow w-full "
             >
-              <img
-                src={`${url}img/${product.coverImage}`}
-                alt={product.name}
-                className="h-24 w-24 object-contain rounded-lg mr-4"
-              />
-              <div className="flex-grow">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              <div className="flex flex-col space-y-1">
+                <img
+                  src={`${url}img/${product.coverImage}`}
+                  alt={product.name}
+                  className="h-24 w-24 object-contain rounded-lg mr-4"
+                />
+                <p className="text-gray-600 mb-2">
+                  Rs. {product.price} * {product.quantity}
+                </p>
+                <p className=" font-bold text-gray-800 ml-4">
+                  Rs. {product.price * product.quantity}
+                </p>
+              </div>
+              <div className="">
+                <h3 className=" font-semibold text-gray-800 mb-2">
                   {product.name}
                 </h3>
-                <p className="text-gray-600 mb-2">Rs. {product.price}</p>
 
-                <div className="flex space-x-2">
-                  {product?.sizes?.map((size) => (
-                    <button
-                      key={size.size}
-                      className={`px-4 py-2 border border-gray-200 rounded-md hover:border-gray-800 transition duration-300 ${
-                        product.selectedSize == size.size &&
-                        "border-gray-500 bg-white border-2 scale-110"
-                      } `}
-                      disabled={size.price * 1 == 0}
-                      onClick={() =>
-                        handleSizeClick(product._id, size.size, size.price * 1)
-                      }
-                    >
-                      <span className="text-lg font-semibold text-indigo-800">
-                        {size.price * 1 != 0 && size.size}
-                      </span>
-                    </button>
-                  ))}
+                <div className="flex  flex-col space-y-2">
+                  <div className="flex space-x-2">
+                    {product?.sizes?.map((size) => (
+                      <button
+                        key={size.size}
+                        className={`px-2 py-1 border border-gray-200 rounded-md hover:border-gray-800 transition duration-300 ${
+                          product.selectedSize == size.size &&
+                          "border-gray-500 bg-white border-2 scale-110"
+                        } `}
+                        disabled={size.price * 1 == 0}
+                        onClick={() =>
+                          handleSizeClick(
+                            product._id,
+                            size.size,
+                            size.price * 1
+                          )
+                        }
+                      >
+                        <span className="text-lg font-semibold text-indigo-800">
+                          {size.price * 1 != 0 && size.size}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                   {product.selectedSize && (
                     <div className="flex items-center">
                       <button
@@ -239,9 +256,6 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
                   )}
                 </div>
               </div>
-              <p className="text-xl font-bold text-gray-800 ml-4">
-                Rs. {product.price * product.quantity}
-              </p>
             </div>
           ))}
         </div>

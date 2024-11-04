@@ -43,10 +43,10 @@ const ProductCard = ({ product }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      onClick={() => navigate(`/productDetails/${product?._id}`)}
     >
       <div className="relative">
         <motion.div
-          onClick={() => navigate(`/productDetails/${product?._id}`)}
           className="w-full overflow-hidden"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.4 }}
@@ -72,7 +72,25 @@ const ProductCard = ({ product }) => {
         <h3 className=" font-bold lg:font-semibold  text-gray-600 mb-2">
           {product?.name}
         </h3>
-        <p className="text-2xl font-bold text-gray-800">₹{product?.price}</p>
+        <p className="text-2xl font-bold text-gray-800 text-center">
+          {product?.discount > 0 ? (
+            <div className="flex items-center justify-center text-center space-x-2">
+              {/* Original Price with Strikethrough */}
+              <span className="text-sm text-gray-500 line-through">
+                ₹{product.price}
+              </span>
+              {/* Discounted Price */}
+              <span className="text-2xl text-center font-bold text-black">
+                ₹{(product.price * (1 - product.discount / 100)).toFixed(2)}
+              </span>
+            </div>
+          ) : (
+            // Regular Price
+            <span className="text-2xl font-bold text-gray-800">
+              ₹{product.price}
+            </span>
+          )}
+        </p>
       </div>
     </motion.div>
   );

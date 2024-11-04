@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiBox } from "react-icons/fi";
@@ -8,10 +8,11 @@ import url from "../../../assets/url";
 const PremiumNavbar = ({ categories }) => {
   const [activeCategory, setActiveCategory] = useState(null);
   const navigate = useNavigate();
+  // useEffect(() => {}, [activeCategory]);
   return (
-    <div className="relative bg-white border-b border-gray-200 shadow-md">
+    <div className="relative bg-white border-b border-gray-200 shadow-md z-10">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ul className="flex justify-between py-2">
+        <ul className="flex justify-between py-2 z-10">
           {categories.map((category, i) => (
             <div
               key={i}
@@ -48,7 +49,7 @@ const NavItem = ({ category, isActive, setActive, clearActive }) => {
 
   return (
     <li
-      className="group relative"
+      className="group relative z-10 "
       onMouseEnter={setActive}
       //   onMouseLeave={clearActive}
     >
@@ -105,7 +106,10 @@ const DropdownMenu = ({ category, onClose }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              onClick={() => navigate(`/productDetails/${product._id}`)}
+              onClick={() => {
+                onClose();
+                navigate(`/productDetails/${product._id}`);
+              }}
               className="flex items-center space-x-4 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition duration-200 ease-in-out"
             >
               <img
@@ -118,7 +122,8 @@ const DropdownMenu = ({ category, onClose }) => {
                   {product.name}
                 </h3>
                 <p className="text-sm text-gray-500 line-clamp-1">
-                  {product.shortDescription || "Premium product"}
+                  {product?.shortDescription?.slice(0, 15) + "..." ||
+                    "Premium product"}
                 </p>
               </div>
               <FaChevronRight className="text-gray-400" />

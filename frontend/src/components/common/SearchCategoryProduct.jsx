@@ -78,7 +78,7 @@ const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto" ref={searchRef}>
+    <div className="z-50 relative w-full max-w-2xl mx-auto" ref={searchRef}>
       <div className="relative">
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
         <input
@@ -109,12 +109,15 @@ const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
             className="absolute mt-2 w-full bg-white rounded-lg shadow-2xl overflow-hidden z-50"
           >
             {loading ? (
-              <div className="flex items-center justify-center p-6 text-blue-500">
+              <div
+                className="flex items-center justify-center p-6 text-blue-500 z-50"
+                style={{ zIndex: 1000000 }}
+              >
                 <FaSpinner className="animate-spin mr-3 text-2xl" />
                 <span className="text-lg font-semibold">Searching...</span>
               </div>
             ) : (
-              <div className="max-h-96 overflow-auto">
+              <div className="max-h-96 overflow-auto z-50">
                 {products.length > 0 && (
                   <div className="p-4 bg-gray-100 border-b border-gray-200">
                     <span className="text-sm font-medium text-gray-500">
@@ -123,7 +126,7 @@ const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
                   </div>
                 )}
                 {products.length > 0 ? (
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2 shadow-lg shadow-black">
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2 shadow-lg shadow-black z-50">
                     {products.map((product, i) => (
                       <motion.li
                         key={i}

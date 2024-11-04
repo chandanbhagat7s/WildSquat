@@ -27,11 +27,11 @@ const BulkListLayoutProduct = ({ toolId }) => {
       let res;
       if (toolId) {
         res = await axios.get(
-          `/api/v1/tools/getToolById/${toolId}?populate=products&populateField=name,price,_id,coverImage&populateLimit=8&populatPage=${page}`
+          `/api/v1/tools/getToolById/${toolId}?populate=products&populateField=name,price,_id,discount,coverImage&populateLimit=8&populatPage=${page}`
         );
       } else {
         res = await axios.get(
-          `/api/v1/tools/getToolById/${params.id}?populate=products&populateField=name,price,_id,coverImage&populateLimit=8&populatPage=${page}`
+          `/api/v1/tools/getToolById/${params.id}?populate=products&populateField=name,price,_id,discount,coverImage&populateLimit=8&populatPage=${page}`
         );
       }
 

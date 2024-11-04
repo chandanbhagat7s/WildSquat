@@ -14,7 +14,7 @@ const NavItem = ({ category }) => {
   const Icon = FiBox;
 
   return (
-    <div className="group relative">
+    <div className="group relative z-10">
       <button
         onClick={() =>
           navigate(`/${category.name.toLowerCase().replace(/\s+/g, "-")}`)
@@ -29,7 +29,7 @@ const NavItem = ({ category }) => {
       </button>
 
       {category?.products?.length > 0 && (
-        <div className="absolute left-0 top-full hidden group-hover:block w-[50vw]  shadow-lg rounded-lg overflow-hidden  -translate-x-[15vw] bg-white bg-opacity-85 ">
+        <div className="absolute left-0 top-full hidden group-hover:block w-[50vw]  shadow-lg rounded-lg overflow-hidden  -translate-x-[15vw] bg-white bg-opacity-85 z-10 ">
           <ul className="py-2 grid grid-cols-3 gap-1">
             {category?.products?.map((item, index) => (
               <li
@@ -65,6 +65,8 @@ const Navbar = () => {
   }
 
   useEffect(() => {
+    console.log("TRIRED NEVBAR");
+
     getData();
   }, [gender]);
 
@@ -83,7 +85,7 @@ const Navbar = () => {
 
           {/* Search Bar */}
           <div className="hidden lg:flex  mx-8">
-            <div className="relative w-[40vw] ">
+            <div className="relative w-[40vw] z-50 ">
               <SearchCategoryProductAndItem />
             </div>
           </div>
@@ -110,7 +112,7 @@ const Navbar = () => {
         </nav>
       </div>
 
-      <div className="hidden lg:block">
+      <div className="hidden lg:block z-10">
         <PremiumNavbar categories={categories} />
       </div>
 
