@@ -7,11 +7,12 @@ import { defaulta, error, info, success } from "../../redux/slices/errorSlice";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { CiLocationOn } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import { FaSpinner } from "react-icons/fa6";
 
 const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   const { isLoggedIn, data } = useSelector((state) => state.auth);
   const nevigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [productData, setProductData] = useState(
     products?.map((el) => {
       let obj = {
@@ -116,6 +117,8 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
       dispatch(info({ message: "Please select Size and quantity " }));
       return;
     }
+
+    setLoading((state) => !state);
     try {
       // Step 1: Create an order on your server
 
@@ -140,7 +143,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
         prefill: {
           name: auth?.data?.name || "name",
           email: auth?.data?.email || "email",
-          contact: auth?.data?.mobile || "9234567890",
+          contact: auth?.data?.mobile || "",
         },
         notes: {
           address: auth?.data?.address || "address",
@@ -151,6 +154,8 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
       };
 
       const rzp1 = new window.Razorpay(options);
+      setLoading((state) => !state);
+      onClose();
       rzp1.open();
     } catch (e) {
       console.log(e);
@@ -206,6 +211,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
                 </h3>
 
                 <div className="flex  flex-col space-y-2">
+                  <p className="text-sm">Select size</p>
                   <div className="flex space-x-2">
                     {product?.sizes?.map((size) => (
                       <button
@@ -273,19 +279,20 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
           </p>
         </div>
 
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 ">
           <button
-            onClick={() =>
+            onClick={() => {
               handlePayment(
                 productData.reduce(
                   (sum, product) => sum + product.price * product.quantity,
                   0
                 )
-              )
-            }
-            className="flex-1 bg-black text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-900 transition duration-300"
+              );
+            }}
+            className="flex-1 bg-black text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-900 transition duration-300 flex items-center justify-center"
+            disabled={loading}
           >
-            Pay Now
+            Pay Now {loading && <FaSpinner className="ml-2 animate-spin" />}
           </button>
           <button
             onClick={onClose}

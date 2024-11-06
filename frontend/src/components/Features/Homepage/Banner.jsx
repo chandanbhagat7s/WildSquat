@@ -67,7 +67,7 @@ const Banner = ({ order = 0 }) => {
               {product?.label}
             </h2>
             <h1 className="text-xl md:text-2xl font-bold mb-6 leading-snug tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-700">
-              {product?.shortDescription}
+              {product?.shortDescription?.replaceAll("$", "\n")}
             </h1>
 
             {/* View All Button */}
@@ -77,7 +77,7 @@ const Banner = ({ order = 0 }) => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
             >
-              <motion.button
+              {/* <motion.button
                 whileHover={{
                   scale: 1.1,
                   backgroundColor: "#333333",
@@ -89,7 +89,7 @@ const Banner = ({ order = 0 }) => {
               >
                 View All
                 <FiArrowRight className="ml-4" size={26} />
-              </motion.button>
+              </motion.button> */}
             </motion.div>
           </div>
         </div>

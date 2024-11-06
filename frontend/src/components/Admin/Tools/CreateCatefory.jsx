@@ -67,9 +67,9 @@ const CreateCategory = () => {
   return (
     <div className="max-w-2xl mx-auto mt-10 p-10 bg-white rounded-2xl shadow-2xl">
       <div className="mb-6">
-        <h2 className="text-4xl font-bold text-gray-900">Category Form</h2>
+        <h2 className="text-4xl font-bold text-gray-900">Create Tools </h2>
         <p className="text-sm text-gray-500">
-          Create category, add slider, cards, posters
+          Create category, add slider, cards, posters..
         </p>
       </div>
 
@@ -80,7 +80,7 @@ const CreateCategory = () => {
             htmlFor="categories"
             className="block text-lg font-medium text-gray-800"
           >
-            Choose a category
+            Choose Tool
           </label>
           <select
             id="categories"
@@ -124,7 +124,7 @@ const CreateCategory = () => {
         )}
 
         {/* Cover Image */}
-        {selectedValue != "OFFER" ? (
+        {selectedValue != "SERIES" ? (
           <div>
             <label className="block text-lg font-medium text-gray-800 mb-2">
               Cover Image

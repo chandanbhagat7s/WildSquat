@@ -223,14 +223,17 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
 
 
         if (shippingpart1?.data?.status) {
-            let data = shipmentDetails?.data?.data;
+
+
             order.courier_id = courerDetails.id;
             order.charges = courerDetails.total_charges;
-            order.courier_name = data?.courier_name;
-            order.master_awb = data?.awb_number;
+            order.courier_name = shippingpart1.data?.data?.courier_name;
+            order.master_awb = shippingpart1.data?.data?.awb_number;
             order.ordredPlaced = true;
             order.phase = 3
             order.platform = "expressbee"
+            order.orderStatus = "Booked"
+            order.statusUpdatedAt = Date.now()
             await order.save()
 
             res.status(200).send({
@@ -431,7 +434,6 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             });
 
 
-            lowestChargeCourier.courierId = 100
 
 
             const shippingpart2 = await axios.post("https://api.bigship.in/api/order/manifest/single", {
@@ -448,6 +450,10 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
             // now we are getting awb and other details
             if (!shippingpart2?.data?.success) {
                 order.phase = 1;
+
+
+                order.orderStatus = "Booked"
+                order.statusUpdatedAt = Date.now()
                 await order.save()
                 res.status(200).send({
                     status: "success",
@@ -470,8 +476,12 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
 
             if (!final?.data?.success) {
                 order.phase = 2;
-                order.shipOrderId =
-                    await order.save()
+
+
+                order.orderStatus = "Booked"
+                order.statusUpdatedAt = Date.now()
+                order.shipOrderId = systemId
+                await order.save()
                 res.status(200).send({
                     status: "success",
                     data: "done"
@@ -514,7 +524,10 @@ responseCode: 200
             order.ordredPlaced = true;
             order.phase = 3;
 
-            order.platform = "bighship"
+            order.orderStatus = "Booked"
+            order.statusUpdatedAt = Date.now()
+
+            order.platform = "bigship"
 
             await order.save()
 
@@ -531,6 +544,10 @@ responseCode: 200
 
 
     } catch (e) {
+        console.log(
+            "error is ", e
+        );
+
         res.status(400).send({
             status: "fail",
             data: "done"
@@ -559,6 +576,8 @@ exports.getAllWarehouse = catchAsync(async (req, res, next) => {
             warehouse: getAllWarehouse?.data?.data?.resData || []
         })
     } catch (e) {
+        console.log("error is", e);
+
         res.status(400).send({
             status: "fail",
             msg: "something went wrong"
@@ -587,119 +606,187 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
     // }
     // first cancle order  
 
+
+    // get orderstatus 
+    let response;
+    let now = Date.now();
     if (order.platform == "bigship") {
-        const cancledShipment = await axios.put("https://api.bigship.in/api/order/cancel", [
-            order.master_awb
-        ]
-            , {
+        // Make the API request
+        response = await axios.get(
+            `https://appapinew.bigship.in/api/Dashboard/GetShipmentDetails?user_Id=6393440&search_key=order_id&search_value=${order.shipOrderId}`,
+            {
                 headers: {
-
-                    'Authorization': `Bearer ${req.shippingToken}` // Authorization header with Bearer token
-                }
-            });
-
-
+                    Authorization: `Bearer ${req.shippingToken}`, // Authorization header with Bearer token
+                },
+            }
+        );
 
 
-        if (!cancledShipment?.data?.success) {
 
-            return next(new appError("Something went wrong please try again to cancle your order", 400))
+        const shipmentInfo = response.data?.data?.shipmentInfo;
 
-        }
+
+        // Update the status and the timestamp in the database
+        order.orderStatus = shipmentInfo.orderStatus;
+        order.statusUpdatedAt = now;
+        order.fetch = false;
+    } else if (order.platform == "expressbee") {
+        // Track Shipment
+
+        response = await axios.get(
+            `https://shipment.xpressbees.com/api/shipments2/track/${order.master_awb}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${req.expressToken}`, // Authorization header with Bearer token
+                },
+            }
+        );
+
+        let shipmentInfo = response.data.data;
+
+
+        order.orderStatus = shipmentInfo.status;
+        order.statusUpdatedAt = now;
+
     } else {
 
+    }
 
-        const cancledShipment = await axios.post("https://shipment.xpressbees.com/api/shipments2/cancel", {
-            "awb": order.master_awb
+
+    try {
+        if (order.platform == "bigship") {
+            console.log("data is", order.master_awb);
+
+            const cancledShipment = await axios.put("https://api.bigship.in/api/order/cancel", [
+                order.master_awb
+            ]
+                , {
+                    headers: {
+
+                        'Authorization': `Bearer ${req.shippingToken}` // Authorization header with Bearer token
+                    }
+                });
+
+
+
+
+            if (!cancledShipment?.data?.success) {
+
+                await order.save()
+                return next(new appError("Something went wrong please try again to cancle your order", 400))
+
+            }
+        } else if (order.platform == "expressbee") {
+
+
+            const cancledShipment = await axios.post("https://shipment.xpressbees.com/api/shipments2/cancel", {
+                "awb": order.master_awb
+            }
+                , {
+                    headers: {
+
+                        'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
+                    }
+                });
+
+
+
+
+            if (!cancledShipment?.data?.status) {
+                await order.save()
+                return next(new appError("Something went wrong please try again to cancle your order", 400))
+
+            }
+        } else {
+            order.phase = 3;
+            order.orderStatus = "Cancelled"
+            order.cancledShipment = true;
+            order.statusUpdatedAt = now;
         }
-            , {
-                headers: {
-
-                    'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
-                }
-            });
-
-
-
-
-        if (!cancledShipment?.data?.status) {
-
-            return next(new appError("Something went wrong please try again to cancle your order", 400))
-
-        }
+    } catch (e) {
+        return next(new appError("Something went wrong please try again to cancle your order", 400))
     }
 
 
 
     order.cancledShipment = true;
+    order.fetch = true;
 
-    // now we need to make the return order
-    let reverseShipmentBody = {
-        order_id: Date.now(),
-        request_auto_pickup: "yes",
-        consignee: {
-            name: `${order.byuser.name.slice(0, 18)}`,
-            address: `${order.byuser.addressLine1}`,
-            address_2: `${order.byuser.addressLine1}`,
-            city: ` ${order.byuser.city}`,
-            state: ` ${order.byuser.state}`,
-            pincode: `${order.byuser.pinCode}`,
-            phone: `${order.byuser.mobile}`,
-            alternate_phone: `${order.byuser.mobile}`
-        },
 
-        pickup: {
-            warehouse_name: "Wildsquat return",
-            name: "WildSquat Down",
-            address: "WILD SQUAT, BEARING NO : 2-3-168, SHOP NO 1, GROUND FLOOR, RAMGOPAL PET, NALLAGUTTA, NALLAGUTTA MASJID ROAD, OPPOSITE BNR TRANSPORT.,  India,",
-            address_2: "Near metro station",
-            city: "HYDERABAD",
-            state: "telangana",
-            pincode: "500016",
-            phone: "8686416102"
-        },
-        categories: "Mens Fashion",
-        product_name: "trial pants 2",
-        product_qty: "1",
-        product_amount: "10",
-        package_weight: 500,
-        package_length: "20",
-        package_breadth: "15",
-        package_height: "2",
-        qccheck: "1",
-        uploadedimage: "https://i0.wp.com/picjumbo.com/wp-content/uploads/amazing-stone-path-in-forest-free-image.jpg?w=600&quality=80",
-        uploadedimage_2: "",
-        uploadedimage_3: "",
-        uploadedimage_4: "",
-        product_usage: "1",
-        product_damage: "1",
-        brandname: "wildsquat",
-        brandnametype: "Fashion",
-        productsize: "1",
-        productsizetype: "10",
-        productcolor: "1",
-        productcolourtype: "Red"
-    }
-    try {
-        let reversebookingres = await axios.post("https://shipment.xpressbees.com/api/reverseshipments", reverseShipmentBody
-            , {
-                headers: {
+    // if order is delivered then only we need to ship return 
 
-                    'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
-                }
-            });
-        console.log("rev data", reversebookingres.data);
 
-        let shipmentInfo = reversebookingres.data?.data;
-        order.reverseBooking = true;
-        order.reverseAWB = shipmentInfo?.awb_number;
-        order.reverseShipmentId = shipmentInfo?.shipment_id;
-        order.reverseOrderId = shipmentInfo?.order_id;
-        console.log("data", reversebookingres.data);
-    } catch (e) {
-        console.log("error ", e);
 
-        order.reverseBooking = false;
+    if (order.orderStatus == "Delivered" || order.orderStatus == "delivered") {
+        // now we need to make the return order
+        let reverseShipmentBody = {
+            order_id: Date.now(),
+            request_auto_pickup: "yes",
+            consignee: {
+                name: `${order.byuser.name.slice(0, 18)}`,
+                address: `${order.byuser.addressLine1}`,
+                address_2: `${order.byuser.addressLine1}`,
+                city: ` ${order.byuser.city}`,
+                state: ` ${order.byuser.state}`,
+                pincode: `${order.byuser.pinCode}`,
+                phone: `${order.byuser.mobile}`,
+                alternate_phone: `${order.byuser.mobile}`
+            },
+
+            pickup: {
+                warehouse_name: "Wildsquat return",
+                name: "WildSquat Down",
+                address: "WILD SQUAT, BEARING NO : 2-3-168, SHOP NO 1, GROUND FLOOR, RAMGOPAL PET, NALLAGUTTA, NALLAGUTTA MASJID ROAD, OPPOSITE BNR TRANSPORT.,  India,",
+                address_2: "Near metro station",
+                city: "HYDERABAD",
+                state: "telangana",
+                pincode: "500016",
+                phone: "8686416102"
+            },
+            categories: "Mens Fashion",
+            product_name: "trial pants 2",
+            product_qty: "1",
+            product_amount: "10",
+            package_weight: 500,
+            package_length: "20",
+            package_breadth: "15",
+            package_height: "2",
+            qccheck: "1",
+            uploadedimage: "https://i0.wp.com/picjumbo.com/wp-content/uploads/amazing-stone-path-in-forest-free-image.jpg?w=600&quality=80",
+            uploadedimage_2: "",
+            uploadedimage_3: "",
+            uploadedimage_4: "",
+            product_usage: "1",
+            product_damage: "1",
+            brandname: "wildsquat",
+            brandnametype: "Fashion",
+            productsize: "1",
+            productsizetype: "10",
+            productcolor: "1",
+            productcolourtype: "Red"
+        }
+        try {
+            let reversebookingres = await axios.post("https://shipment.xpressbees.com/api/reverseshipments", reverseShipmentBody
+                , {
+                    headers: {
+
+                        'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
+                    }
+                });
+            console.log("rev data", reversebookingres.data);
+
+            let shipmentInfo = reversebookingres.data?.data;
+            order.reverseBooking = true;
+            order.reverseAWB = shipmentInfo?.awb_number;
+            order.reverseShipmentId = shipmentInfo?.shipment_id;
+            order.reverseOrderId = shipmentInfo?.order_id;
+            console.log("data", reversebookingres.data);
+        } catch (e) {
+            console.log("error ", e);
+
+            order.reverseBooking = false;
+
+        }
     }
 
 
@@ -779,6 +866,11 @@ exports.shipProductByAdmin = catchAsync(async (req, res, next) => {
             // now we are getting awb and other details
             if (!shippingpart2?.data?.success) {
                 order.phase = 1;
+
+
+                order.orderStatus = "Booked"
+                order.statusUpdatedAt = Date.now()
+                order.fetch = true;
                 await order.save()
                 res.status(400).send({
                     status: "fail",
@@ -802,8 +894,12 @@ exports.shipProductByAdmin = catchAsync(async (req, res, next) => {
 
             if (!final?.data?.success) {
                 order.phase = 2;
-                order.shipOrderId =
-                    await order.save()
+                order.orderStatus = "Booked"
+                order.statusUpdatedAt = Date.now()
+                order.fetch = true;
+                order.shipOrderId = systemId
+
+                await order.save()
                 res.status(200).send({
                     status: "success",
                     msg: "order is set for courier but it is not menifested"
@@ -844,7 +940,7 @@ responseCode: 200
             order.ordredPlaced = true;
             order.phase = 3
 
-            order.platform = "bighship"
+            order.platform = "bigship"
             await order.save()
 
             res.status(200).send({

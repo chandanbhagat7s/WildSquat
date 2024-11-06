@@ -59,7 +59,7 @@ const Slider = () => {
   if (!slider?.length) return null;
 
   return (
-    <div className="relative w-full h-[50vh] lg:h-[80vh] bg-gray-900 text-white overflow-hidden mt-2 md:mt-5">
+    <div className="relative w-full h-[35vh] md:h-[70vh] lg:h-[80vh] bg-gray-900 text-white overflow-hidden mt-2 md:mt-5">
       <AnimatePresence initial={false}>
         <motion.div
           key={currentIndex}
@@ -72,19 +72,19 @@ const Slider = () => {
           <img
             src={`${url}Tools/${slider[currentIndex]?.coverImage}`}
             alt={`Slide ${currentIndex + 1}`}
-            className="w-full h-full object-cover opacity-70"
+            className="w-full h-full object-cover opacity-80"
           />
           <div className="absolute inset-0 bg-gradient-to-r md:from-black via-transparent md:to-black opacity-5" />
 
-          <div className="absolute inset-0 flex flex-col justify-center md:justify-end items-center md:p-24 space-y-6">
-            <motion.h2
+          <div className="absolute inset-0 flex flex-col justify-end md:justify-end items-center md:p-24 space-y-6">
+            {/* <motion.h2
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-2xl md:text-6xl font-bold tracking-tight"
             >
               {slider[currentIndex]?.label}
-            </motion.h2>
+            </motion.h2> */}
             {/* <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -93,7 +93,7 @@ const Slider = () => {
             >
               {slider[currentIndex]?.shortDescription}
             </motion.p> */}
-            <motion.div
+            {/* <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6 }}
@@ -108,34 +108,34 @@ const Slider = () => {
                 <FaInfoCircle />
                 <span>Explore It</span>
               </button>
-            </motion.div>
+            </motion.div> */}
           </div>
         </motion.div>
       </AnimatePresence>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 sm:text-sm text-xl">
         <button
           onClick={prevSlide}
           className="bg-white/20 p-2 rounded-full hover:bg-white/40 transition-colors duration-300"
         >
-          <FaChevronLeft className="text-2xl" />
+          <FaChevronLeft className="text-sm md:text-xl lg:text-2xl" />
         </button>
         <button
           onClick={() => setIsPlaying(!isPlaying)}
           className="bg-white/20 p-2 rounded-full hover:bg-white/40 transition-colors duration-300"
         >
           {isPlaying ? (
-            <FaPause className="text-2xl" />
+            <FaPause className="text-sm md:text-xl lg:text-2xl" />
           ) : (
-            <FaPlay className="text-2xl" />
+            <FaPlay className="text-sm md:text-xl lg:text-2xl" />
           )}
         </button>
         <button
           onClick={nextSlide}
           className="bg-white/20 p-2 rounded-full hover:bg-white/40 transition-colors duration-300"
         >
-          <FaChevronRight className="text-2xl" />
+          <FaChevronRight className="text-sm md:text-xl lg:text-2xl" />
         </button>
       </div>
 

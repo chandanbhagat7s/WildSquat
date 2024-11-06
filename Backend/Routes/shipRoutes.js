@@ -7,6 +7,7 @@ const shipRouter = express.Router()
 // get all wherehouse
 shipRouter.use(ensureShippingAuth)
 shipRouter.post("/shipProduct", isLoggedIn, checkForExpressBeeMiddlewareAvaibility, tryExpressBee, shipProduct)
+// shipRouter.post("/shipProduct", isLoggedIn, checkForExpressBeeMiddlewareAvaibility, shipProduct)
 // shipRouter.post("/shipProduct", shipProduct)
 shipRouter.get("/getAllWarehouseDetails", getAllWarehouse)
 shipRouter.post("/cancleOrderAndRefund", cancleShpementAndRefund)

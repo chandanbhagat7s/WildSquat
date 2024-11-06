@@ -12,10 +12,10 @@ export default function Homepage() {
       <Slider />
       <ProductListing />
       <CategoryList />
-      <Offer />
-      <PresentSection />
-      <ThinkingSection />
       <Banner />
+      {/* <Offer /> */}
+      <PresentSection />
+      {/* <ThinkingSection /> */}
     </>
   );
 }

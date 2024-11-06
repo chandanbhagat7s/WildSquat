@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import FullScreenDialog from "../../common/FullScreenDialog";
 import axios from "axios";
 import CourierDetails from "./CourierDetails";
+import { useDispatch } from "react-redux";
+import { error, success } from "../../../redux/slices/errorSlice";
 
 const UnshippedTableComponent = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -10,6 +12,8 @@ const UnshippedTableComponent = () => {
     order: "",
     system_order_id: 0,
   });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -38,9 +42,18 @@ const UnshippedTableComponent = () => {
         orderId: selectedOrder.order,
         courierId: courierId,
       });
-
+      closeDialog();
+      dispatch(
+        success({
+          message: "Ordred confirmed and shipped for user,with details",
+        })
+      );
       // setOrders(res.data.orders);
-    } catch (err) {}
+    } catch (err) {
+      dispatch(
+        error({ message: "Something went worng please try diffrent courrier" })
+      );
+    }
   }
 
   return (

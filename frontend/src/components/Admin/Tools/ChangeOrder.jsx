@@ -95,7 +95,7 @@ const ChangeOrder = ({ docid, onClose }) => {
                             <h3 className="text-xl font-semibold">
                               {product.name}
                             </h3>
-                            <p className="text-gray-600">${product.price}</p>
+                            <p className="text-gray-600">Rs. {product.price}</p>
                           </div>
                         </div>
                         <div

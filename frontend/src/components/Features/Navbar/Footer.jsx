@@ -40,7 +40,7 @@ export default function Footer() {
                 className="scale-125 h-20 "
               />
             </div>
-            <h3 className="font-semibold text-lg mb-2">About As..</h3>
+            <h3 className="font-semibold text-lg mb-2">About Us..</h3>
             <p className="text-sm leading-relaxed">
               We are a dedicated team of enthusiasts passionate about creating
               high-quality athleisure wear that seamlessly blends style and

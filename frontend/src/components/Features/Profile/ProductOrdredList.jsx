@@ -67,7 +67,12 @@ const ProductCard = ({ p, onCancelOrder }) => {
       {/* Cancel Order Button */}
       {p?.orderStatus !== "Cancelled" && p?.orderStatus !== "cancelled" && (
         <button
-          onClick={() => onCancelOrder(p._id)}
+          onClick={() => {
+            let choise = confirm("Do You want To cancle order");
+            if (choise) {
+              onCancelOrder(p._id);
+            }
+          }}
           className="mt-4 py-2 px-4 bg-red-600 text-white rounded-lg flex items-center justify-center hover:bg-red-700 transition-colors duration-300"
         >
           <FaTrash className="mr-2" /> Cancel Order
@@ -106,6 +111,7 @@ export default function ProductOrdredList() {
       if (res?.data?.status === "success") {
         dispatch(success({ message: "Order cancled successfully" }));
         getData(); // Refresh orders after cancellation
+        setLoading(true);
       } else {
         dispatch(error({ message: "failed please try again" }));
       }
@@ -127,7 +133,7 @@ export default function ProductOrdredList() {
       {loading && <LoadingSpinner small={true} />}
       {orders.length > 0 && !loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10 text-center">
-          {orders.map((p) => (
+          {orders?.map((p) => (
             <ProductCard key={p._id} p={p} onCancelOrder={handleCancelOrder} />
           ))}
         </div>

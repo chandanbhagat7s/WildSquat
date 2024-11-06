@@ -70,14 +70,15 @@ exports.getOrderStatuses = async (req, res) => {
         const responses = await Promise.all(
             orders.Ordred.map(async (order) => {
                 const now = Date.now();
-                let newUpdate = new Date(order.statusUpdatedAt).getMilliseconds() + 4 * 60 * 60 * 1000;
+                let newUpdate = new Date(order.statusUpdatedAt).getTime() + 4 * 60 * 60 * 1000;
+                console.log(order?.fetch, now > newUpdate, order?.master_awb?.length > 2);
 
                 // Check if the status was updated more than 4 hours ago
-                if ((order?.orderStatus !== "Cancelled" && order?.orderStatus !== "cancelled") || order?.fetch || now > newUpdate) {
+                if (order?.fetch || now > newUpdate || order?.master_awb?.length > 2) {
                     console.log("fetched order by 3rd praty api");
 
                     let response;
-                    if (order.platform == "bighship") {
+                    if (order.platform == "bigship") {
                         // Make the API request
                         response = await axios.get(
                             `https://appapinew.bigship.in/api/Dashboard/GetShipmentDetails?user_Id=6393440&search_key=order_id&search_value=${order.shipOrderId}`,
@@ -100,7 +101,7 @@ exports.getOrderStatuses = async (req, res) => {
                         await order.save();
 
                         return shipmentInfo.orderStatus; // Return the orderStatus
-                    } else {
+                    } else if (order.platform == "expressbee") {
                         // Track Shipment
 
                         response = await axios.get(
@@ -111,18 +112,20 @@ exports.getOrderStatuses = async (req, res) => {
                                 },
                             }
                         );
+
+                        let shipmentInfo = response.data.data;
+
+
+                        order.orderStatus = shipmentInfo.status;
                     }
                     // console.log("res is ", response);
 
-                    let shipmentInfo = response.data.data;
-
-
-                    order.orderStatus = shipmentInfo.status;
                     order.statusUpdatedAt = now;
                     await order.save();
                     return order.orderStatus;
                 } else {
-                    return order.orderStatus; // Use the cached status from the database
+
+                    return order?.orderStatus || "Booked"; // Use the cached status from the database
                 }
             })
         );
@@ -133,7 +136,7 @@ exports.getOrderStatuses = async (req, res) => {
             orders: orders.Ordred,
         });
     } catch (err) {
-        console.log(err);
+        // console.log(err);
 
         res.status(500).send({
             status: "error",
