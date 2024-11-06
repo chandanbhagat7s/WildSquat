@@ -108,6 +108,8 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   };
 
   const handlePayment = async (amount) => {
+    console.log("amount is ", amount);
+
     if (!isLoggedIn) {
       dispatch(info({ message: "Please Login first" }));
       nevigate("/login");
@@ -123,13 +125,13 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
       // Step 1: Create an order on your server
 
       const orderResponse = await axios.post("/api/v1/payment/createOrder", {
-        amount: 1, // Razorpay expects amount in paise
+        amount: amount, // Razorpay expects amount in paise
         name: products?.map((el) => el.name).join(" "),
       });
 
       const options = {
         key: orderResponse.data.key_id, // Replace with your Razorpay Key ID
-        amount: 1,
+        amount: amount * 1,
         currency: "INR",
         name: "WILDSQUAT",
         description: `Payment for ${products?.map((el) => el.name).join(" ")}`,

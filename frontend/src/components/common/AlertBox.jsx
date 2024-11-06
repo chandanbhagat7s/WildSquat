@@ -42,7 +42,7 @@ const Alert = ({ status, message }) => {
       <div className="p-4 flex items-center">
         <div className="flex-shrink-0">{icon}</div>
         <div className="ml-3 flex-1">
-          <p className="text-white text-sm font-medium">{message}</p>
+          <p className="text-white text-sm font-medium capitalize">{message}</p>
         </div>
       </div>
     </motion.div>
