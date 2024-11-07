@@ -108,8 +108,6 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
   };
 
   const handlePayment = async (amount) => {
-    console.log("amount is ", amount);
-
     if (!isLoggedIn) {
       dispatch(info({ message: "Please Login first" }));
       nevigate("/login");
@@ -134,7 +132,7 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
         amount: amount * 1,
         currency: "INR",
         name: "WILDSQUAT",
-        description: `Payment for ${products?.map((el) => el.name).join(" ")}`,
+        description: `Payment for ${products?.map((el) => el?.name).join(" ")}`,
         order_id: orderResponse.data.order_id,
         handler: function (response) {
           // Handle successful payment
@@ -160,14 +158,16 @@ const BuyNowPopup = ({ products, onClose, setOrderProcessing }) => {
       onClose();
       rzp1.open();
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({
           message:
-            e?.response?.msg || e.response?.message || "Please try again ",
+            e?.response?.data?.msg ||
+            e.response?.data?.message ||
+            "Please try again ",
         })
       );
+      setLoading((state) => !state);
+      onClose();
     }
   };
 

@@ -5,6 +5,8 @@ import { FaSearch, FaSpinner, FaTimes, FaChevronRight } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import url from "../../assets/url";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { error } from "../../redux/slices/errorSlice";
 
 const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,6 +16,7 @@ const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
   const navigate = useNavigate();
   const searchRef = useRef(null);
 
+  const dispatch = useDispatch();
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
 
   useEffect(() => {
@@ -27,8 +30,13 @@ const SearchCategoryProduct = ({ addToSelected, nonevigate = false }) => {
           if (response.data?.status === "success") {
             setProducts(response?.data?.products);
           }
-        } catch (e) {
-          console.error("Error fetching products:", e);
+        } catch (err) {
+          dispatch(
+            error({
+              message:
+                err?.response?.data?.msg || "Error in searching the product",
+            })
+          );
         } finally {
           setLoading(false);
         }

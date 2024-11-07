@@ -17,7 +17,6 @@ const Banner = ({ order = 0 }) => {
         const res = await axios.get(
           `/api/v1/tools/getTool/SERIES?gender=${gender}&page=1&limit=2`
         );
-        console.log("SERIES REs", res);
 
         setProduct({ ...res?.data?.products[order] });
       } catch (e) {
@@ -67,7 +66,9 @@ const Banner = ({ order = 0 }) => {
               {product?.label}
             </h2>
             <h1 className="text-xl md:text-2xl font-bold mb-6 leading-snug tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-700">
-              {product?.shortDescription?.replaceAll("$", "\n")}
+              {product?.shortDescription?.split("$").map((el) => {
+                return <li>{el}</li>;
+              })}
             </h1>
 
             {/* View All Button */}

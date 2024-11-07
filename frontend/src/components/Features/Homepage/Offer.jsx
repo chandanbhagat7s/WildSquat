@@ -80,7 +80,9 @@ const Offer = ({ order = 0 }) => {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-base font-bold mb-3 uppercase tracking-widest text-gray-800"
             >
-              {product?.label.replaceAll("$", "\n")}
+              {product?.label.split("$").map((el) => {
+                return <li>{el}</li>;
+              })}
             </motion.h2>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -88,7 +90,9 @@ const Offer = ({ order = 0 }) => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl md:text-4xl font-bold mb-6 leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-800 to-gray-500"
             >
-              {product?.shortDescription.replaceAll("$", "\n")}
+              {product?.shortDescription.split("$").map((el) => {
+                return <li>{el}</li>;
+              })}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

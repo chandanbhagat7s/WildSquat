@@ -145,7 +145,6 @@ exports.getToolByIdForMange = catchAsync(async (req, res, next) => {
 
 
     const products = await features.query;
-    console.log(products);
     res.status(200).send({
         status: "success",
         products: products[0]

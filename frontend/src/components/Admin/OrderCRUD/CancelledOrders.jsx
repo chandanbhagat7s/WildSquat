@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDispatch } from "react-redux";
+import { error } from "../../../redux/slices/errorSlice";
 
 const CanclledOrders = () => {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const dispatch = useDispatch();
 
   const fetchOrders = async () => {
     try {
@@ -22,7 +25,7 @@ const CanclledOrders = () => {
         setPage(page + 1);
       }
     } catch (err) {
-      console.error(err);
+      dispatch(error({ message: "Something went wrong" }));
     }
   };
 
@@ -50,7 +53,7 @@ const CanclledOrders = () => {
           </thead>
           <tbody>
             {orders?.length > 0 &&
-              orders?.map((order) => (
+              orders?.reverse()?.map((order) => (
                 <tr key={order._id} className="border-t">
                   {/* Product Details */}
                   <td className="py-3 px-6">

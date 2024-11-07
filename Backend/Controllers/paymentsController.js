@@ -49,7 +49,8 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         );
 
     } catch (error) {
-        console.log(error);
+        return next(new appError("'Something went wrong!'", 400))
+
     }
 
 
@@ -61,8 +62,6 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
     const { RAZORPAY_SECRET_KEY } = process.env;
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, productData } = req.body;
-    console.log("data", razorpay_order_id, razorpay_payment_id, razorpay_signature, productData);
-
 
 
 

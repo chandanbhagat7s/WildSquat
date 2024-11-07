@@ -22,7 +22,11 @@ const UnshippedTableComponent = () => {
           "/api/v1/orders/getOrderDetails?phase[lt]=3&populate=byuser&cancledShipment=false"
         );
         setOrders(res.data.orders);
-      } catch (err) {}
+      } catch (err) {
+        dispatch(
+          error({ message: err?.response?.data?.msg || "Something Went Wrong" })
+        );
+      }
     };
     fetchOrders();
   }, []);

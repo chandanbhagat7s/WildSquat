@@ -59,7 +59,7 @@ exports.getProductById = catchAsync(async (req, res, next) => {
 
     redisClient.incr(`product:${productId}:viewCount`, (err, reply) => {
         if (err) {
-            console.error('Error incrementing view count:', err);
+
         }
     });
 

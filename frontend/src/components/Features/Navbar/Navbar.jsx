@@ -65,8 +65,6 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    console.log("TRIRED NEVBAR");
-
     getData();
   }, [gender]);
 

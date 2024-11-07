@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CategorySelector from "./PresentSub";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GrFormNext } from "react-icons/gr";
 import { IoIosArrowBack } from "react-icons/io";
 import ProductCard from "../Common/Cards/ProductCard";
 import { FiArrowRight } from "react-icons/fi";
+import { error, message } from "../../../redux/slices/errorSlice";
 
 const PresentSection = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -16,6 +17,7 @@ const PresentSection = () => {
   const [category, setCategory] = useState([]);
   const { gender } = useSelector((state) => state.auth);
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -25,12 +27,13 @@ const PresentSection = () => {
         );
 
         const data = res.data;
-        console.log(data);
 
         setCategory([...data.products]);
         setSelectedCategory(data.products[0]?._id);
         fetchProducts(data.products[0]?._id);
-      } catch (e) {}
+      } catch (e) {
+        dispatch(error({ message: "Something went wrong" }));
+      }
     }
     fetchCategories();
   }, [gender]);

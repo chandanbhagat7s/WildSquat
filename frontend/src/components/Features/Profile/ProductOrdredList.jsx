@@ -116,8 +116,6 @@ export default function ProductOrdredList() {
         dispatch(error({ message: "failed please try again" }));
       }
     } catch (e) {
-      console.log(e);
-
       dispatch(
         error({ message: e?.response?.data?.message || "Cancellation failed" })
       );

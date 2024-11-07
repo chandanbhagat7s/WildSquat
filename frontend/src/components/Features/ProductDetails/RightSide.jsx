@@ -98,7 +98,9 @@ export default function RightSide({ product }) {
           Rs <span className="text-2xl font-bold"> {product.price}</span>
         </p>
         <p className="mb-4 text-gray-400">
-          {product.shortDescription.replaceAll("$", "\n")}
+          {product.shortDescription.split("$").map((el) => {
+            return <li>{el}</li>;
+          })}
         </p>
 
         <div className="mb-4">
@@ -184,7 +186,9 @@ export default function RightSide({ product }) {
               toggle={() => toggleSection("shipping")}
             >
               <p className="text-gray-700">
-                {product.shippingDetails.replaceAll("$", "\n")}
+                {product.shippingDetails.split("$").map((el) => {
+                  return <li>{el}</li>;
+                })}
               </p>
             </AccordionItem>
 
@@ -195,7 +199,9 @@ export default function RightSide({ product }) {
               toggle={() => toggleSection("returns")}
             >
               <p className="text-gray-700">
-                {product.returnDetails.replaceAll("$", "\n")}
+                {product.returnDetails.split("$").map((el) => {
+                  return <li>{el}</li>;
+                })}
               </p>
             </AccordionItem>
 
@@ -206,7 +212,9 @@ export default function RightSide({ product }) {
               toggle={() => toggleSection("care")}
             >
               <p className="text-gray-700">
-                {product.careInstructions.replaceAll("$", "\n")}
+                {product.careInstructions.split("$").map((el) => {
+                  return <li>{el}</li>;
+                })}
               </p>
             </AccordionItem>
 
@@ -217,7 +225,9 @@ export default function RightSide({ product }) {
               toggle={() => toggleSection("description")}
             >
               <p className="text-gray-700">
-                {product.longDescription.replaceAll("$", "\n")}
+                {product.longDescription.split("$").map((el) => {
+                  return <li>{el}</li>;
+                })}
               </p>
             </AccordionItem>
           </div>

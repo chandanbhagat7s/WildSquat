@@ -22,7 +22,7 @@ const BookedOrders = () => {
         setPage(page + 1);
       }
     } catch (err) {
-      console.error(err);
+      alert("Problem in Ordred section");
     }
   };
 

@@ -20,7 +20,6 @@ const BulkListLayoutProduct = ({ toolId }) => {
 
   const location = useLocation();
   let state = location?.state?.reset || false;
-  console.log(location);
 
   const fetchProducts = async () => {
     try {
@@ -48,21 +47,16 @@ const BulkListLayoutProduct = ({ toolId }) => {
         setHasMore(false);
       }
     } catch (e) {
-      console.log(e);
-
       dispatch(error({ message: "Failed to load products" }));
     }
   };
 
   useEffect(() => {
-    console.log("TRIGRED", params.id, page);
-
     window.scrollTo(0, 0);
     if (state) {
       setPage((page) => page - page);
       setProducts(() => []);
     }
-    console.log("page", page);
 
     fetchProducts();
   }, [gender, params.id]);

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDispatch } from "react-redux";
+import { error } from "../../../redux/slices/errorSlice";
 
 const DeliveredOrders = () => {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const dispatch = useDispatch();
 
   const fetchOrders = async () => {
     try {
@@ -22,7 +25,12 @@ const DeliveredOrders = () => {
         setPage(page + 1);
       }
     } catch (err) {
-      console.error(err);
+      dispatch(
+        error({
+          message:
+            err?.response?.data?.msg || "Error in fetching delivered orders",
+        })
+      );
     }
   };
 

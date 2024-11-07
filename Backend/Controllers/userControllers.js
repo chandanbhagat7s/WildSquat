@@ -71,11 +71,10 @@ exports.getOrderStatuses = async (req, res) => {
             orders.Ordred.map(async (order) => {
                 const now = Date.now();
                 let newUpdate = new Date(order.statusUpdatedAt).getTime() + 4 * 60 * 60 * 1000;
-                console.log(order?.fetch, now > newUpdate, order?.master_awb?.length > 2);
 
                 // Check if the status was updated more than 4 hours ago
                 if (order?.fetch || now > newUpdate || order?.master_awb?.length > 2) {
-                    console.log("fetched order by 3rd praty api");
+
 
                     let response;
                     if (order.platform == "bigship") {

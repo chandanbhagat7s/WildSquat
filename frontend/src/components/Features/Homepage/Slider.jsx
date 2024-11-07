@@ -18,7 +18,6 @@ const Slider = () => {
   const { gender } = useSelector((state) => state.auth);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const navigate = useNavigate();
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
@@ -41,9 +40,7 @@ const Slider = () => {
         if (res.data.products.length > 0) {
           setSlider([...res.data.products]);
         }
-      } catch (e) {
-        console.error("Error fetching slider data:", e);
-      }
+      } catch (e) {}
     }
     getData();
   }, [gender]);

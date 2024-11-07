@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { error, message } from "../../../redux/slices/errorSlice";
 
 const CourierDetails = ({ shipmentData, handleShip }) => {
   const [ships, setShips] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -15,7 +18,14 @@ const CourierDetails = ({ shipmentData, handleShip }) => {
         );
         setShips(res.data.ship);
       } catch (err) {
-        console.error(err);
+        dispatch(
+          error({
+            message:
+              err?.response?.data?.msg || "Error While Fetching the Details",
+          })
+        );
+
+        //  dispatch(error({message : }))
       }
     };
     fetchOrders();

@@ -50,7 +50,6 @@ exports.ensureShippingAuth = catchAsync(async (req, res, next) => {
 
     let token = await redisClient.get("token");
     let expressToken = await redisClient.get("expressToken");
-    console.log("token before redis", token, expressToken);
 
     if (token) {
         token = JSON.parse(token).data.token
@@ -248,7 +247,6 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
 
 
     } catch (e) {
-        console.log("error is ", e);
 
         next()
     }
@@ -544,9 +542,7 @@ responseCode: 200
 
 
     } catch (e) {
-        console.log(
-            "error is ", e
-        );
+
 
         res.status(400).send({
             status: "fail",
@@ -576,7 +572,6 @@ exports.getAllWarehouse = catchAsync(async (req, res, next) => {
             warehouse: getAllWarehouse?.data?.data?.resData || []
         })
     } catch (e) {
-        console.log("error is", e);
 
         res.status(400).send({
             status: "fail",
@@ -655,7 +650,6 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
 
     try {
         if (order.platform == "bigship") {
-            console.log("data is", order.master_awb);
 
             const cancledShipment = await axios.put("https://api.bigship.in/api/order/cancel", [
                 order.master_awb
@@ -773,16 +767,13 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
                         'Authorization': `Bearer ${req.expressToken}` // Authorization header with Bearer token
                     }
                 });
-            console.log("rev data", reversebookingres.data);
 
             let shipmentInfo = reversebookingres.data?.data;
             order.reverseBooking = true;
             order.reverseAWB = shipmentInfo?.awb_number;
             order.reverseShipmentId = shipmentInfo?.shipment_id;
             order.reverseOrderId = shipmentInfo?.order_id;
-            console.log("data", reversebookingres.data);
         } catch (e) {
-            console.log("error ", e);
 
             order.reverseBooking = false;
 

@@ -13,7 +13,6 @@ const EditProductForm = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
 
   const [categoryName, setCategoryName] = useState([]);
-  console.log("cateory name", categoryName);
 
   const [editedProduct, setEditedProduct] = useState({
     name: "",
@@ -155,9 +154,6 @@ const EditProductForm = () => {
   useEffect(() => {
     bringProductInfo();
   }, [selectedProduct]);
-  useEffect(() => {
-    console.log(editedProduct.category);
-  });
 
   return (
     <div className="mb-60">
@@ -257,10 +253,7 @@ const EditProductForm = () => {
                         value={category.label}
                         onChange={() => handleCategoryChanges(category._id)}
                       />
-                      {console.log(
-                        editedProduct?.category?.includes(category._id),
-                        category._id
-                      )}
+
                       {category.label}
                       <span className="ml-3 font-bold">({category.name})</span>
                     </div>

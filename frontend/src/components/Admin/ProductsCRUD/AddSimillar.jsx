@@ -12,8 +12,6 @@ const AddSimillar = () => {
   const dispatch = useDispatch();
 
   const addToSelected = (product) => {
-    console.log(product);
-
     if (selectedProducts.find((el) => el.id == product.id)) {
       dispatch(warning({ message: "Product already added" }));
       return;
@@ -33,7 +31,10 @@ const AddSimillar = () => {
       }
     } catch (e) {
       dispatch(
-        error({ message: e?.response?.data?.msg || "something went wrong" })
+        error({
+          message:
+            e?.response?.data?.msg || "Error in adding Product to simillar one",
+        })
       );
     }
   }
