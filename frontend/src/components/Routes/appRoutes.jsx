@@ -12,6 +12,7 @@ import BulkListLayoutProduct from "../Features/BulkList/BulkListLayoutProduct";
 import BulkListLayoutCard from "../Features/BulkList/BulkListLayoutCard";
 import Product from "../Features/ProductDetails/Product";
 import ProfileOut from "../Features/Profile/ProfileMainBox";
+import PrivacyPolicyPage from "../Authentication/PrivatePolicy";
 
 export default function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export default function AppRoutes() {
             </MainLayout>
           }
         />
+        <Route path="/PrivacyPolicyPage" element={<PrivacyPolicyPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/denide" element={<AccessDeniedPage />} />

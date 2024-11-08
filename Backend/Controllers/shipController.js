@@ -190,7 +190,7 @@ exports.tryExpressBee = catchAsync(async (req, res, next) => {
             "consignee": {
                 "name": `${order?.byuser?.name}`,
                 "address": order?.byuser?.addressLine1,
-                "address_2": "   ",
+                "address_2": `${order?.byuser?.addressLine2 || "      "}`,
                 "city": order?.byuser?.city || "pune",
                 "state": order?.byuser?.state,
                 "pincode": order?.byuser?.pinCode,
@@ -323,7 +323,7 @@ exports.shipProduct = catchAsync(async (req, res, next) => {
                 "email_id": "",
                 "consignee_address": {
                     "address_line1": `${order?.byuser?.addressLine1.substr(0, 48)}`,
-                    "address_line2": `${order?.byuser?.state} , ${order?.byuser?.country}`,
+                    "address_line2": `${order?.byuser?.addressLine2 || `${order?.byuser?.state}`}`,
                     "address_landmark": "",
                     "pincode": `${order.byuser.pinCode}`
                 }
@@ -719,7 +719,7 @@ exports.cancleShpementAndRefund = catchAsync(async (req, res, next) => {
             consignee: {
                 name: `${order.byuser.name.slice(0, 18)}`,
                 address: `${order.byuser.addressLine1}`,
-                address_2: `${order.byuser.addressLine1}`,
+                address_2: `${order?.byuser?.addressLine2 || `${order?.byuser?.state}`}`,
                 city: ` ${order.byuser.city}`,
                 state: ` ${order.byuser.state}`,
                 pincode: `${order.byuser.pinCode}`,

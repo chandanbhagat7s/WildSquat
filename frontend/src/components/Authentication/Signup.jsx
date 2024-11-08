@@ -33,9 +33,11 @@ const SignUpPage = () => {
     district: "",
     pinCode: "",
     addressLine1: "",
+    addressLine2: "",
     otpId: 0,
     city: "",
   });
+  const [tick, setTick] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   const handleChange = (e) => {
@@ -60,6 +62,11 @@ const SignUpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!tick) {
+      return dispatch(
+        warning({ message: "Please accept terms and condition" })
+      );
+    }
     if (Object.values(formData).some((field) => field === "")) {
       return dispatch(warning({ message: "Please enter all the details" }));
     }
@@ -88,7 +95,18 @@ const SignUpPage = () => {
 
     if (formData.addressLine1.length < 6 || formData.addressLine1.length > 45) {
       return dispatch(
-        warning({ message: "Please describe your address in 10 to 40 words" })
+        warning({
+          message:
+            "Please describe your address (address Line 1) in 10 to 40 characters",
+        })
+      );
+    }
+    if (formData.addressLine2.length < 6 || formData.addressLine2.length > 45) {
+      return dispatch(
+        warning({
+          message:
+            "Please describe your address (address Line 2) in 10 to 40 characters",
+        })
       );
     }
     const statusOtp = await dispatch(
@@ -204,6 +222,12 @@ const SignUpPage = () => {
       placeholder: "Address Line 1",
       icon: <FiHome className="w-5 h-5 text-gray-400" />,
     },
+    {
+      name: "addressLine2",
+      type: "text",
+      placeholder: "Address Line 2",
+      icon: <FiHome className="w-5 h-5 text-gray-400" />,
+    },
   ];
 
   return (
@@ -223,7 +247,7 @@ const SignUpPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {inputFields.map((field) => (
-                  <div className="flex flex-col" key={field.name}>
+                  <div className={`flex flex-col`} key={field.name}>
                     <label htmlFor={field.name}>
                       <span className="text-sm text-gray-700 font-semibold">
                         {field.placeholder}
@@ -269,6 +293,28 @@ const SignUpPage = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="flex items-center mt-4">
+                <input
+                  type="checkbox"
+                  id="termsCheckbox"
+                  checked={tick}
+                  onChange={() => {
+                    !tick && window.open("/PrivacyPolicyPage", "_blank");
+                    setTick(!tick);
+                  }}
+                  className="mr-2 h-4 w-4 border-gray-300 rounded"
+                />
+                <label htmlFor="termsCheckbox" className="text-gray-800">
+                  I accept the terms and conditions{" "}
+                  <a
+                    href="/PrivacyPolicyPage"
+                    target="_blank"
+                    className="text-gray-900 underline"
+                  >
+                    click Hear
+                  </a>
+                </label>
               </div>
               <div>
                 <button
@@ -318,7 +364,7 @@ const SignUpPage = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-medium text-gray-600 hover:text-gray-500"
+              className="font-medium text-gray-600 hover:text-gray-500 underline"
             >
               Sign in
             </Link>

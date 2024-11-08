@@ -154,9 +154,12 @@ exports.editProfile = catchAsync(async (req, res, next) => {
         state,
         district,
         pinCode,
-        addressLine1 } = req.body;
+        addressLine1,
+        addressLine2,
 
-    if (!name || !email || !country || !state || !pinCode || !district || !addressLine1) {
+    } = req.body;
+
+    if (!name || !email || !country || !state || !pinCode || !district || !addressLine1 || !addressLine2) {
         return next(new appError("Please provide entire data to update", 400))
     }
 
@@ -167,7 +170,8 @@ exports.editProfile = catchAsync(async (req, res, next) => {
         state,
         district,
         pinCode,
-        addressLine1
+        addressLine1,
+        addressLine2,
     }, {
         new: true
     })

@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'Public')))
 
 
 
+
 app.use(express.static('Public', {
     setHeaders: function (res, path) {
         if (path.endsWith('.css')) {
@@ -58,6 +59,8 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
 // security for headers
 app.use(helmet())
 // security for mongoquery injection
@@ -68,6 +71,26 @@ app.use(xss())
 app.use(hpp({
     whitelist: ["price", "color"]
 }))
+// Serve static files from the Tools directory
+app.use('/Tools', express.static(path.join(__dirname, 'Tools'), {
+    // Optional: Set headers for CORS if needed
+    setHeaders: (res, path) => {
+        res.set('Access-Control-Allow-Origin', 'https://www.wildsquat.com'); // Adjust as necessary
+    }
+}));
+
+// Set Content Security Policy (CSP) using Helmet
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://checkout.razorpay.com", "https://api.razorpay.com", "'unsafe-inline'", "'unsafe-eval'"],
+        imgSrc: ["'self'", "https://wildsquat.com", "https://www.wildsquat.com", "blob:", "data:"],
+        frameSrc: ["'self'", "https://api.razorpay.com"],
+        connectSrc: ["'self'", "https://api.razorpay.com"],
+        styleSrc: ["'self'", "'unsafe-inline'"]
+    }
+}));
 
 // for get and post cors is done above but for patch,delete
 app.options("*", cors())
@@ -91,7 +114,7 @@ app.use("/api", Limiter)
 
 
 
-// app.use(morgan("dev"))
+app.use(morgan("dev"))
 app.use(express.json({ limit: "10kb" }))
 app.use(express.urlencoded({ extended: true }))
 
@@ -164,13 +187,9 @@ module.exports = app;
 
 
 /*
-return order booking , shipping and updation 
-admin side week,day,month updation of product 
-booked order list graph,chart 
-offer section , 
+return order booking , shipping and updation
+admin side week,day,month updation of product
+booked order list graph,chart
+offer section ,
 
 */
-
-
-
-

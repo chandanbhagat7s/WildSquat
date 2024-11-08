@@ -15,17 +15,25 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "email should be provided"],
         maxLength: 40,
-        minLenght: 5
+        minLenght: 5,
+        trim: true
     },
     mobile: {
         type: Number,
         required: true,
         maxLength: 10,
-        minLenght: 10
+        minLenght: 10,
     },
     addressLine1: {
         type: String,
-        maxLength: 150,
+        trim: true,
+        maxLength: [49, "Address Line 1 max 49 characters"],
+        minLenght: 5
+    },
+    addressLine2: {
+        type: String,
+        trim: true,
+        maxLength: [49, "Address Line 2 max 49 characters"],
         minLenght: 5
     },
     role: {
@@ -44,6 +52,7 @@ const userSchema = new mongoose.Schema({
     state: {
 
         type: String,
+        trim: true,
         required: [true, "You are from which country must be provided"]
 
     },

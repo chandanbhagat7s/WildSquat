@@ -1,4 +1,5 @@
 node_modules
 /backend/config.env 
-
+/frontend/vite.config.js
+/frontend/src/assets/url.js
 
