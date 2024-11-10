@@ -153,7 +153,7 @@ const ContentCard = ({ item, openDialog, setBtn, openDialogChange }) => {
       <div className="relative pb-72 overflow-hidden">
         <img
           className="absolute inset-0 h-96 object-cover transform hover:scale-110 transition-transform duration-300"
-          src={`${url}tools/${item.coverImage}`}
+          src={`${url}Tools/${item.coverImage}`}
           alt={item.name}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   FaChartPie,
   FaUsers,
@@ -7,14 +7,13 @@ import {
   FaChartLine,
   FaTools,
   FaCogs,
-  FaFileAlt,
-  FaQuestionCircle,
 } from "react-icons/fa";
 import ProductActions from "./../ProductsCRUD/ProductsCRUD";
 import ManageTools from "./../Tools/ManageTools";
 import CreateCategory from "./../Tools/CreateCatefory";
 import ProductData from "./ProductData";
 import Main from "../OrderCRUD/Main";
+import StockManagement from "../Stock/Main";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -22,14 +21,14 @@ const AdminPanel = () => {
 
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: <FaChartPie /> },
-    { id: "users", label: "Users", icon: <FaUsers /> },
+    { id: "stock", label: "Stock Details", icon: <FaUsers /> },
     { id: "products", label: "Products", icon: <FaBox /> },
     { id: "orders", label: "Orders", icon: <FaClipboardList /> },
     { id: "analytics", label: "Analytics", icon: <FaChartLine /> },
-    { id: "tools", label: "Tools", icon: <FaTools /> },
+    { id: "tools", label: "Create Tools", icon: <FaTools /> },
     { id: "manage-tools", label: "Manage Tools", icon: <FaCogs /> },
-    { id: "reports", label: "Reports", icon: <FaFileAlt /> },
-    { id: "help", label: "Help", icon: <FaQuestionCircle /> },
+    // { id: "reports", label: "Reports", icon: <FaFileAlt /> },
+    // { id: "help", label: "Help", icon: <FaQuestionCircle /> },
   ];
 
   const renderTabContent = () => {
@@ -44,6 +43,8 @@ const AdminPanel = () => {
         return <CreateCategory />;
       case "manage-tools":
         return <ManageTools />;
+      case "stock":
+        return <StockManagement />;
       default:
         return <p className="text-gray-600">Content for {activeTab}</p>;
     }
@@ -96,8 +97,11 @@ const AdminPanel = () => {
         <div
           className={`${
             isMobileMenuOpen ? "block" : "hidden"
-          } md:block p-4 md:p-6 space-y-2`}
+          } lg:block p-4 md:p-6 space-y-2 `}
         >
+          <h1 className="text-2xl font-bold my-2 mb-10">
+            WILDSQUAT WEB MANAGEMENT
+          </h1>
           {tabs.map((tab) => (
             <button
               key={tab.id}

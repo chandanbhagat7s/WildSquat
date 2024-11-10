@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import url from "../../../assets/url";
 
 const BookedOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -57,16 +58,30 @@ const BookedOrders = () => {
                 <tr key={order._id} className="border-t">
                   {/* Product Details */}
                   <td className="py-3 px-6">
-                    <ul className="list-disc pl-4">
+                    <div className="grid gap-4">
                       {order.productData.map((product, index) => (
-                        <div key={index} className="flex flex-col">
-                          <li>{product.name}</li>
-                          <li>{product.quantity}</li>
-                          <li>{product.selectedSize || "not mentioned"}</li>
-                          <li>{product.weight}</li>
+                        <div
+                          key={index}
+                          className="flex items-center gap-4 border-b py-2"
+                        >
+                          <img
+                            src={`${url}img/${product.coverImage}`}
+                            alt="product image not found/fetched"
+                            className="h-24 w-24 object-contain rounded-lg"
+                          />
+                          <div className="flex flex-col space-y-1">
+                            <span className="font-semibold">
+                              {product.name}
+                            </span>
+                            <span>Quantity: {product.quantity}</span>
+                            <span>
+                              Size: {product.selectedSize || "Not mentioned"}
+                            </span>
+                            <span>Weight: {product.weight}</span>
+                          </div>
                         </div>
                       ))}
-                    </ul>
+                    </div>
                   </td>
 
                   {/* User Details */}

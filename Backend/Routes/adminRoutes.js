@@ -1,5 +1,5 @@
 const express = require('express');
-const { createProduct, uploadImages, resizeImage, editProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, actionOnTool, deletTool, addOtherSimillarColorProduct, deleteProduct } = require('../Controllers/adminController');
+const { createProduct, uploadImages, resizeImage, editProduct, getAllOrdersForShipment, confirmShipemntForOrder, resizeToolImage, createCategory, updateCategory, updateSlider, getAllMyTools, actionOnTool, deletTool, addOtherSimillarColorProduct, deleteProduct, editPartProduct } = require('../Controllers/adminController');
 const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const giveAccess = require('../Middleware/giveAccessTo');
 const { getToolById, getToolByIdForMange } = require('../Controllers/toolControllers');
@@ -17,6 +17,7 @@ adminRouter.get("/getToolById/:toolId", getToolById)
 adminRouter.use(isLoggedIn, giveAccess("ADMIN"))
 adminRouter.post("/create", uploadImages, resizeImage, createProduct)
 adminRouter.patch("/edit/:productId", editProduct)
+adminRouter.patch("/editPart/:id", editPartProduct)
 adminRouter.post("/delete", deleteProduct)
 // add colors simillar product to product
 

@@ -10,7 +10,7 @@ const Tool = require("../Models/Tools");
 const SimilarPrduct = require("../Models/SimilarProduct");
 const { saveCountAndClearCache } = require("../Redis/syncViewCounts");
 
-
+const factory = require("../utils/factory")
 
 // now we will decrease the quality and perform many operation 
 const multerStorage = multer.memoryStorage();
@@ -711,4 +711,8 @@ exports.deletTool = catchAsync(async (req, res, next) => {
         msg: "operation performed successfully, delete tool "
     })
 })
+
+
+exports.editPartProduct = factory.updateOne(Product)
+
 
