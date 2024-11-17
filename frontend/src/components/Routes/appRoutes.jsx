@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import CreateProductForm from "../Admin/ProductsCRUD/AddProduct";
-import AdminPanel from "../Admin/Dashboard/AdminDash";
 import SignUpPage from "../Authentication/Signup";
 import Homepage from "../Features/Homepage/Homepage";
 import AccessDeniedPage from "../Instruction/AccessDenide";
@@ -13,6 +12,7 @@ import BulkListLayoutCard from "../Features/BulkList/BulkListLayoutCard";
 import Product from "../Features/ProductDetails/Product";
 import ProfileOut from "../Features/Profile/ProfileMainBox";
 import PrivacyPolicyPage from "../Authentication/PrivatePolicy";
+import Adminrouter from "../Admin/Router/adminRouter";
 
 export default function AppRoutes() {
   return (
@@ -44,7 +44,7 @@ export default function AppRoutes() {
         </Route>
         <Route element={<Authentication allow={["ADMIN"]} />}>
           <Route path="/createProduct" element={<CreateProductForm />} />
-          <Route path="/adminDash" element={<AdminPanel />} />
+          <Route path="/adminDash/*" element={<Adminrouter />} />
         </Route>
 
         <Route
