@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
-import CreateProductForm from "../Admin/ProductsCRUD/AddProduct";
 import SignUpPage from "../Authentication/Signup";
 import Homepage from "../Features/Homepage/Homepage";
 import AccessDeniedPage from "../Instruction/AccessDenide";
@@ -10,9 +9,10 @@ import LoginPage from "../Authentication/Login";
 import BulkListLayoutProduct from "../Features/BulkList/BulkListLayoutProduct";
 import BulkListLayoutCard from "../Features/BulkList/BulkListLayoutCard";
 import Product from "../Features/ProductDetails/Product";
-import ProfileOut from "../Features/Profile/ProfileMainBox";
 import PrivacyPolicyPage from "../Authentication/PrivatePolicy";
 import Adminrouter from "../Admin/Router/adminRouter";
+import ProfileRouter from "../Features/Profile/ProfileRouter";
+import WholesaleAdminrouter from "../AdminWholesale/wholeSaleRouter";
 
 export default function AppRoutes() {
   return (
@@ -34,17 +34,20 @@ export default function AppRoutes() {
         <Route element={<Authentication allow={["user", "ADMIN"]} />}>
           {" "}
           <Route
-            path="/profile"
+            path="/profile/*"
             element={
               <MainLayout>
-                <ProfileOut />
+                <ProfileRouter />
               </MainLayout>
             }
           />
         </Route>
         <Route element={<Authentication allow={["ADMIN"]} />}>
-          <Route path="/createProduct" element={<CreateProductForm />} />
           <Route path="/adminDash/*" element={<Adminrouter />} />
+          <Route
+            path="/adminDash/wholesale/*"
+            element={<WholesaleAdminrouter />}
+          />
         </Route>
 
         <Route

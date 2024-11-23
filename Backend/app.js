@@ -19,6 +19,8 @@ const reviewRouter = require('./Routes/reviewRoute');
 const paymentRouter = require('./Routes/paymentsRoute');
 const userrouter = require('./Routes/userRouter');
 const toolRouter = require('./Routes/toolsRouter');
+const wholesaleProductRoute = require('./Wholesale/Routes/productRoutes');
+const wholesaleToolRoute = require('./Wholesale/Routes/ToolRoutes');
 
 const { syncViewCounts } = require('./Redis/syncViewCounts');
 const shipRouter = require('./Routes/shipRoutes');
@@ -145,6 +147,8 @@ app.use('/api/v1/review', reviewRouter)
 app.use('/api/v1/payment', paymentRouter)
 app.use('/api/v1/user', userrouter)
 app.use('/api/v1/ship', shipRouter)
+app.use('/api/v1/wholesale/product', wholesaleProductRoute)
+app.use('/api/v1/wholesale/tool', wholesaleToolRoute)
 
 
 

@@ -1,11 +1,11 @@
 import { FaUser, FaShoppingCart, FaBox } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { RiOrderPlayFill } from "react-icons/ri";
-import ProfileTab from "./ProfileTab";
-import UserCart from "./UserCart";
-import ProductOrdredList from "./ProductOrdredList";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
+const ProfilePage = ({ children }) => {
+  const [activeTab, setActiveTab] = useState("profile");
+  const nevigate = useNavigate();
   const TabButton = ({ label, icon, isActive, onClick }) => (
     <motion.button
       whileHover={{ scale: 1.05 }}
@@ -29,26 +29,38 @@ const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
           label="Profile"
           icon={<FaUser className="text-xl" />}
           isActive={activeTab === "profile"}
-          onClick={() => setActiveTab("profile")}
+          onClick={() => {
+            nevigate("/profile/");
+            setActiveTab("profile");
+          }}
         />
         <TabButton
           label="Cart"
           icon={<FaShoppingCart className="text-xl" />}
           isActive={activeTab === "cart"}
-          onClick={() => setActiveTab("cart")}
+          onClick={() => {
+            nevigate("/profile/cart");
+            setActiveTab("cart");
+          }}
         />
 
         <TabButton
           label="Orders"
           icon={<FaBox className="text-xl" />}
           isActive={activeTab === "orders"}
-          onClick={() => setActiveTab("orders")}
+          onClick={() => {
+            nevigate("/profile/orders");
+            setActiveTab("orders");
+          }}
         />
         <TabButton
           label="Buyed Items"
           icon={<FaBox className="text-xl" />}
           isActive={activeTab === "buyItems"}
-          onClick={() => setActiveTab("buyItems")}
+          onClick={() => {
+            nevigate("/profile/buyItems");
+            setActiveTab("buyItems");
+          }}
         />
       </div>
 
@@ -60,7 +72,7 @@ const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {activeTab === "profile" && load == false && (
+          {/* {activeTab === "profile" && load == false && (
             <ProfileTab data={data} setLoad={setLoad} load={load} />
           )}
           {activeTab === "cart" && <UserCart data={data} setLoad={setLoad} />}
@@ -69,7 +81,8 @@ const ProfilePage = ({ data, load, setLoad, activeTab, setActiveTab }) => {
             <>
               <ProductOrdredList />
             </>
-          )}
+          )} */}
+          {children}
         </motion.div>
       </AnimatePresence>
     </div>

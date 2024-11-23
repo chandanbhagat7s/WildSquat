@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaBuyNLarge, FaRegCreditCard, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa6";
 import OrderProcessingPage from "../../Instruction/OrderProcessing";
 import BuyNowPopup from "../../Payments/paymentDialog";
+import axios from "axios";
 const ProductCard = ({ product, onMoreInfo, onRemove, removeLabel }) => {
   const nevigate = useNavigate();
   return (
@@ -54,7 +55,9 @@ const ProductCard = ({ product, onMoreInfo, onRemove, removeLabel }) => {
   );
 };
 
-export default function UserCart({ data, setLoad }) {
+export default function UserCart({ userData = {} }) {
+  const [load, setLoad] = useState(false);
+  const [data, setData] = useState({ ...userData });
   const dispatch = useDispatch();
   const nevigate = useNavigate();
   let [orderProcessing, setOrderProcessing] = useState(false);
@@ -76,6 +79,27 @@ export default function UserCart({ data, setLoad }) {
       );
     }
   }
+
+  async function getData() {
+    try {
+      const res = await axios.get("/api/v1/user/getCartHeartOrders");
+
+      let temp = res.data;
+      if (res?.data?.status == "success") {
+        setData({
+          ...temp.product,
+        });
+        setLoad(false);
+      }
+    } catch (e) {
+      dispatch(error({ message: e?.response?.msg || "something went wrong" }));
+    }
+  }
+  useEffect(() => {
+    // !product.name && getData();
+    (load == true || !userData.name) && getData();
+  }, [load]);
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-8">
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Cart</h2>

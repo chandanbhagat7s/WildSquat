@@ -7,10 +7,11 @@ import {
   FaChartLine,
   FaTools,
   FaCogs,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-const AdminLayout = ({ children }) => {
+const WholesaleAdminLayout = ({ children }) => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const nevigate = useNavigate();
@@ -18,8 +19,8 @@ const AdminLayout = ({ children }) => {
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: <FaChartPie /> },
     { id: "stock", label: "Stock Details", icon: <FaUsers /> },
-    { id: "products", label: "Products", icon: <FaBox /> },
-    { id: "orders", label: "Orders", icon: <FaClipboardList /> },
+    { id: "products", label: "Products CRUD", icon: <FaBox /> },
+    { id: "orders", label: "Requested-Orders", icon: <FaClipboardList /> },
     { id: "analytics", label: "Analytics", icon: <FaChartLine /> },
     { id: "tools", label: "Create Tools", icon: <FaTools /> },
     { id: "manage-tools", label: "Manage Tools", icon: <FaCogs /> },
@@ -31,7 +32,7 @@ const AdminLayout = ({ children }) => {
     switch (tab) {
       case "products":
         // return <ProductActions />;
-        nevigate("/adminDash/products");
+        nevigate("/adminDash/wholesale/products");
         break;
       case "dashboard":
         nevigate("/adminDash");
@@ -40,10 +41,10 @@ const AdminLayout = ({ children }) => {
         nevigate("/adminDash/ordersdashboard");
         break;
       case "tools":
-        nevigate("/adminDash/tools");
+        nevigate("/adminDash/wholesale/tools");
         break;
       case "manage-tools":
-        nevigate("/adminDash/manage-tools");
+        nevigate("/adminDash/wholesale/manage-tools");
         break;
       case "stock":
         nevigate("/adminDash/stock");
@@ -54,11 +55,11 @@ const AdminLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-100 to-gray-200">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-100 to-blue-200">
       {/* Sidebar */}
       <nav className="bg-white shadow-lg md:w-1/4 lg:w-1/5">
         <div className="md:hidden flex justify-between items-center p-4">
-          <h1 className="text-2xl font-bold text-blue-600">Admin Panel</h1>
+          <h1 className="text-2xl font-bold text-blue-800">Admin Panel</h1>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-gray-600 focus:outline-none"
@@ -102,12 +103,15 @@ const AdminLayout = ({ children }) => {
             isMobileMenuOpen ? "block" : "hidden"
           } lg:block p-4 md:p-6 space-y-2 `}
         >
-          <h1 className="text-2xl font-bold my-2">WILDSQUAT WEB MANAGEMENT</h1>
+          <h1 className="text-2xl font-bold my-2 mb-10">
+            WILDSQUAT WEB-WHOLESALE MANAGEMENT
+          </h1>
           <button
-            className="p-2 border border-1 border-gray-200 rounded-lg bg-gray-100"
-            onClick={() => nevigate("/adminDash/wholesale/")}
+            className="p-2 border border-1 border-gray-200 rounded-lg bg-gray-100 hover:bg-gray-200"
+            onClick={() => nevigate("/adminDash/")}
           >
-            Switch To Wholesale Dashboard
+            <FaArrowLeft className="text-xl inline-block mx-2" /> Switch To
+            Retail Dashboard
           </button>
           {tabs.map((tab) => (
             <button
@@ -137,4 +141,4 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-export default AdminLayout;
+export default WholesaleAdminLayout;

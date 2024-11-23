@@ -17,7 +17,8 @@ import { FaExchangeAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../redux/slices/authSlice";
 
-const ProfileTab = ({ data, setLoad, load }) => {
+const ProfileTab = ({ data }) => {
+  const [load, setLoad] = useState(false);
   const dispatch = useDispatch();
   const nevigate = useNavigate();
   const [formData, setFormData] = useState({

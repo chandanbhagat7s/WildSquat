@@ -82,7 +82,7 @@ const ProductCard = ({ p, onCancelOrder }) => {
   );
 };
 
-export default function ProductOrdredList() {
+export default function ProductOrdredList({}) {
   const [orders, setOrders] = useState([]);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState([]);
