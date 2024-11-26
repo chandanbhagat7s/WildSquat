@@ -152,7 +152,7 @@ export default function RightSide({ product }) {
                   key={index}
                   src={`${url}img/${img.coverImage}`}
                   alt={`Thumbnail ${index + 1}`}
-                  className={`w-20 h-20 object-cover rounded-md cursor-pointer ${
+                  className={`w-20 h-20 object-cover object-top rounded-md cursor-pointer ${
                     product._id == img._id ? "border-2 border-blue-500" : ""
                   }`}
                   onClick={() => {

@@ -91,7 +91,7 @@ const ProductListing = () => {
               animate="visible"
               className="grid grid-cols-2 lg:grid-cols-4 gap-2"
             >
-              {products.length > 0 &&
+              {products?.length > 0 &&
                 products.map((product) => (
                   <motion.div key={product._id} variants={itemVariants}>
                     <ProductCard product={product} />

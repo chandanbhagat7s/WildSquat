@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { FiUpload, FiX } from "react-icons/fi";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { error, success } from "../../../../redux/slices/errorSlice";
 import DataTable from "./DataTable";
+import ProductSearch from "../Common/SearchProduct";
 
 const CreateProductForm = () => {
   const dispatch = useDispatch();
-  const { categoryName } = useSelector((state) => state.product);
 
-  let [store, setStore] = useState([]);
+  let [category, setCategory] = useState([]);
   const [product, setProduct] = useState({
     name: "",
     price: 0,
@@ -19,11 +19,11 @@ const CreateProductForm = () => {
     material: "",
     images: [],
     features: ["", "", "", "", ""],
-    shippingDetails: "",
-    returnDetails: "",
+
     category: [],
-    color: 0,
+    colors: 0,
     careInstructions: "",
+    moq: 0,
   });
 
   const sizeOptions = [
@@ -42,9 +42,9 @@ const CreateProductForm = () => {
   async function bringProductInfo(id) {
     try {
       if (id) {
-        const res = await axios.get(`/api/v1/product/getProduct/${id}`);
+        const res = await axios.get(`/api/v1/wholesale/product/${id}`);
 
-        const p = res?.data?.product;
+        const p = res?.data?.data;
         setProduct({
           name: p.name,
           price: 0,
@@ -58,6 +58,7 @@ const CreateProductForm = () => {
           category: [],
           colors: 0,
           careInstructions: p.careInstructions,
+          moq: 0,
         });
       }
     } catch (e) {
@@ -143,7 +144,7 @@ const CreateProductForm = () => {
         }
       }
 
-      const res = await axios.post("/api/v1/admin/create", fd);
+      const res = await axios.post("/api/v1/wholesale/product", fd);
 
       if (res.data.status == "success") {
         dispatch(success({ message: "product added successfully" }));
@@ -162,6 +163,19 @@ const CreateProductForm = () => {
     }
   };
 
+  async function getAllTools(params) {
+    try {
+      const res = await axios.get(
+        "/api/v1/wholesale/tool?fields=_id,label,name"
+      );
+
+      setCategory([...res?.data.data]);
+    } catch (e) {}
+  }
+  useEffect(() => {
+    getAllTools();
+  }, []);
+
   return (
     <>
       <div className=" min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
@@ -170,7 +184,7 @@ const CreateProductForm = () => {
           <div className="mx-auto text-center my-1 font-bold text-xl">
             Auto Fill Product
           </div>
-          {/* <ProductSearch setSelectedProduct={handleClickSelectedProduct} /> */}
+          <ProductSearch setSelectedProduct={handleClickSelectedProduct} />
         </div>
 
         <form onSubmit={handleSubmit} className="py-8 p-1 lg:px-8 space-y-6">
@@ -285,6 +299,41 @@ const CreateProductForm = () => {
               htmlFor="material"
               className="block text-sm font-medium text-gray-700"
             >
+              MOQ
+            </label>
+            <input
+              type="text"
+              id="material"
+              name="moq"
+              value={product.moq}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Polyester,Nylon,Fleece etc"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="material"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Color
+            </label>
+            <input
+              type="text"
+              id="material"
+              name="colors"
+              value={product.colors}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Polyester,Nylon,Fleece etc"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="material"
+              className="block text-sm font-medium text-gray-700"
+            >
               Material
             </label>
             <input
@@ -370,7 +419,7 @@ const CreateProductForm = () => {
             >
               Add Into Category
             </label>
-            {/* <DataTable data={categoryName} additon={handleCategoryChanges} /> */}
+            <DataTable data={category} additon={handleCategoryChanges} />
           </div>
 
           <div>

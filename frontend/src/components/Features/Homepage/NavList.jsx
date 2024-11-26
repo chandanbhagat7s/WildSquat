@@ -115,15 +115,17 @@ const DropdownMenu = ({ category, onClose }) => {
               <img
                 src={`${url}img/${product.coverImage}`}
                 alt={product.name}
-                className="h-16 w-16 object-cover rounded-md shadow-md"
+                className="h-16 w-16 object-cover rounded-md shadow-md object-top"
               />
               <div className="flex-grow">
                 <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
                   {product.name}
                 </h3>
                 <p className="text-sm text-gray-500 line-clamp-1">
-                  {product?.shortDescription?.slice(0, 15) + "..." ||
-                    "Premium product"}
+                  Rs.{" "}
+                  <span className="font-bold text-black">
+                    {product?.price + "..." || "Premium product"}
+                  </span>
                 </p>
               </div>
               <FaChevronRight className="text-gray-400" />

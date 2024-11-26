@@ -39,7 +39,7 @@ const ProductCard = ({ product }) => {
   return (
     <motion.div
       key={product?._id}
-      className=" bg-gray-200 font-semibold  shadow-lg  overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-sm "
+      className="bg-gray-200 font-semibold shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-sm"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -51,25 +51,33 @@ const ProductCard = ({ product }) => {
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.4 }}
         >
-          <img
-            src={`${url}img/${product?.coverImage}`}
-            alt={product?.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:animate-pulse"
-          />
+          {/* Image Container with Aspect Ratio */}
+          <div className="relative w-full h-0 pb-[100%]">
+            {" "}
+            {/* 1:1 aspect ratio */}
+            <img
+              src={`${url}img/${product?.coverImage}`}
+              alt={product?.name}
+              className="absolute top-0 left-0 w-full h-full object-cover object-top"
+            />
+          </div>
         </motion.div>
-        <div className="absolute bottom-0 right-4 flex space-x-2 ">
+        <div className="absolute bottom-0 right-4 flex space-x-2">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             className="p-3 bg-white rounded-full shadow-md transition-colors duration-200"
-            onClick={() => ATC(product?._id)}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent triggering parent onClick
+              ATC(product?._id);
+            }}
           >
             <FiShoppingCart size={20} />
           </motion.button>
         </div>
       </div>
-      <div className="p-6 text-center ">
-        <h3 className=" font-bold lg:font-semibold  text-gray-600 mb-2">
+      <div className="p-6 text-center">
+        <h3 className="font-bold lg:font-semibold text-gray-700 mb-2">
           {product?.name}
         </h3>
         <p className="text-2xl font-bold text-gray-800 text-center">

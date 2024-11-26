@@ -5,12 +5,15 @@ const catchAsync = require("../../utils/catchAsync");
 const Product = require("./../Model/Product")
 const Tool = require("./../Model/Tools");
 const multer = require("multer");
+const { getOne } = require("../../utils/factory");
 
 
 // now we will decrease the quality and perform many operation 
 const multerStorage = multer.memoryStorage();
 
 exports.resizeImage = catchAsync(async (req, res, next) => {
+    console.log("riq.file", req.files);
+
     if (!req.files.images) {
         return next(new appError("please upload a image files", 400))
     }
@@ -84,15 +87,15 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         return next(new appError("Product not created plese try again", 500))
     }
 
-    let filter = { _id: { $in: c } }
+    // let filter = { _id: { $in: c } }
 
-    let update = {
-        $push: {
-            products: product._id
-        }
-    }
+    // let update = {
+    //     $push: {
+    //         products: product._id
+    //     }
+    // }
 
-    const tool = await Tool.updateMany(filter, update)
+    // const tool = await Tool.updateMany(filter, update)
 
 
     res.status(200).send({
@@ -101,8 +104,27 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.getProduct = getOne(Product)
 
 
+
+exports.getSearchedProduct = catchAsync(async (req, res, next) => {
+
+    const { search } = req.query;
+    console.log("req query is", req.query);
+
+    const products = await Product.find({
+        name: { $regex: search, $options: 'i' }
+    }, "_id name images price")
+
+
+
+    res.status(200).send({
+        status: "success",
+        products,
+
+    })
+})
 
 
 

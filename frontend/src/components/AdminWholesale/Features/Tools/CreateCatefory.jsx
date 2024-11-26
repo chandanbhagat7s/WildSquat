@@ -26,15 +26,17 @@ const CreateCategory = () => {
     e.preventDefault();
     try {
       const fd = new FormData();
+
+      fd.append("name", selectedValue);
       fd.append("label", label);
       fd.append("shortDescription", shortDescription);
 
       images.map((el) => {
         fd.append("images", el);
       });
-      const data = await axios.post("/api/v1/admin/createCategory", fd);
+      await axios.post("/api/v1/wholesale/tool/", fd);
 
-      dispatch(success({ message: data.data.msg || "something went wrong" }));
+      dispatch(success({ message: "Category created " }));
     } catch (e) {
       dispatch(
         error({
@@ -55,9 +57,7 @@ const CreateCategory = () => {
     <div className="max-w-2xl mx-auto mt-10 p-10 bg-white rounded-2xl shadow-2xl">
       <div className="mb-6">
         <h2 className="text-4xl font-bold text-gray-900">Create Tools </h2>
-        <p className="text-sm text-gray-500">
-          Create category, add slider, cards, posters..
-        </p>
+        <p className="text-sm text-gray-500">Create category, add slider</p>
       </div>
 
       <div className="space-y-8">

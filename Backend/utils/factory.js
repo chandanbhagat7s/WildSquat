@@ -14,7 +14,7 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
 
 
     res.status(201).json({
-        status: 'success',
+        status: true,
         data: doc
     })
 })
@@ -22,7 +22,7 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
 
 exports.getAll = Model => catchAsync(async (req, res, next) => {
 
-    let features = new Apifeature(Model.find(), req.query).filter().sort().fields().pagination()
+    let features = new Apifeature(Model.find(), req.query).filter().sort().fields().pagination().populate()
 
     let doc = await features.query;
 
@@ -31,7 +31,7 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
     }
 
     res.status(200).json({
-        status: 'success',
+        status: true,
         totalResult: doc.length,
         data: doc
     })
@@ -51,7 +51,7 @@ exports.getAllByFilterOut = (Model) => catchAsync(async (req, res, next) => {
     }
 
     res.status(200).json({
-        status: 'success',
+        status: true,
         totalResult: doc.length,
         data: doc
     })
@@ -68,7 +68,7 @@ exports.getOne = Model => catchAsync(async (req, res, next) => {
         return next(new appError('unable to find documnet  ', 404))
     }
     res.status(200).json({
-        status: 'success',
+        status: true,
         data: doc
     })
 
@@ -80,8 +80,8 @@ exports.deleteOne = Model => catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id)
 
 
-    res.status(200).json({
-        status: 'success',
+    res.status(204).json({
+        status: true,
         data: null
     })
 })
@@ -97,13 +97,32 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
 
 
     res.status(200).json({
-        status: 'success',
+        status: true,
         data: doc
     })
 })
 
 
+exports.updateByPush = Model => catchAsync(async (req, res, next) => {
 
+    const doc = await Model.findByIdAndUpdate(req.params.id, {
+        ...req.body
+    }, {
+        runValidators: true,
+        new: true
+    })
+
+
+    res.status(200).json({
+        status: true,
+        data: doc
+    })
+
+
+
+
+
+})
 
 
 

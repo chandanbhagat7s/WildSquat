@@ -35,10 +35,7 @@ const productSchema = new mongoose.Schema({
         type: [String], // Array of image URLs
         required: true
     },
-    coverImage: {
-        type: String, // Array of image URLs
-        required: true
-    },
+
     features: {
         type: [String],
         required: true
@@ -56,6 +53,9 @@ const productSchema = new mongoose.Schema({
     colors: {
         type: Number
     },
+    moq: {
+        type: Number
+    }
 
 
 });

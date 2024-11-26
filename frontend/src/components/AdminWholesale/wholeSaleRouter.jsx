@@ -4,6 +4,7 @@ import WholesaleAdminLayout from "./Layout/adminLayout";
 import ProductActions from "./Features/Products/ProductsCRUD";
 import CreateCategory from "./Features/Tools/CreateCatefory";
 import ManageTools from "./Features/Tools/ManageTools";
+import BulkListLayoutProduct from "./Features/Common/BulkListProduct";
 
 function WholesaleAdminrouter() {
   return (
@@ -38,6 +39,20 @@ function WholesaleAdminrouter() {
             <WholesaleAdminLayout>
               <ManageTools />
             </WholesaleAdminLayout>
+          }
+        />
+
+        <Route
+          path="/productDetails/:id"
+          element={<div className="">{/* <Product />{" "} */}</div>}
+        />
+
+        <Route
+          path="/productList/:id"
+          element={
+            <div className="">
+              <BulkListLayoutProduct />
+            </div>
           }
         />
 

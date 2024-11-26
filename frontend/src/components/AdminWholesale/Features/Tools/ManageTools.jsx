@@ -7,22 +7,21 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import ToolProductAction from "./ToolProductAction";
 import ChangeOrder from "./ChangeOrder";
-import { error } from "../../../../redux/slices/errorSlice";
+import { error, success } from "../../../../redux/slices/errorSlice";
+import url from "../../../../assets/url";
+import FullScreenDialog from "../Common/FullScreenDialog";
 
 export default function ManageTools() {
   const dispatch = useDispatch();
   const [tools, setTools] = useState({
     sliders: [],
     category: [],
-    posters: [],
-    cards: [],
-    offer: [],
   });
 
   async function getAllTools() {
     try {
-      const res = await axios.get(`/api/v1/admin/getAllMyTools/${gender}`);
-      const data = res.data.allToolsdata;
+      const res = await axios.get(`/api/v1/wholesale/tool`);
+      const data = res.data.data;
       let sliders = [],
         category = [],
         custom = [];
@@ -87,7 +86,7 @@ const ContentDisplay = ({ tools }) => {
           </div>
         </div>
       ))}
-      {/* {isDialogOpen && (
+      {isDialogOpen && (
         <FullScreenDialog isOpen={isDialogOpen} onClose={closeDialog}>
           <ToolProductAction docid={btn} />
         </FullScreenDialog>
@@ -99,7 +98,7 @@ const ContentDisplay = ({ tools }) => {
         >
           <ChangeOrder docid={btn} onClose={closeDialogChange} />
         </FullScreenDialog>
-      )} */}
+      )}
     </div>
   );
 };
@@ -109,10 +108,9 @@ const ContentCard = ({ item, openDialog, setBtn, openDialogChange }) => {
 
   async function deleteThisTool(toolid) {
     try {
-      const res = await axios.delete(`/api/v1/admin/actionOnTool/${toolid}`);
-      if (res.status === 204) {
-        dispatch(success({ message: "Tool deleted successfully" }));
-      }
+      await axios.delete(`/api/v1/wholesale/tool/${toolid}`);
+
+      dispatch(success({ message: "Tool deleted successfully" }));
     } catch (e) {
       dispatch(error({ message: "Please try again" }));
     }
@@ -121,6 +119,11 @@ const ContentCard = ({ item, openDialog, setBtn, openDialogChange }) => {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden  hover:bg-gray-200">
       <div className="relative pb-72 overflow-hidden">
+        <img
+          className="absolute inset-0 h-96 object-cover transform hover:scale-110 transition-transform duration-300"
+          src={`${url}wholesale/tool/${item.images[0]}`}
+          alt={item.name}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
       </div>
       <div className="p-3">

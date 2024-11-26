@@ -57,7 +57,7 @@ const Navbar = () => {
   async function getData() {
     try {
       const res = await axios.get(
-        `/api/v1/tools/getTool/CATEGORY?gender=${gender}&limit=6&page=1&fields=label,_id,products&populate=products&populateField=name,_id,coverImage&populateLimit=10`
+        `/api/v1/tools/getTool/CATEGORY?gender=${gender}&limit=6&page=1&fields=label,_id,products&populate=products&populateField=name,_id,price,coverImage&populateLimit=10`
       );
 
       setCategories([...res?.data?.products]);

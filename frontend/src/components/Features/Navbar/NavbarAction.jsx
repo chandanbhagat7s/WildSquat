@@ -25,7 +25,8 @@ const NavbarActions = ({}) => {
           {!isToggled ? "Male" : "M"}
         </span>
         <button
-          onClick={handleGenderToggle}
+          // onClick={handleGenderToggle}
+          onClick={() => nevigate("/commingSoon")}
           className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out ${
             isToggled ? "bg-pink-600" : "bg-blue-600"
           }`}

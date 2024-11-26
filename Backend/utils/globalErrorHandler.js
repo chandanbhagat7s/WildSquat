@@ -54,6 +54,7 @@ const callProdError = (err, req, res) => {
 
 
 const callDevError = (err, req, res) => {
+    console.log("error", err);
 
     if (req.originalUrl.startsWith('/api')) {
         err.statusCode = err.statusCode || 500;

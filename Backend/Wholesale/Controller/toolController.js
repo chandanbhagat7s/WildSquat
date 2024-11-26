@@ -1,7 +1,7 @@
 const sharp = require("sharp")
 const appError = require("../../utils/appError")
 const catchAsync = require("../../utils/catchAsync")
-const { createOne } = require("../../utils/factory")
+const { createOne, getAll, deleteOne, updateByPush } = require("../../utils/factory")
 const Tool = require("../Model/Tools")
 const multer = require("multer")
 
@@ -18,12 +18,12 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 
 
     // images
-    req.body.Images = []
+    req.body.images = []
     req.files.images &&
         await Promise.all(req.files.images.map(async (el, i) => {
             const fileName = `${req.body.name}-${Math.random()}-${i}.jpeg`
             await sharp(el.buffer).toFormat('jpeg').toFile(`./Public/wholesale/tool/${fileName}`)
-            req.body.Images.push(fileName);
+            req.body.images.push(fileName);
         }))
 
 
@@ -52,5 +52,18 @@ exports.uploadImages = uploads.fields([
 exports.createTool = createOne(Tool)
 
 
+exports.getAllTool = getAll(Tool)
 
+exports.deleteTool = deleteOne(Tool)
+
+exports.addProductToToolMiddleware = catchAsync(async (req, res, next) => {
+
+    let obj = req.body.push;
+    let query = {
+        $push: { products: { $each: obj } }
+    }
+    req.body = query;
+    next()
+})
+exports.addProductToTool = updateByPush(Tool)
 

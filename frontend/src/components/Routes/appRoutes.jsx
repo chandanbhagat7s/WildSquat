@@ -7,12 +7,15 @@ import Authentication from "../Authentication/Authenticater";
 import PageNotFound from "../Instruction/PageNotFound";
 import LoginPage from "../Authentication/Login";
 import BulkListLayoutProduct from "../Features/BulkList/BulkListLayoutProduct";
+import BulkListLayoutProductWholesale from "../AdminWholesale/Features/Common/BulkListProduct";
 import BulkListLayoutCard from "../Features/BulkList/BulkListLayoutCard";
 import Product from "../Features/ProductDetails/Product";
 import PrivacyPolicyPage from "../Authentication/PrivatePolicy";
 import Adminrouter from "../Admin/Router/adminRouter";
 import ProfileRouter from "../Features/Profile/ProfileRouter";
 import WholesaleAdminrouter from "../AdminWholesale/wholeSaleRouter";
+import LandingPage from "../AdminWholesale/Features/Homepage/LandingPage";
+import ComingSoonPage from "../Instruction/CommingSoon";
 
 export default function AppRoutes() {
   return (
@@ -79,6 +82,31 @@ export default function AppRoutes() {
                 <BulkListLayoutProduct />
               </div>
             </MainLayout>
+          }
+        />
+
+        <Route
+          path="/commingSoon"
+          element={
+            <>
+              <ComingSoonPage />
+            </>
+          }
+        />
+        <Route
+          path="/wholesale"
+          element={
+            <>
+              <LandingPage />
+            </>
+          }
+        />
+        <Route
+          path="/wholesale/category/:id"
+          element={
+            <>
+              <BulkListLayoutProductWholesale />
+            </>
           }
         />
 

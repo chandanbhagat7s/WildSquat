@@ -4,6 +4,7 @@ import { FiTrash2 } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { error, success } from "../../../../redux/slices/errorSlice";
 import url from "../../../../assets/url";
+import ProductSearch from "../Common/SearchProduct";
 
 const ToolProductAction = ({ docid }) => {
   const [selectedItem, setSelectedItem] = useState({});
@@ -11,18 +12,11 @@ const ToolProductAction = ({ docid }) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const dispatch = useDispatch();
   const [searchedProduct, setsearchedProduct] = useState([]);
-  const [discountProduct, setDiscountProduct] = useState({});
 
   function setsearchedProductOnClick(id, el) {
     if (![...searchedProduct].includes(id)) {
       setsearchedProduct([...searchedProduct, id]);
-      setDiscountProduct({
-        ...discountProduct,
-        [id]: {
-          discount: 0,
-          newPrice: 0,
-        },
-      });
+
       setData([...data, el]);
     }
   }
@@ -30,9 +24,9 @@ const ToolProductAction = ({ docid }) => {
   async function getDataOfTool() {
     try {
       const res = await axios.get(
-        `/api/v1/admin/getToolByIdManage/${docid}?fields=name,_id,products,shortDescription&populate=products&populateField=name,price,_id,coverImage&populateLimit=20&page=1`
+        `/api/v1/wholesale/tool/?_id=${docid}&fields=name,_id,products,shortDescription&populate=products&populateField=name,price,_id,images&populateLimit=20&page=1`
       );
-      setSelectedItem({ ...res.data.products });
+      setSelectedItem({ ...res.data.data[0] });
     } catch (e) {
       dispatch(error({ message: "something Went wrong" }));
     }
@@ -48,26 +42,20 @@ const ToolProductAction = ({ docid }) => {
 
   async function addProductsToTool() {
     try {
-      let res;
-      if (selectedItem.name == "OFFER") {
-        res = await axios.patch("/api/v1/admin/actionOnTool", {
-          action: "ADDANDUPDATE",
-          toolId: selectedItem._id,
-          ids: searchedProduct,
-          discountProduct,
-        });
-      } else {
-        res = await axios.patch("/api/v1/admin/actionOnTool", {
-          action: "ADD",
-          toolId: selectedItem._id,
-          ids: searchedProduct,
-        });
-      }
+      console.log(selectedItem, searchedProduct);
 
-      if (res?.data?.status === "success") {
-        dispatch(success({ message: res?.data?.msg || "Products added!" }));
+      let res = await axios.patch(
+        `/api/v1/wholesale/tool/operation/${selectedItem._id}`,
+        {
+          push: searchedProduct,
+        }
+      );
+
+      if (res.data.status == true) {
+        dispatch(success({ message: "Products added!" }));
       }
     } catch (e) {
+      console.log("error ", e);
       dispatch(
         error({
           message:
@@ -112,25 +100,13 @@ const ToolProductAction = ({ docid }) => {
     setSelectedProducts([]);
   };
 
-  function handleChangeDiscount(e, id) {
-    const { name, value } = e.target;
-
-    setDiscountProduct({
-      ...discountProduct,
-      [id]: {
-        ...discountProduct[id],
-        [name]: value,
-      },
-    });
-  }
-
   useEffect(() => {
     getDataOfTool();
   }, []);
 
   return (
     <>
-      {selectedItem?.name && (
+      {selectedItem.name && (
         <div className="bg-white rounded-xl shadow-lg p-2 lg:p-6 max-w-5xl mx-auto my-8">
           <h2 className="text-3xl font-bold mb-6 text-center">
             {selectedItem.name}
@@ -140,7 +116,7 @@ const ToolProductAction = ({ docid }) => {
           </p>
 
           <div className="mb-10">
-            {/* <ProductSearch setSelectedProduct={setsearchedProductOnClick} /> */}
+            <ProductSearch setSelectedProduct={setsearchedProductOnClick} />
           </div>
 
           {searchedProduct.length > 0 && (
@@ -153,61 +129,12 @@ const ToolProductAction = ({ docid }) => {
                     className="bg-white p-4 rounded-lg shadow-md text-center"
                   >
                     <img
-                      src={`${url}img/${el.coverImage}`}
+                      src={`${url}wholesale/product/${el?.image}`}
                       alt={el.name}
                       className="h-28 w-full object-contain mb-2 rounded-lg"
                     />
                     <p className="text-gray-700 font-semibold">{el.name}</p>
                     <p className="text-gray-700 font-semibold">{el.price}</p>
-                    {selectedItem?.name == "OFFER" && (
-                      <div className="flex flex-col space-y-4">
-                        {/* New Price Input */}
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="newPrice"
-                            className="text-sm font-medium text-gray-700 mb-1"
-                          >
-                            New Price
-                          </label>
-                          <input
-                            type="number"
-                            id="newPrice"
-                            placeholder="Enter new price"
-                            className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            name="newPrice"
-                            value={discountProduct[el.id]?.newPrice || 0}
-                            onChange={(e) => handleChangeDiscount(e, el.id)}
-                          />
-                        </div>
-
-                        {/* Discount Input */}
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="discount"
-                            className="text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Discount (%)
-                          </label>
-                          <input
-                            type="number"
-                            id="discount"
-                            placeholder="Enter discount percentage"
-                            className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            name="discount"
-                            value={discountProduct[el.id]?.discount || 0}
-                            onChange={(e) => handleChangeDiscount(e, el.id)}
-                          />
-                        </div>
-
-                        {/* Calculated Price */}
-                        <p className="p-3 text-lg font-semibold text-gray-900">
-                          Rs.{" "}
-                          {discountProduct[el.id]?.newPrice -
-                            (discountProduct[el.id]?.newPrice / 100) *
-                              discountProduct[el.id]?.discount}
-                        </p>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -252,7 +179,7 @@ const ToolProductAction = ({ docid }) => {
                 </tr>
               </thead>
               <tbody>
-                {selectedItem.products.map((product, index) => (
+                {selectedItem?.products?.map((product, index) => (
                   <tr
                     key={product._id}
                     className="hover:bg-gray-100 transition-colors"
@@ -261,8 +188,8 @@ const ToolProductAction = ({ docid }) => {
                     <td className="py-3 px-6 border-t">
                       <input
                         type="checkbox"
-                        checked={selectedProducts.includes(product._id)}
-                        onChange={() => toggleProductSelection(product._id)}
+                        checked={selectedProducts?.includes(product._id)}
+                        onChange={() => toggleProductSelection(product?._id)}
                         className="form-checkbox h-5 w-5 text-blue-600"
                       />
                     </td>
@@ -271,19 +198,19 @@ const ToolProductAction = ({ docid }) => {
                     </td>
                     <td className="py-3 px-6 border-t">
                       <img
-                        src={`${url}/img/${product.coverImage}`}
-                        alt={product.name}
+                        src={`${url}wholesale/product/${product?.images[0]}`}
+                        alt={product?.name}
                         className="h-12 w-12 object-cover rounded-lg object-top"
                       />
                     </td>
-                    <td className="py-3 px-6 border-t">{product.price}</td>
+                    <td className="py-3 px-6 border-t">{product?.price}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {selectedProducts.length > 0 && (
+          {selectedProducts?.length > 0 && (
             <div className="mt-6 flex justify-end">
               <button
                 onClick={removeSelectedProducts}
