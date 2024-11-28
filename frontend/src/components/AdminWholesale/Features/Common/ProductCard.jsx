@@ -3,7 +3,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import url from "../../../../assets/url";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, openDialog }) => {
   const navigate = useNavigate();
 
   return (
@@ -13,7 +13,7 @@ const ProductCard = ({ product }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      onClick={() => navigate(`/productDetails/${product?._id}`)}
+      onClick={() => openDialog(product?._id)}
     >
       <div className="relative">
         <motion.div

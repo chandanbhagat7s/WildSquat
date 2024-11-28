@@ -8,19 +8,26 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { error } from "../../../../redux/slices/errorSlice";
 import LoadingSpinner from "../../../common/Spinner";
 import ProductCard from "./ProductCard";
-import ThinkingCard from "./ThinkingCard";
+import FullScreenDialog from "./FullScreenDialog";
+import Product from "../Products/ProductDetails";
 
 const BulkListLayoutProduct = ({ toolName }) => {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [id, setId] = useState("");
   const navigate = useNavigate();
   const params = useParams();
 
   const location = useLocation();
   let state = location?.state?.reset || false;
-
+  const closeDialog = () => setIsDialogOpen(false);
+  const openDialog = (productId) => {
+    setId(productId);
+    setIsDialogOpen(true);
+  };
   const fetchProducts = async () => {
     try {
       let res;
@@ -53,10 +60,10 @@ const BulkListLayoutProduct = ({ toolName }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (state) {
-      setPage((page) => page - page);
-      setProducts(() => []);
-    }
+    // if (state) {
+    //   setPage((page) => page - page);
+    //   setProducts(() => []);
+    // }
 
     fetchProducts();
   }, []);
@@ -68,7 +75,7 @@ const BulkListLayoutProduct = ({ toolName }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-1 sm:px-1 lg:px-8">
         {!toolName ? (
           <>
             <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500 tracking-tight mb-4 py-2 animate-fadeIn">
@@ -97,27 +104,25 @@ const BulkListLayoutProduct = ({ toolName }) => {
           endMessage={
             <div className="text-center text-2xl font-bold mt-20">
               You have seen all products
-              <div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center px-10 py-3 bg-gray-600 text-white rounded-full font-semibold text-xl shadow-lg hover:bg-gray-700 transition-colors duration-300 mt-3"
-                  onClick={() => navigate("/categoryLists/CATEGORY")}
-                >
-                  Explore more...
-                  <FaArrowTrendUp className="ml-3 animate-ping" size={24} />
-                </motion.button>
-              </div>
             </div>
           }
         >
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
             {products.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <ProductCard
+                key={product._id}
+                product={product}
+                openDialog={openDialog}
+              />
             ))}
           </div>
         </InfiniteScroll>
       </div>
+      {isDialogOpen && (
+        <FullScreenDialog isOpen={isDialogOpen} onClose={closeDialog}>
+          <Product productId={id} />
+        </FullScreenDialog>
+      )}{" "}
     </motion.div>
   );
 };

@@ -33,7 +33,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="space-y-12 px-4 py-8">
+    <div className="space-y-12 px-1 py-8">
       <Slider images={sliderImages} />
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Categories</h2>

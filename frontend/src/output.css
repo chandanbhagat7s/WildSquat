@@ -1798,6 +1798,11 @@ video {
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
+.bg-green-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+}
+
 .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
@@ -2305,6 +2310,10 @@ video {
   padding-bottom: 24rem;
 }
 
+.pb-\[100\%\] {
+  padding-bottom: 100%;
+}
+
 .pl-1 {
   padding-left: 0.25rem;
 }
@@ -2367,10 +2376,6 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pb-\[100\%\] {
-  padding-bottom: 100%;
 }
 
 .text-left {
@@ -2759,6 +2764,12 @@ video {
 
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.backdrop-blur-lg {
+  --tw-backdrop-blur: blur(16px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+          backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 
 .transition {
@@ -3411,16 +3422,16 @@ video {
     display: none;
   }
 
+  .md\:h-64 {
+    height: 16rem;
+  }
+
   .md\:h-96 {
     height: 24rem;
   }
 
   .md\:h-\[70vh\] {
     height: 70vh;
-  }
-
-  .md\:h-64 {
-    height: 16rem;
   }
 
   .md\:w-1\/2 {
