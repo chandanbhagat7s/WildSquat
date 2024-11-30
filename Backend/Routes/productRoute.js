@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllProduct, getAllProductForMiniCard, getProductById, getSearchedProduct, getProductByName, getAllCategory, getTrending, getAllPosters, getAllCardProducts, getAllProductByFilter } = require('../Controllers/productController');
+const { getAllProduct, getAllProductForMiniCard, getProductById, getSearchedProduct, getProductByName, getAllCategory, getTrending, getAllPosters, getAllCardProducts, getAllProductByFilter, getProduct } = require('../Controllers/productController');
 const cacheMiddleware = require('../Redis/cacheMiddleware');
 // const { isLoggedIn } = require('../Middleware/isLoggedIn');
 const productRouter = express.Router()

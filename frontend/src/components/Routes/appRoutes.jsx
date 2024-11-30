@@ -15,7 +15,9 @@ import Adminrouter from "../Admin/Router/adminRouter";
 import ProfileRouter from "../Features/Profile/ProfileRouter";
 import WholesaleAdminrouter from "../AdminWholesale/wholeSaleRouter";
 import LandingPage from "../AdminWholesale/Features/Homepage/LandingPage";
+import ProductDetailWholesale from "../AdminWholesale/Features/Products/ProductDetails";
 import ComingSoonPage from "../Instruction/CommingSoon";
+import WholesaleLayout from "../AdminWholesale/Layout/WholesaleLayout";
 
 export default function AppRoutes() {
   return (
@@ -97,7 +99,9 @@ export default function AppRoutes() {
           path="/wholesale"
           element={
             <>
-              <LandingPage />
+              <WholesaleLayout>
+                <LandingPage />
+              </WholesaleLayout>
             </>
           }
         />
@@ -105,8 +109,19 @@ export default function AppRoutes() {
           path="/wholesale/category/:id"
           element={
             <>
-              <BulkListLayoutProductWholesale />
+              <WholesaleLayout>
+                <BulkListLayoutProductWholesale />
+              </WholesaleLayout>
             </>
+          }
+        />
+
+        <Route
+          path="/wholesale/productDetails/:id"
+          element={
+            <WholesaleLayout>
+              <ProductDetailWholesale />
+            </WholesaleLayout>
           }
         />
 

@@ -52,16 +52,19 @@ exports.getProductById = catchAsync(async (req, res, next) => {
         select: "products name"
     }])
 
-    const categoryid = await Tool.findOne({
-        products: { $in: product._id },
-        name: "CATEGORY"
-    }, "_id")
+    let categoryid;
+    if (product?._id) {
+        categoryid = await Tool.findOne({
+            products: { $in: product._id },
+            name: "CATEGORY"
+        }, "_id")
 
-    redisClient.incr(`product:${productId}:viewCount`, (err, reply) => {
-        if (err) {
+        redisClient.incr(`product:${productId}:viewCount`, (err, reply) => {
+            if (err) {
 
-        }
-    });
+            }
+        });
+    }
 
     res.status(200).send({
         status: "success",
@@ -283,7 +286,7 @@ exports.homePageClickData = catchAsync(async (req, res, next) => {
 
 
 
-
+exports.getProduct = factory.getOne(Product)
 
 
 

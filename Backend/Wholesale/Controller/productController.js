@@ -68,6 +68,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         features,
         colors,
         careInstructions,
+        moq
     } = req.body;
 
     const product = await Product.create({
@@ -82,6 +83,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         features,
         colors,
         careInstructions,
+        moq
     })
     if (!product) {
         return next(new appError("Product not created plese try again", 500))

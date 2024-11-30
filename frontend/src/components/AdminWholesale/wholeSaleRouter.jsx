@@ -43,8 +43,6 @@ function WholesaleAdminrouter() {
           }
         />
 
-        <Route path="/productDetails/:id" element={<Product />} />
-
         <Route
           path="/productList/:id"
           element={

@@ -9,44 +9,6 @@ import NavbarActions from "./NavbarAction";
 import logo from "./../../../assets/logo.jpeg";
 import PremiumNavbar from "../Homepage/NavList";
 
-const NavItem = ({ category }) => {
-  const navigate = useNavigate();
-  const Icon = FiBox;
-
-  return (
-    <div className="group relative z-10">
-      <button
-        onClick={() =>
-          navigate(`/${category.name.toLowerCase().replace(/\s+/g, "-")}`)
-        }
-        className="flex items-center space-x-2 py-2 px-4 text-gray-600 hover:bg-gray-300 hover:text-black rounded-md transition-colors duration-200"
-      >
-        <Icon className="w-5 h-5 text-gray-500 group-hover:text-gray-700" />
-        <span className="font-medium ">{category.label}</span>
-        {category.products && (
-          <FaChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" />
-        )}
-      </button>
-
-      {category?.products?.length > 0 && (
-        <div className="absolute left-0 top-full hidden group-hover:block w-[50vw]  shadow-lg rounded-lg overflow-hidden  -translate-x-[15vw] bg-white bg-opacity-85 z-10 ">
-          <ul className="py-2 grid grid-cols-3 gap-1">
-            {category?.products?.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => navigate(`/productDetails/${item._id}`)}
-                className="px-4 text-center font-semibold rounded py-2 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 cursor-pointer transition-colors duration-200"
-              >
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
-
 const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
