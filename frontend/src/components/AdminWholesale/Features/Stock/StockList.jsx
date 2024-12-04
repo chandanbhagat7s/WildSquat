@@ -3,13 +3,12 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { error, success } from "../../../redux/slices/errorSlice";
-import LoadingSpinner from "../../common/Spinner";
-import url from "../../../assets/url";
+import { error, success } from "../../../../redux/slices/errorSlice";
+import LoadingSpinner from "../../../common/Spinner";
+import url from "../../../../assets/url";
 
 export default function StockList() {
   const dispatch = useDispatch();
-  const [gender, setGender] = useState("male");
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -19,7 +18,7 @@ export default function StockList() {
   const fetchProducts = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/product/getAllProductsByFilter?fields=coverImage,name,price,sizes&limit=8&page=${page}&gender=${gender}`
+        `/api/v1/wholesale/product?fields=images,name,price,sizes&limit=8&page=${page}`
       );
       const newProducts = res?.data?.data;
 
@@ -39,11 +38,7 @@ export default function StockList() {
     setPage(1);
     setProducts([]);
     fetchProducts();
-  }, [gender]);
-
-  const handleGenderChange = (newGender) => {
-    setGender(newGender);
-  };
+  }, []);
 
   const handleOpenDialog = (product) => {
     setSelectedProduct(product);
@@ -90,25 +85,6 @@ export default function StockList() {
       transition={{ duration: 1 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center mb-10">
-          <button
-            onClick={() => handleGenderChange("male")}
-            className={`mr-2 px-4 py-2 ${
-              gender === "male" ? "bg-gray-600 text-white" : "bg-gray-300"
-            } rounded-full`}
-          >
-            Male
-          </button>
-          <button
-            onClick={() => handleGenderChange("female")}
-            className={`px-4 py-2 ${
-              gender === "female" ? "bg-gray-600 text-white" : "bg-gray-300"
-            } rounded-full`}
-          >
-            Female
-          </button>
-        </div>
-
         <InfiniteScroll
           dataLength={products.length}
           next={fetchProducts}
@@ -128,7 +104,7 @@ export default function StockList() {
               >
                 <div className="flex-shrink-0">
                   <img
-                    src={`${url}img/${product.coverImage}`}
+                    src={`${url}/wholesale/product/${product.images[0]}`}
                     alt={product.name}
                     className="h-32 w-32 object-cover rounded-md object-top"
                   />
@@ -193,6 +169,9 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
     { size: "L", price: 0 },
     { size: "XL", price: 0 },
     { size: "XXL", price: 0 },
+    { size: "3XL", price: 0 },
+    { size: "4XL", price: 0 },
+    { size: "5XL", price: 0 },
   ];
   const handleSizeChange = (size, price = 0) => {
     if (!price) {
@@ -237,7 +216,7 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
 
         {/* Product Image */}
         <img
-          src={`${url}img/${product?.coverImage}`}
+          src={`${url}/wholesale/product/${product.images[0]}`}
           alt="Product"
           className="w-32 h-32 object-contain mx-auto mb-4"
         />
@@ -247,7 +226,7 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
           <label className=" block text-sm font-bold text-gray-700">
             Sizes and Prices
           </label>
-          <div className="mt-2 space-y-2">
+          <div className="mt-2 space-y-2 md:grid md:grid-cols-2">
             {sizeOptions.map((size, i) => (
               <div key={size.size} className="flex items-center space-x-2">
                 <input

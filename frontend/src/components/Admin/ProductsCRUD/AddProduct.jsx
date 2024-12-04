@@ -187,6 +187,27 @@ const CreateProductForm = () => {
 
       if (res.data.status == "success") {
         dispatch(success({ message: "product added successfully" }));
+        setProduct({
+          name: "",
+          price: 1000,
+          shortDescription: "",
+          longDescription: "",
+          sizes: [],
+          material: "",
+          images: [],
+          coverImage: null,
+          features: ["", "", "", "", ""],
+          shippingDetails: "",
+          returnDetails: "",
+          category: [],
+          colorCategory: "",
+          careInstructions: "",
+          gender: "",
+          stock: 20,
+          dimension: [0, 0, 0],
+          stockPlace: 0,
+          weight: 0,
+        });
       } else {
         dispatch(error({ message: "something went wrong please try again" }));
       }

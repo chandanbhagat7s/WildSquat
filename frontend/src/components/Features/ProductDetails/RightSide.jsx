@@ -90,7 +90,7 @@ export default function RightSide({ product }) {
         />
       )}
 
-      <div className="lg:w-1/3 px-2 lg:pl-8">
+      <div className="lg:w-1/3 px-2 lg:pl-8 ">
         <h1 className="text-3xl font-bold mb-4 text-gray-700 capitalize text-center">
           {product.name}
         </h1>

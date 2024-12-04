@@ -51,7 +51,7 @@ const Product = () => {
         )}
       </div>
       {!loading && (
-        <div className="">
+        <div className="bg-gray-100 relative">
           <BulkListLayoutProduct toolId={category._id} />
         </div>
       )}

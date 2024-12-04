@@ -6,6 +6,7 @@ import CreateCategory from "./Features/Tools/CreateCatefory";
 import ManageTools from "./Features/Tools/ManageTools";
 import BulkListLayoutProduct from "./Features/Common/BulkListProduct";
 import Product from "./Features/Products/ProductDetails";
+import StockList from "./Features/Stock/StockList";
 
 function WholesaleAdminrouter() {
   return (
@@ -39,6 +40,14 @@ function WholesaleAdminrouter() {
           element={
             <WholesaleAdminLayout>
               <ManageTools />
+            </WholesaleAdminLayout>
+          }
+        />
+        <Route
+          path="/stock"
+          element={
+            <WholesaleAdminLayout>
+              <StockList />
             </WholesaleAdminLayout>
           }
         />

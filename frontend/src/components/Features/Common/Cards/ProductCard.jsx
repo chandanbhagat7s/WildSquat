@@ -66,7 +66,7 @@ const ProductCard = ({ product }) => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="p-3 bg-white rounded-full shadow-md transition-colors duration-200"
+            className="p-3  bg-white text-black rounded-full shadow-md transition-colors duration-200"
             onClick={(e) => {
               e.stopPropagation(); // Prevent triggering parent onClick
               ATC(product?._id);
@@ -76,10 +76,8 @@ const ProductCard = ({ product }) => {
           </motion.button>
         </div>
       </div>
-      <div className="p-6 text-center">
-        <h3 className="font-bold lg:font-semibold text-gray-700 mb-2">
-          {product?.name}
-        </h3>
+      <div className="py-2 px-1 text-center backdrop-blur-lg">
+        <h3 className=" text-gray-900 mb-2">{product?.name}</h3>
         <p className="text-2xl font-bold text-gray-800 text-center">
           {product?.discount > 0 ? (
             <div className="flex items-center justify-center text-center space-x-2">

@@ -130,7 +130,7 @@ const AdminLayout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-6 bg-white shadow-lg rounded-lg">
+      <main className="flex-1 p-4 md:p-6 bg-white shadow-lg rounded-lg ">
         {children}
       </main>
     </div>

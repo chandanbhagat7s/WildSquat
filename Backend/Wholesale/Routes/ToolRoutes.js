@@ -6,14 +6,13 @@ const { getOne } = require('../../utils/factory');
 const Router = express.Router()
 
 
-Router.use(isLoggedIn, giveAccess("ADMIN"))
 
 
-Router.route("/").get(getAllTool).post(uploadImages, resizeImage, createTool)
+Router.route("/").get(getAllTool).post(isLoggedIn, giveAccess("ADMIN"), uploadImages, resizeImage, createTool)
 
-Router.route("/:id").get(getOne).delete(deleteTool)
+Router.route("/:id").get(getOne).delete(isLoggedIn, giveAccess("ADMIN"), deleteTool)
 
-Router.route("/operation/:id").patch(addProductToToolMiddleware, addProductToTool)
+Router.route("/operation/:id").patch(isLoggedIn, giveAccess("ADMIN"), addProductToToolMiddleware, addProductToTool)
 
 
 module.exports = Router;

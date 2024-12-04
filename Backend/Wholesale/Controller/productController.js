@@ -5,7 +5,7 @@ const catchAsync = require("../../utils/catchAsync");
 const Product = require("./../Model/Product")
 const Tool = require("./../Model/Tools");
 const multer = require("multer");
-const { getOne } = require("../../utils/factory");
+const { getOne, getAll } = require("../../utils/factory");
 
 
 // now we will decrease the quality and perform many operation 
@@ -107,7 +107,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 })
 
 exports.getProduct = getOne(Product)
-
+exports.getAllProduct = getAll(Product)
 
 
 exports.getSearchedProduct = catchAsync(async (req, res, next) => {

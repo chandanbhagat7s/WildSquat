@@ -6,6 +6,7 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 import { error, success } from "../../../../redux/slices/errorSlice";
+import ProductSearch from "../Common/SearchProduct";
 const EditProductForm = () => {
   const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -21,6 +22,9 @@ const EditProductForm = () => {
     { size: "L", price: 0 },
     { size: "XL", price: 0 },
     { size: "XXL", price: 0 },
+    { size: "3XL", price: 0 },
+    { size: "4XL", price: 0 },
+    { size: "5XL", price: 0 },
   ];
 
   const handleSizeChange = (size, price = 0) => {
@@ -81,11 +85,11 @@ const EditProductForm = () => {
     try {
       if (selectedProduct) {
         const res = await axios.get(
-          `/api/v1/product/getProduct/${selectedProduct}`
+          `/api/v1/wholesale/product/${selectedProduct}`
         );
 
         setEditedProduct({
-          ...res?.data?.product,
+          ...res?.data?.data,
         });
       }
     } catch (e) {
@@ -119,7 +123,7 @@ const EditProductForm = () => {
         <div className="mx-2 my-3 font-bold text-3xl text-indigo-500 bg-clip-text ">
           Edit Product
         </div>
-        {/* <ProductSearch setSelectedProduct={setSelectedProduct} /> */}
+        <ProductSearch setSelectedProduct={setSelectedProduct} />
       </div>
       {editedProduct?.name && (
         <>
@@ -227,7 +231,7 @@ const EditProductForm = () => {
               </div>
 
               {/* Material */}
-              <div>
+              {/* <div>
                 <label className="  block text-xl font-bold text-gray-900 mb-1">
                   Material
                 </label>
@@ -245,12 +249,12 @@ const EditProductForm = () => {
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
                 />
-              </div>
+              </div> */}
 
               {/* Sizes */}
               <div>
                 <label className=" block text-sm font-bold text-gray-700">
-                  Sizes and ratio
+                  Sizes and Prices
                 </label>
                 <div className="mt-2 space-y-2">
                   {sizeOptions.map((size, i) => (

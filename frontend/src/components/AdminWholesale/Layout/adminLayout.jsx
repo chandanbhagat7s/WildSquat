@@ -47,7 +47,7 @@ const WholesaleAdminLayout = ({ children }) => {
         nevigate("/adminDash/wholesale/manage-tools");
         break;
       case "stock":
-        nevigate("/adminDash/stock");
+        nevigate("/adminDash/wholesale/stock");
         break;
       default:
         return <p className="text-gray-600">Content for {activeTab}</p>;
@@ -134,7 +134,7 @@ const WholesaleAdminLayout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-6 bg-white shadow-lg rounded-lg">
+      <main className="flex-1 p-4 md:p-6 bg-white shadow-lg rounded-lg lg:h-[100vh] lg:overflow-y-scroll">
         {children}
       </main>
     </div>

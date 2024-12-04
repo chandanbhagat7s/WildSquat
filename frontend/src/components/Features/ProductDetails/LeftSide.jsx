@@ -52,7 +52,7 @@ export default function LeftSide({ product }) {
   };
 
   return (
-    <div className="lg:w-2/3 mb-8 lg:mb-0">
+    <div className="lg:w-2/3 mb-8 lg:mb-0 lg:h-[120vh] lg:overflow-y-scroll ">
       {/* Large and Medium screens */}
       <div className="hidden md:grid grid-cols-2 gap-1">
         {product.images.map((img, index) => (
