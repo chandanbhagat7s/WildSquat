@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import url from "../../../assets/url";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export default function LeftSide({ product }) {
   const [selectedImage, setSelectedImage] = useState(0); // Track selected image
@@ -50,6 +51,9 @@ export default function LeftSide({ product }) {
       );
     }
   };
+  function Placeholder() {
+    return <div className="bg-gray-200 w-full h-full animate-pulse"></div>;
+  }
 
   return (
     <div className="lg:w-2/3 mb-8 lg:mb-0 lg:h-[120vh] lg:overflow-y-scroll ">
@@ -62,22 +66,29 @@ export default function LeftSide({ product }) {
             onMouseMove={(e) => handleMouseMove(e, index)} // Only move zoom for the clicked image
             onClick={() => handleZoomToggle(index)} // Toggle zoom on click
           >
-            <img
-              src={`${url}/img/${img}`}
-              alt={`${product.name} ${index + 1}`}
-              className={`main-image w-full h-full object-cover ${
-                zoomedImage === index ? "zoomed" : ""
-              }`} // Apply zoomed class only to the clicked image
-              style={
-                zoomedImage === index
-                  ? {
-                      transformOrigin: `${mousePosition.x * 100}% ${
-                        mousePosition.y * 100
-                      }%`,
-                    }
-                  : {}
-              }
-            />
+            <Suspense fallback={<Placeholder />} key={index}>
+              <LazyLoadImage
+                src={`${url}/img/${img}`}
+                loading="lazy"
+                threshold={300}
+                duration={500}
+                effect="blur"
+                placeholder={<Placeholder />}
+                alt={`${product.name} ${index + 1}`}
+                className={`main-image w-full h-full object-cover ${
+                  zoomedImage === index ? "zoomed" : ""
+                }`} // Apply zoomed class only to the clicked image
+                style={
+                  zoomedImage === index
+                    ? {
+                        transformOrigin: `${mousePosition.x * 100}% ${
+                          mousePosition.y * 100
+                        }%`,
+                      }
+                    : {}
+                }
+              />
+            </Suspense>
           </div>
         ))}
       </div>

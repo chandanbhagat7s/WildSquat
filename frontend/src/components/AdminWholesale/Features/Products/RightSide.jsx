@@ -27,11 +27,11 @@ export default function RightSide({ product }) {
     if (isMobile) {
       const encodedMessage = encodeURIComponent(message);
 
-      const whatsappLink = `https://wa.me/${7337265120}?text=${encodedMessage}`;
+      const whatsappLink = `https://wa.me/${8686416102}?text=${encodedMessage}`;
       window.open(whatsappLink, "_blank");
     } else {
       const whatsappUrl = `https://web.whatsapp.com/send?phone=${encodeURIComponent(
-        7337265120
+        8686416102
       )}&text=${encodeURIComponent(message)}&app_absent=0`;
 
       // Open the URL in a new tab

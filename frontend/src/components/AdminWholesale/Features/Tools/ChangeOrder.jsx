@@ -15,11 +15,11 @@ const ChangeOrder = ({ docid, onClose }) => {
     const fetchToolData = async () => {
       try {
         const response = await axios.get(
-          `/api/v1/admin/getToolByIdManage/${docid}?fields=name,_id,products,shortDescription&populate=products&populateField=name,price,_id,coverImage&populateLimit=30&page=1`
+          `/api/v1/wholesale/tool?_id=${docid}&fields=name,_id,products,shortDescription&populate=products&populateField=name,price,_id,images&populateLimit=30&page=1`
         );
 
-        setTool(response.data.products);
-        setProducts(response.data.products.products);
+        setTool(response.data.data[0]);
+        setProducts(response.data.data[0].products);
       } catch (err) {
         dispatch(
           error({
@@ -47,8 +47,8 @@ const ChangeOrder = ({ docid, onClose }) => {
   const saveNewOrder = async () => {
     try {
       const newProductOrder = products.map((product) => product._id);
-      await axios.post(`/api/v1/tools/reorderToolProducts/${docid}`, {
-        newProductOrder,
+      await axios.patch(`/api/v1/wholesale/tool/${docid}`, {
+        products: newProductOrder,
       });
       //   onClose();
       dispatch(success({ message: "Operation completed !" }));
@@ -90,7 +90,7 @@ const ChangeOrder = ({ docid, onClose }) => {
                       >
                         <div className="flex items-center space-x-4">
                           <img
-                            src={`${url}img/${product.coverImage}`}
+                            src={`${url}/wholesale/product/${product.images[0]}`}
                             alt={product.name}
                             className="w-20 h-20 object-cover rounded-lg object-top"
                           />

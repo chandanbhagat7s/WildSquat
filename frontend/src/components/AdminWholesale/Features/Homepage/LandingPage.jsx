@@ -1,7 +1,6 @@
 // pages/LandingPage.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
-import TrendingProducts from "./Trending";
 import Categories from "./Category";
 import Slider from "./Slider";
 import BulkListLayoutProduct from "../Common/BulkListProduct";
@@ -9,8 +8,6 @@ import BulkListLayoutProduct from "../Common/BulkListProduct";
 const LandingPage = () => {
   const [sliderImages, setSliderImages] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [trendingProducts, setTrendingProducts] = useState([]);
-
   async function getData() {
     try {
       const sliderRes = await axios.get(
@@ -19,13 +16,9 @@ const LandingPage = () => {
       const categoryRes = await axios.get(
         "/api/v1/wholesale/tool?name=CATEGORY&fields=name,label,images"
       );
-      const trendingRes = await axios.get(
-        "/api/v1/wholesale/tool?name=Trending&populate=products"
-      );
 
       setSliderImages(sliderRes.data.data);
       setCategories(categoryRes.data.data);
-      setTrendingProducts(trendingRes.data.data.products);
     } catch (error) {}
   }
   useEffect(() => {

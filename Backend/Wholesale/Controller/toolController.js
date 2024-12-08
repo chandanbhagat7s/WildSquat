@@ -1,7 +1,7 @@
 const sharp = require("sharp")
 const appError = require("../../utils/appError")
 const catchAsync = require("../../utils/catchAsync")
-const { createOne, getAll, deleteOne, updateByPush } = require("../../utils/factory")
+const { createOne, getAll, deleteOne, updateByPush, updateOne } = require("../../utils/factory")
 const Tool = require("../Model/Tools")
 const multer = require("multer")
 
@@ -55,6 +55,7 @@ exports.createTool = createOne(Tool)
 exports.getAllTool = getAll(Tool)
 
 exports.deleteTool = deleteOne(Tool)
+exports.updateTool = updateOne(Tool)
 
 exports.addProductToToolMiddleware = catchAsync(async (req, res, next) => {
 

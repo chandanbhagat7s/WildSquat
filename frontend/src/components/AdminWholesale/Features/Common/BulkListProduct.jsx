@@ -59,12 +59,6 @@ const BulkListLayoutProduct = ({ toolName }) => {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    // if (state) {
-    //   setPage((page) => page - page);
-    //   setProducts(() => []);
-    // }
-
     fetchProducts();
   }, []);
 

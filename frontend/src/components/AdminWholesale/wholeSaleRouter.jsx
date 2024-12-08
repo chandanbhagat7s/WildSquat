@@ -1,11 +1,9 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import WholesaleAdminLayout from "./Layout/adminLayout";
 import ProductActions from "./Features/Products/ProductsCRUD";
 import CreateCategory from "./Features/Tools/CreateCatefory";
 import ManageTools from "./Features/Tools/ManageTools";
 import BulkListLayoutProduct from "./Features/Common/BulkListProduct";
-import Product from "./Features/Products/ProductDetails";
 import StockList from "./Features/Stock/StockList";
 
 function WholesaleAdminrouter() {

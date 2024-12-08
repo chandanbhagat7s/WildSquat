@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import url from "../../../assets/url";
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Banner = ({ order = 0 }) => {
   const { gender } = useSelector((state) => state.auth);
@@ -25,6 +26,9 @@ const Banner = ({ order = 0 }) => {
     }
     getData();
   }, [gender]);
+  function Placeholder() {
+    return <div className="bg-gray-200 w-full h-full animate-pulse"></div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 relative">
@@ -33,11 +37,18 @@ const Banner = ({ order = 0 }) => {
           {/* Image Section */}
           <div className="md:w-1/3 relative h-[600px] w-full">
             {/* Top-left image */}
-            <img
-              src={`${url}Tools/${product?.images[0]}`}
-              alt="Woman with basketball"
-              className="absolute top-0 left-0 w-48 h-64 object-cover z-40 rounded-lg shadow-lg"
-            />
+            <Suspense fallback={<Placeholder />}>
+              <LazyLoadImage
+                loading="lazy"
+                threshold={300}
+                duration={500}
+                effect="blur"
+                placeholder={<Placeholder />}
+                src={`${url}Tools/${product?.images[0]}`}
+                alt="Woman with basketball"
+                className="absolute top-0 left-0 w-48 h-64 object-cover z-40 rounded-lg shadow-lg"
+              />
+            </Suspense>
 
             {/* Middle-right image */}
             <img

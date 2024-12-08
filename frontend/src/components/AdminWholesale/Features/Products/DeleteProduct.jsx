@@ -3,29 +3,35 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiX } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { error, success } from "../../../../redux/slices/errorSlice";
+import { error, success, warning } from "../../../../redux/slices/errorSlice";
 import url from "../../../../assets/url";
+import ProductSearch from "../Common/SearchProduct";
 const DeleteProduct = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const dispatch = useDispatch();
 
-  const addToSelected = (product) => {
-    if (selectedProducts.find((el) => el.id == product.id)) {
-      dispatch(warning({ message: "Product already added" }));
-      return;
-    }
+  const addToSelected = (id, product) => {
+    console.log(product);
+
+    // if (selectedProducts.find((el) => el.id == product.id)) {
+    //   dispatch(warning({ message: "Product already added" }));
+    //   return;
+    // }
     setSelectedProducts([...selectedProducts, product]);
+    setSelectedIds([...selectedIds, id]);
   };
 
   async function deleteProduct() {
     try {
-      const res = await axios.post("/api/v1/admin/delete", {
+      const res = await axios.post("/api/v1/wholesale/product/deleteProduct", {
         productIds: selectedProducts.map((el) => el?.id),
       });
 
-      if (res?.data?.status == "success") {
+      if (res?.data?.status) {
         dispatch(success({ message: res?.data?.msg }));
         setSelectedProducts([]);
+        setSelectedIds([]);
       }
     } catch (e) {
       dispatch(
@@ -36,15 +42,13 @@ const DeleteProduct = () => {
 
   const removeToSelected = (id) => {
     setSelectedProducts([...selectedProducts.filter((el) => el.id != id)]);
+    setSelectedIds([...selectedIds.filter((el) => el != id)]);
   };
 
   return (
     <div className="container mx-auto p-6 flex flex-col bg-gray-50 rounded-xl shadow-lg">
       <div className="mb-10">
-        {/* <SearchCategoryProduct
-          addToSelected={addToSelected}
-          nonevigate={true}
-        /> */}
+        <ProductSearch setSelectedProduct={addToSelected} />
       </div>
 
       <div className="flex flex-col space-y-6">
@@ -62,7 +66,7 @@ const DeleteProduct = () => {
                 >
                   <div className="relative">
                     <img
-                      src={`${url}img/${product.coverImage}`}
+                      src={`${url}wholesale/product/${product.image}`}
                       alt={product.name}
                       className="w-full h-56 object-contain transition-opacity duration-300 hover:opacity-90"
                     />
@@ -89,7 +93,7 @@ const DeleteProduct = () => {
             className="px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md ring-2 ring-indigo-500 ring-inset transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg font-semibold text-lg self-center"
             onClick={deleteProduct}
           >
-            Add {selectedProducts.length} Products to Similar
+            delete selected products
           </button>
         )}
       </div>

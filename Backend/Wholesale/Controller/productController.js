@@ -2,10 +2,12 @@ const sharp = require("sharp");
 const appError = require("../../utils/appError");
 const catchAsync = require("../../utils/catchAsync");
 
+const path = require('path');
+const fs = require('fs');
 const Product = require("./../Model/Product")
-const Tool = require("./../Model/Tools");
 const multer = require("multer");
-const { getOne, getAll } = require("../../utils/factory");
+const { getOne, getAll, updateOne } = require("../../utils/factory");
+const Tool = require("../Model/Tools");
 
 
 // now we will decrease the quality and perform many operation 
@@ -68,7 +70,8 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         features,
         colors,
         careInstructions,
-        moq
+        moq,
+        category
     } = req.body;
 
     const product = await Product.create({
@@ -83,21 +86,22 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         features,
         colors,
         careInstructions,
-        moq
+        moq,
+
     })
     if (!product) {
         return next(new appError("Product not created plese try again", 500))
     }
 
-    // let filter = { _id: { $in: c } }
+    let filter = { _id: { $in: JSON.parse(category) } }
 
-    // let update = {
-    //     $push: {
-    //         products: product._id
-    //     }
-    // }
+    let update = {
+        $push: {
+            products: product._id
+        }
+    }
 
-    // const tool = await Tool.updateMany(filter, update)
+    await Tool.updateMany(filter, update)
 
 
     res.status(200).send({
@@ -108,7 +112,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 exports.getProduct = getOne(Product)
 exports.getAllProduct = getAll(Product)
-
+exports.updateProduct = updateOne(Product)
 
 exports.getSearchedProduct = catchAsync(async (req, res, next) => {
 
@@ -128,7 +132,43 @@ exports.getSearchedProduct = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.deleteProducts = catchAsync(async (req, res, next) => {
 
+    const { productIds } = req.body;
+    if (!Array.isArray(productIds) || productIds.length === 0) {
+        return next(new appError("not valid data to perform delete operation", 400))
+    }
+
+    const productsToDelete = await Product.find({ _id: { $in: productIds } });
+    if (productsToDelete.length === 0) {
+        return res.status(404).json({ message: 'No products found to delete.' });
+    }
+
+
+
+    await Product.deleteMany({ _id: { $in: productIds } });
+
+    productsToDelete.forEach((product) => {
+        if (product.images && product.images.length > 0) {
+            product.images.forEach((image) => {
+                const imagePath = path.join(__dirname, '../../Public/wholesale/product', image);
+                fs.unlink(imagePath, (err) => {
+                    if (err) {
+                        console.error(`Failed to delete image at ${imagePath}:`, err.message);
+                    } else {
+                        console.log(`Successfully deleted image at ${imagePath}`);
+                    }
+                });
+            });
+        }
+    });
+
+
+    res.status(200).send({
+        status: true,
+        msg: "products deleted "
+    })
+})
 
 
 

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -59,6 +58,8 @@ const productSchema = new mongoose.Schema({
 
 
 });
+
+
 
 const WProduct = mongoose.model('Wproduct', productSchema);
 

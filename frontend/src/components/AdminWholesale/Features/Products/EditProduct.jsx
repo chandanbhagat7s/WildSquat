@@ -63,11 +63,14 @@ const EditProductForm = () => {
     try {
       let res;
 
-      res = await axios.patch(`/api/v1/admin/edit/${editedProduct._id}`, {
-        ...editedProduct,
-      });
+      res = await axios.patch(
+        `/api/v1/wholesale/product/${editedProduct._id}`,
+        {
+          ...editedProduct,
+        }
+      );
 
-      if (res?.data?.status == "success") {
+      if (res?.data?.status) {
         dispatch(success({ message: "product updated successfully" }));
       }
     } catch (e) {

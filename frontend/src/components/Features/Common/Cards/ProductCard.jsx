@@ -5,6 +5,8 @@ import url from "../../../../assets/url";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../../redux/slices/productSlice";
 import { error, info, warning } from "../../../../redux/slices/errorSlice";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Suspense } from "react";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -35,6 +37,9 @@ const ProductCard = ({ product }) => {
       );
     }
   }
+  function Placeholder() {
+    return <div className="bg-gray-200 w-full h-full animate-pulse"></div>;
+  }
 
   return (
     <motion.div
@@ -55,11 +60,18 @@ const ProductCard = ({ product }) => {
           <div className="relative w-full h-0 pb-[100%]">
             {" "}
             {/* 1:1 aspect ratio */}
-            <img
-              src={`${url}img/${product?.coverImage}`}
-              alt={product?.name}
-              className="absolute top-0 left-0 w-full h-full object-cover object-top"
-            />
+            <Suspense fallback={<Placeholder />}>
+              <LazyLoadImage
+                loading="lazy"
+                threshold={300}
+                duration={500}
+                effect="blur"
+                placeholder={<Placeholder />}
+                src={`${url}img/${product?.coverImage}`}
+                alt={product?.name}
+                className="absolute top-0 left-0 w-full h-full object-cover object-top"
+              />
+            </Suspense>
           </div>
         </motion.div>
         <div className="absolute bottom-0 right-4 flex space-x-2">

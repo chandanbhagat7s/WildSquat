@@ -55,11 +55,11 @@ const WholesaleAdminLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-100 to-blue-200">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-100 to-gray-200">
       {/* Sidebar */}
       <nav className="bg-white shadow-lg md:w-1/4 lg:w-1/5">
         <div className="md:hidden flex justify-between items-center p-4">
-          <h1 className="text-2xl font-bold text-blue-800">Admin Panel</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Admin Panel</h1>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-gray-600 focus:outline-none"
@@ -118,8 +118,8 @@ const WholesaleAdminLayout = ({ children }) => {
               key={tab.id}
               className={`flex items-center p-3 w-full text-left rounded-lg font-medium transition-all duration-200 ${
                 activeTab === tab.id
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-700 hover:bg-blue-100 hover:text-blue-600"
+                  ? "bg-gray-500 text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-600"
               }`}
               onClick={() => {
                 renderTabContent(tab.id);
@@ -134,7 +134,7 @@ const WholesaleAdminLayout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-6 bg-white shadow-lg rounded-lg lg:h-[100vh] lg:overflow-y-scroll">
+      <main className="flex-1 p-4 md:p-6 bg-white shadow-lg rounded-lg ">
         {children}
       </main>
     </div>
