@@ -54,6 +54,10 @@ const productSchema = new mongoose.Schema({
     },
     moq: {
         type: Number
+    },
+    sizeOption: {
+        type: Boolean,
+
     }
 
 

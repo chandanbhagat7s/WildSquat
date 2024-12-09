@@ -1,7 +1,7 @@
 const sharp = require("sharp")
 const appError = require("../../utils/appError")
 const catchAsync = require("../../utils/catchAsync")
-const { createOne, getAll, deleteOne, updateByPush, updateOne } = require("../../utils/factory")
+const { createOne, getAll, deleteOne, updateOne, updateByQuery } = require("../../utils/factory")
 const Tool = require("../Model/Tools")
 const multer = require("multer")
 
@@ -66,5 +66,26 @@ exports.addProductToToolMiddleware = catchAsync(async (req, res, next) => {
     req.body = query;
     next()
 })
-exports.addProductToTool = updateByPush(Tool)
+exports.addProductToTool = updateByQuery(Tool)
+
+
+exports.removeProductFromToolMiddleware = catchAsync(async (req, res, next) => {
+    const idsToRemove = req.body.pull; // Array of IDs to remove from the `products` array
+
+    if (!Array.isArray(idsToRemove) || idsToRemove.length === 0) {
+        return next(new appError('No valid IDs provided for removal', 400))
+    }
+
+    // Construct the query to remove the IDs from the `products` array
+    const query = {
+        $pull: { products: { $in: idsToRemove } },
+    };
+
+    req.body = query; // Update the request body to include the query
+    next(); // Pass control to the next middleware or route handler
+});
+
+
+exports.removeProductFromTool = updateByQuery(Tool)
+
 

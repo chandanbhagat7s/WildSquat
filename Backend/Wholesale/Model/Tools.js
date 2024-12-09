@@ -26,7 +26,8 @@ const toolSchema = new mongoose.Schema(({
 
     images: {
         type: [String]
-    }
+    },
+
 }))
 
 toolSchema.post('findOneAndDelete', async function (doc) {

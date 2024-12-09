@@ -76,20 +76,15 @@ const ToolProductAction = ({ docid }) => {
   const removeSelectedProducts = async () => {
     try {
       let res;
-      if (selectedItem.name == "OFFER") {
-        res = await axios.patch("/api/v1/admin/actionOnTool", {
-          toolId: selectedItem._id,
-          ids: selectedProducts,
-          action: "REMOVEANDUPDATE",
-        });
-      } else {
-        res = await axios.patch("/api/v1/admin/actionOnTool", {
-          toolId: selectedItem._id,
-          ids: selectedProducts,
-          action: "REMOVE",
-        });
-      }
-      if (res?.data?.status === "success") {
+
+      res = await axios.patch(
+        `/api/v1/wholesale/tool/removeFromTool/${selectedItem._id}`,
+        {
+          pull: selectedProducts,
+        }
+      );
+
+      if (res?.data?.status) {
         dispatch(success({ message: res?.data?.msg }));
       }
     } catch (e) {

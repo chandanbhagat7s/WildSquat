@@ -15,7 +15,7 @@ const ProductCard = ({ product, openDialog }) => {
   const handleOrderClick = (product) => {
     // Construct the WhatsApp message
     // const message = `Hello, I want to purchase:\n\n*${product.name}*\n*Price:* ${product.price}\n*URL:* ${url}wholesale/productDetails/${product._id}\n\nThank you!`;
-    const message = `Hello, I want to purchase:\n\n*${product.name}*\n*Price:* ${product.price}\n*URL:* http://localhost:5173/wholesale/productDetails/${product._id}\n\nThank you!`;
+    const message = `Hello, I want to purchase:\n\n*${product.name}*\n*Price:* ${product.price}\n*URL:* ${url}wholesale/productDetails/${product._id}\n\nThank you!`;
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(
       navigator.userAgent
     );

@@ -15,6 +15,8 @@ export default function StockList() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  const [isToggled, setIsToggled] = useState(false);
+
   const fetchProducts = async () => {
     try {
       const res = await axios.get(
@@ -77,6 +79,10 @@ export default function StockList() {
     }
   };
 
+  const handleAvabilityChange = () => {
+    setIsToggled(!isToggled);
+  };
+
   return (
     <motion.div
       className="mt-16"
@@ -108,6 +114,35 @@ export default function StockList() {
                     alt={product.name}
                     className="h-32 w-32 object-cover rounded-md object-top"
                   />
+                  <p className="py-1 text-sm text-center">Size option</p>
+                  <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-lg">
+                    <span
+                      className={`text-blue-600 ${
+                        !isToggled ? "font-bold" : ""
+                      }`}
+                    >
+                      {!isToggled ? "Available" : "M"}
+                    </span>
+                    <button
+                      className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out ${
+                        isToggled ? "bg-pink-600" : "bg-blue-600"
+                      }`}
+                      onClick={handleAvabilityChange}
+                    >
+                      <div
+                        className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+                          isToggled ? "translate-x-6" : ""
+                        }`}
+                      ></div>
+                    </button>
+                    <span
+                      className={`text-pink-600 ${
+                        isToggled ? "font-bold" : ""
+                      }`}
+                    >
+                      {isToggled ? "Not Avaiable" : "F"}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex flex-col flex-grow">
                   <h2 className="text-lg font-bold mb-2">{product.name}</h2>

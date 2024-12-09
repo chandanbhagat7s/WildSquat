@@ -103,7 +103,7 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
 })
 
 
-exports.updateByPush = Model => catchAsync(async (req, res, next) => {
+exports.updateByQuery = Model => catchAsync(async (req, res, next) => {
 
     const doc = await Model.findByIdAndUpdate(req.params.id, {
         ...req.body
@@ -115,7 +115,8 @@ exports.updateByPush = Model => catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: true,
-        data: doc
+        data: doc,
+        msg: "updated "
     })
 
 
