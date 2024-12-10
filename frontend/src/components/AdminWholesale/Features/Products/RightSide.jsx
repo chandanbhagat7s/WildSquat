@@ -78,6 +78,12 @@ export default function RightSide({ product }) {
         <h1 className="text-3xl font-bold mb-4 text-gray-600 capitalize text-center">
           {product.name}
         </h1>
+        <div className="text-center text-sm p-2  text-black bg-green-300 z-10 rounded">
+          <span className="animate-pulse">
+            {" "}
+            {product?.sizeOption && "Buy With Optional Size"}
+          </span>
+        </div>
         <p className="text-xl font-semibold mb-4 text-gray-500 text-center">
           Rs <span className="text-2xl font-bold"> {product.price}</span>
         </p>

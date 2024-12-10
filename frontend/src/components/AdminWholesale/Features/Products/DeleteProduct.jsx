@@ -46,7 +46,7 @@ const DeleteProduct = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 flex flex-col bg-gray-50 rounded-xl shadow-lg">
+    <div className="h-[100vh] overflow-scroll container mx-auto p-6 flex flex-col bg-gray-50 rounded-xl shadow-lg">
       <div className="mb-10">
         <ProductSearch setSelectedProduct={addToSelected} />
       </div>

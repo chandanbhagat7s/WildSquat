@@ -11,10 +11,10 @@ const LandingPage = () => {
   async function getData() {
     try {
       const sliderRes = await axios.get(
-        "/api/v1/wholesale/tool?name=SLIDER&fields=name,label,images"
+        "/api/v1/wholesale/tool?name=SLIDER&fields=name,label,images,sizeOption"
       );
       const categoryRes = await axios.get(
-        "/api/v1/wholesale/tool?name=CATEGORY&fields=name,label,images"
+        "/api/v1/wholesale/tool?name=CATEGORY&fields=name,label,images,sizeOption"
       );
 
       setSliderImages(sliderRes.data.data);

@@ -57,7 +57,7 @@ const productSchema = new mongoose.Schema({
     },
     sizeOption: {
         type: Boolean,
-
+        default: false
     }
 
 

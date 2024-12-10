@@ -45,11 +45,7 @@ export default function ManageTools() {
   }, []);
 
   return (
-    <div className="my-10">
-      <h1 className="text-4xl font-bold text-center my-16 text-gray-800">
-        Tool Management
-      </h1>
-
+    <div className=" h-[100vh] overflow-scroll">
       <ContentDisplay tools={tools} />
     </div>
   );
@@ -67,7 +63,7 @@ const ContentDisplay = ({ tools }) => {
   const closeDialogChange = () => setIsDialogOpenChange(false);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 ">
       {Object.entries(tools).map(([category, items]) => (
         <div key={category} className="mb-12">
           <h2 className="text-2xl font-bold mb-6 uppercase text-gray-700">

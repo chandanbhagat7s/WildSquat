@@ -121,18 +121,15 @@ const EditProductForm = () => {
   }, [selectedProduct]);
 
   return (
-    <div className="mb-60">
-      <div className="mb-20">
-        <div className="mx-2 my-3 font-bold text-3xl text-indigo-500 bg-clip-text ">
-          Edit Product
-        </div>
+    <div className="h-[100vh] overflow-scroll">
+      <div className="my-2">
         <ProductSearch setSelectedProduct={setSelectedProduct} />
       </div>
       {editedProduct?.name && (
         <>
           <form
             onSubmit={handleSubmit}
-            className="max-w-4xl mx-auto px-2 py-10 space-y-8 rounded-3xl shadow-2xl bg-white border border-gray-200"
+            className="max-w-4xl mx-auto px-2 py-10 space-y-8  bg-white "
           >
             <div className="text-center">
               <h2 className="text-4xl font-extrabold text-gray-800 mb-2">

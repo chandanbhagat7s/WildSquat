@@ -183,9 +183,9 @@ const CreateProductForm = () => {
     <>
       <div className=" min-h-screen py-12 px-1 sm:px-1 lg:px-2 ">
         {/* Product Search Section */}
-        <div className="mb-10">
-          <div className="mx-auto text-center my-1 font-bold text-xl">
-            Auto Fill Product
+        <div className="mb-2">
+          <div className="mx-auto text-center mt-10 font-semibold text-xl">
+            Search And Use Information
           </div>
           <ProductSearch setSelectedProduct={handleClickSelectedProduct} />
         </div>
@@ -205,7 +205,7 @@ const CreateProductForm = () => {
                 name="name"
                 value={product.name}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                 placeholder="Track pant"
                 required
               />
@@ -223,7 +223,7 @@ const CreateProductForm = () => {
                 name="price"
                 value={product.price}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                 required
               />
             </div>
@@ -242,7 +242,7 @@ const CreateProductForm = () => {
               name="shortDescription"
               value={product.shortDescription}
               onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               placeholder=" Comfortable, stylish, and perfect for any workout or casual day out."
               required
             />
@@ -261,7 +261,7 @@ const CreateProductForm = () => {
               rows="4"
               value={product.longDescription}
               onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               placeholder="Elevate your athleisure wardrobe with our Classic Black Track Pants. Designed for both comfort and style, these pants are crafted from a soft, breathable fabric that moves with you. The elastic waistband ensures a secure fit,"
               required
             ></textarea>
@@ -280,7 +280,7 @@ const CreateProductForm = () => {
                       (item) => item.size === size.size
                     )}
                     onChange={() => handleSizeChange(size)}
-                    className="form-checkbox h-5 w-5 text-indigo-600"
+                    className="form-checkbox h-5 w-5 text-gray-600"
                   />
                   <span className="text-gray-700">{size.size}</span>
 
@@ -288,7 +288,7 @@ const CreateProductForm = () => {
                     <input
                       type="number"
                       placeholder={`Ratio of :  ${size.size}`}
-                      className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                       onChange={(e) => handleSizeChange(size, e.target.value)}
                     />
                   )}
@@ -310,7 +310,7 @@ const CreateProductForm = () => {
               name="moq"
               value={product.moq}
               onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               placeholder="Polyester,Nylon,Fleece etc"
             />
           </div>
@@ -327,7 +327,7 @@ const CreateProductForm = () => {
               name="colors"
               value={product.colors}
               onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               placeholder="Polyester,Nylon,Fleece etc"
             />
           </div>
@@ -345,7 +345,7 @@ const CreateProductForm = () => {
               name="material"
               value={product.material}
               onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               placeholder="Polyester,Nylon,Fleece etc"
             />
           </div>
@@ -360,7 +360,7 @@ const CreateProductForm = () => {
                 <div className="flex text-sm text-gray-600">
                   <label
                     htmlFor="images"
-                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                    className="relative cursor-pointer bg-white rounded-md font-medium text-gray-600 hover:text-gray-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-gray-500"
                   >
                     <span>Upload images</span>
                     <input
@@ -409,7 +409,7 @@ const CreateProductForm = () => {
                 value={feature}
                 onChange={(e) => handleFeatureChange(index, e.target.value)}
                 placeholder={`Feature ${index + 1}`}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               />
             ))}
           </div>
@@ -438,7 +438,7 @@ const CreateProductForm = () => {
               rows="3"
               value={product.careInstructions}
               onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
             ></textarea>
           </div>
 
@@ -446,7 +446,7 @@ const CreateProductForm = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
                 Create Product
               </button>

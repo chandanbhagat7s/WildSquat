@@ -41,7 +41,7 @@ const ProductSearch = ({ setSelectedProduct }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 px-2 lg:p-8 bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-2xl">
+    <div className="max-w-3xl mx-auto my-8 px-2 lg:p-8 bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-2xl">
       <div className="relative mb-6">
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
         <input
@@ -49,12 +49,12 @@ const ProductSearch = ({ setSelectedProduct }) => {
           placeholder="Search for premium products..."
           value={searchTerm}
           onChange={handleSearchChange}
-          className="w-full pl-12 pr-6 py-3 text-gray-900 bg-gray-200 rounded-full shadow-inner focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300 ease-in-out"
+          className="w-full pl-12 pr-6 py-3 text-gray-900 bg-gray-200 rounded-full shadow-inner focus:outline-none focus:ring-4 focus:ring-gray-300 transition duration-300 ease-in-out"
         />
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center text-blue-600">
+        <div className="flex items-center justify-center text-gray-600">
           <FaSpinner className="animate-spin mr-2" />
           <span>Searching for products...</span>
         </div>

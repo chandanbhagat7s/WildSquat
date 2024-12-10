@@ -7,7 +7,10 @@ import {
   FaChartLine,
   FaTools,
   FaCogs,
+  FaArrowRight,
 } from "react-icons/fa";
+
+import logo from "./../../../assets/logo.jpeg";
 import { useNavigate } from "react-router-dom";
 
 const AdminLayout = ({ children }) => {
@@ -100,15 +103,27 @@ const AdminLayout = ({ children }) => {
         <div
           className={`${
             isMobileMenuOpen ? "block" : "hidden"
-          } lg:block p-4 md:p-6 space-y-2 `}
+          } lg:block p-2 space-y-2 `}
         >
-          <h1 className="text-2xl font-bold my-2">WILDSQUAT WEB MANAGEMENT</h1>
-          <button
-            className="p-2 border border-1 border-gray-200 rounded-lg bg-gray-100"
-            onClick={() => nevigate("/adminDash/wholesale/")}
-          >
-            Switch To Wholesale Dashboard
-          </button>
+          <div className="mb-10 space-y-2">
+            <div className=" my-2 ">
+              <img
+                src={logo}
+                alt="Wild Squat Logo"
+                className="scale-125 h-12 mx-auto"
+              />
+              <div className="text-xl text-center">
+                <span className="font-bold ">WILDSQUAT</span> Retail Management
+              </div>
+            </div>
+            <button
+              className="p-2 ring-black ring-1 rounded w-full hover:bg-gray-200"
+              onClick={() => nevigate("/adminDash/wholesale/")}
+            >
+              Wholesale Dashboard{" "}
+              <FaArrowRight className="text-xl inline-block mx-2" />
+            </button>
+          </div>
           {tabs.map((tab) => (
             <button
               key={tab.id}

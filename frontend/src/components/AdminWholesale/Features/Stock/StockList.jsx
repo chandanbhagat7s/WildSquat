@@ -15,14 +15,12 @@ export default function StockList() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [isToggled, setIsToggled] = useState(false);
-
   const fetchProducts = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/wholesale/product?fields=images,name,price,sizes&limit=8&page=${page}`
+        `/api/v1/wholesale/product?fields=images,name,price,sizes,sizeOption&limit=8&page=${page}`
       );
-      const newProducts = res?.data?.data;
+      let newProducts = res?.data?.data;
 
       if (newProducts?.length === 0) setHasMore(false);
       else if (newProducts?.length > 0) {
@@ -57,11 +55,13 @@ export default function StockList() {
       console.log("submitting data", data);
 
       const res = await axios.patch(
-        `/api/v1/admin/editPart/${selectedProduct._id}`,
+        `/api/v1/wholesale/product/${selectedProduct._id}`,
         data
       );
-      dispatch(success({ message: "Size updated of product" }));
-      handleCloseDialog();
+      if (res?.data?.status) {
+        dispatch(success({ message: "Size updated of product" }));
+        handleCloseDialog();
+      }
     } catch (e) {
       dispatch(error({ message: "Failed to update size" }));
     }
@@ -77,10 +77,6 @@ export default function StockList() {
     } catch (e) {
       dispatch(error({ message: "Failed to hide product" }));
     }
-  };
-
-  const handleAvabilityChange = () => {
-    setIsToggled(!isToggled);
   };
 
   return (
@@ -103,7 +99,7 @@ export default function StockList() {
           }
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {products.map((product) => (
+            {products.map((product, index) => (
               <div
                 key={product._id}
                 className="flex items-center gap-4 border p-4 rounded-lg shadow-md"
@@ -114,38 +110,16 @@ export default function StockList() {
                     alt={product.name}
                     className="h-32 w-32 object-cover rounded-md object-top"
                   />
-                  <p className="py-1 text-sm text-center">Size option</p>
-                  <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-lg">
-                    <span
-                      className={`text-blue-600 ${
-                        !isToggled ? "font-bold" : ""
-                      }`}
-                    >
-                      {!isToggled ? "Available" : "M"}
-                    </span>
-                    <button
-                      className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out ${
-                        isToggled ? "bg-pink-600" : "bg-blue-600"
-                      }`}
-                      onClick={handleAvabilityChange}
-                    >
-                      <div
-                        className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
-                          isToggled ? "translate-x-6" : ""
-                        }`}
-                      ></div>
-                    </button>
-                    <span
-                      className={`text-pink-600 ${
-                        isToggled ? "font-bold" : ""
-                      }`}
-                    >
-                      {isToggled ? "Not Avaiable" : "F"}
-                    </span>
-                  </div>
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <h2 className="text-lg font-bold mb-2">{product.name}</h2>
+                  <h2 className="text-lg font-bold mb-2">
+                    {" "}
+                    {index + 1} . {product.name}
+                  </h2>
+                  <span className="text-black">Size Option</span>
+                  <span className="font-bold text-gray-500">
+                    {product.sizeOption ? "Available" : "Not Available"}
+                  </span>
                   <div className="mb-4">
                     <h3 className="font-semibold mb-1">Sizes</h3>
                     <div className="flex flex-wrap gap-2">
@@ -192,9 +166,26 @@ export default function StockList() {
 
 const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
   // Close dialog on pressing the Escape key
+  const dispatch = useDispatch();
   const [editedProduct, setEditedProduct] = useState({
     ...product,
   });
+  async function featchProduct() {
+    try {
+      const res = await axios.get(`/api/v1/wholesale/product/${product._id}`);
+      setEditedProduct({ ...res?.data?.data });
+    } catch (e) {
+      dispatch(error({ message: "Something went wrong" }));
+      onclose();
+    }
+  }
+
+  const handleAvabilityChange = () => {
+    setEditedProduct({
+      ...editedProduct,
+      sizeOption: !editedProduct.sizeOption,
+    });
+  };
   console.log("edited", editedProduct);
 
   const sizeOptions = [
@@ -234,6 +225,9 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
+  useEffect(() => {
+    featchProduct();
+  }, []);
 
   if (!isOpen || !product) return null;
 
@@ -255,9 +249,38 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
           alt="Product"
           className="w-32 h-32 object-contain mx-auto mb-4"
         />
+        <p className="py-1 text-sm text-center">Size option</p>
+        <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-lg justify-center">
+          <span
+            className={`text-blue-600 ${
+              editedProduct?.sizeOption ? "font-bold" : ""
+            }`}
+          >
+            {editedProduct?.sizeOption ? "Available" : "A"}
+          </span>
+          <button
+            className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out ${
+              !editedProduct?.sizeOption ? "bg-pink-600" : "bg-blue-600"
+            }`}
+            onClick={handleAvabilityChange}
+          >
+            <div
+              className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+                !editedProduct?.sizeOption ? "translate-x-6" : ""
+              }`}
+            ></div>
+          </button>
+          <span
+            className={`text-pink-600 ${
+              !editedProduct?.sizeOption ? "font-bold" : ""
+            }`}
+          >
+            {!editedProduct?.sizeOption ? "Not Avaiable" : "NA"}
+          </span>
+        </div>
 
         {/* Sizes */}
-        <div>
+        <div className="pt-3">
           <label className=" block text-sm font-bold text-gray-700">
             Sizes and Prices
           </label>
@@ -303,19 +326,19 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
           </button>
         </div>
         <div className="mt-6 flex justify-between space-x-4">
-          <button
+          {/* <button
             onClick={onHideProduct}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Hide Product
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             onClick={() => onClose(!isOpen)}
             className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
           >
             Close
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
