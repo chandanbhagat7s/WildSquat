@@ -46,12 +46,11 @@ const ProductCard = ({ product, openDialog }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="absolute text-sm p-2  text-black bg-green-300 z-10 rounded">
-        <span className="animate-pulse">
-          {" "}
-          {product?.sizeOption && "Buy With Optional Size"}
-        </span>
-      </div>
+      {product?.sizeOption && (
+        <div className="absolute text-sm p-2  text-black bg-green-300 z-10 rounded">
+          <span className="animate-pulse"> Buy With Optional Size</span>
+        </div>
+      )}
       {/* Product Images Section */}
       <div className="grid grid-cols-2 gap-1 p-2">
         {product?.images?.slice(0, 4).map((image, index) => (

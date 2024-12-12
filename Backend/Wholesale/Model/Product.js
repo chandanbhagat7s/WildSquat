@@ -58,12 +58,31 @@ const productSchema = new mongoose.Schema({
     sizeOption: {
         type: Boolean,
         default: false
+    },
+    hidden: {
+        type: Boolean,
+        default: false
     }
 
 
 });
 
+productSchema.pre(/^find/, function (next) {
+    // console.log(this.options.disableMiddlewares);  we set the  property okk to provide login access to deactive user
+    console.log("CAME INTO <", this.options.disableSchemaMiddleware);
 
+    if (this.options.disableSchemaMiddleware) {
+
+        next();
+    }
+    else {
+        console.log("passssed");
+
+        this.where({ hidden: false });
+        next();
+    }
+
+});
 
 const WProduct = mongoose.model('Wproduct', productSchema);
 

@@ -102,34 +102,47 @@ export default function LeftSide({ product }) {
           onTouchStart={handleTouchStart} // Track touch start for swipe
           onTouchEnd={handleTouchEnd} // Detect swipe direction
         >
-          <img
-            src={`${url}/wholesale/product/${product.images[selectedImage]}`}
-            alt={`${product.name} ${selectedImage + 1}`}
-            className={`main-image w-full h-full object-cover ${
-              zoomedImage === selectedImage ? "zoomed" : ""
-            }`}
-            style={
-              zoomedImage === selectedImage
-                ? {
-                    transformOrigin: `${mousePosition.x * 100}% ${
-                      mousePosition.y * 100
-                    }%`,
-                  }
-                : {}
-            }
-          />
+          <Suspense fallback={<Placeholder />}>
+            <LazyLoadImage
+              src={`${url}/wholesale/product/${product.images[selectedImage]}`}
+              alt={`${product.name} ${selectedImage + 1}`}
+              loading="lazy"
+              threshold={300}
+              duration={500}
+              effect="blur"
+              className={`main-image w-full h-full object-cover ${
+                zoomedImage === selectedImage ? "zoomed" : ""
+              }`}
+              style={
+                zoomedImage === selectedImage
+                  ? {
+                      transformOrigin: `${mousePosition.x * 100}% ${
+                        mousePosition.y * 100
+                      }%`,
+                    }
+                  : {}
+              }
+            />
+          </Suspense>
         </div>
         <div className="flex mt-2 overflow-x-auto">
           {product.images.map((img, index) => (
-            <img
-              key={index}
-              src={`${url}/wholesale/product/${img}`}
-              alt={`${product.name} ${index + 1}`}
-              className={`w-16 h-16 object-cover mr-2 cursor-pointer ${
-                selectedImage === index ? "border-2 border-blue-500" : ""
-              }`}
-              onClick={() => setSelectedImage(index)}
-            />
+            <Suspense fallback={<Placeholder />} key={index}>
+              <LazyLoadImage
+                key={index}
+                loading="lazy"
+                threshold={300}
+                duration={500}
+                effect="blur"
+                placeholder={<Placeholder />}
+                src={`${url}/wholesale/product/${img}`}
+                alt={`${product.name} ${index + 1}`}
+                className={`w-16 h-16 object-cover mr-2 cursor-pointer ${
+                  selectedImage === index ? "border-2 border-blue-500" : ""
+                }`}
+                onClick={() => setSelectedImage(index)}
+              />
+            </Suspense>
           ))}
         </div>
       </div>

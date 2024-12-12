@@ -3,6 +3,7 @@ import { FaUsers, FaBox, FaTools, FaCogs, FaArrowLeft } from "react-icons/fa";
 
 import logo from "./../../../assets/logo.jpeg";
 import { useNavigate } from "react-router-dom";
+import { GiPrivate } from "react-icons/gi";
 
 const WholesaleAdminLayout = ({ children }) => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -14,6 +15,7 @@ const WholesaleAdminLayout = ({ children }) => {
     { id: "stock", label: "Stock Details", icon: <FaUsers /> },
     { id: "tools", label: "Create Tools", icon: <FaTools /> },
     { id: "manage-tools", label: "Manage Tools", icon: <FaCogs /> },
+    { id: "hidden-Products", label: "Hidden Products", icon: <GiPrivate /> },
     // { id: "reports", label: "Reports", icon: <FaFileAlt /> },
     // { id: "help", label: "Help", icon: <FaQuestionCircle /> },
   ];
@@ -24,12 +26,7 @@ const WholesaleAdminLayout = ({ children }) => {
         // return <ProductActions />;
         nevigate("/adminDash/wholesale/products");
         break;
-      case "dashboard":
-        nevigate("/adminDash");
-        break;
-      case "orders":
-        nevigate("/adminDash/ordersdashboard");
-        break;
+
       case "tools":
         nevigate("/adminDash/wholesale/tools");
         break;
@@ -38,6 +35,9 @@ const WholesaleAdminLayout = ({ children }) => {
         break;
       case "stock":
         nevigate("/adminDash/wholesale/stock");
+        break;
+      case "hidden-Products":
+        nevigate("/adminDash/wholesale/hiddenProducts");
         break;
       default:
         return <p className="text-gray-600">Content for {activeTab}</p>;

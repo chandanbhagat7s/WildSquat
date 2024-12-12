@@ -6,6 +6,7 @@ import ManageTools from "./Features/Tools/ManageTools";
 import BulkListLayoutProduct from "./Features/Common/BulkListProduct";
 import StockList from "./Features/Stock/StockList";
 import WholeSaleLandingPage from "./Features/Pages/WholeSaleLandingPage";
+import HiddenList from "./Features/Others/HiddenList";
 
 function WholesaleAdminrouter() {
   return (
@@ -51,6 +52,14 @@ function WholesaleAdminrouter() {
           element={
             <WholesaleAdminLayout>
               <StockList />
+            </WholesaleAdminLayout>
+          }
+        />
+        <Route
+          path="/hiddenProducts"
+          element={
+            <WholesaleAdminLayout>
+              <HiddenList />
             </WholesaleAdminLayout>
           }
         />

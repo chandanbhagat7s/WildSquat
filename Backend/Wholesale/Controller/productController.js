@@ -174,5 +174,35 @@ exports.deleteProducts = catchAsync(async (req, res, next) => {
 
 
 
+exports.getAllHiddenProducts = catchAsync(async (req, res, next) => {
+
+    let options = {
+        disableSchemaMiddleware: true, // can be checked in middleware with this.options.disableMiddlewares
+    };
+    const products = await Product.find({ hidden: true }).setOptions(options)
+
+    res.status(200).send({
+        status: true,
+        data: products
+    })
+})
 
 
+exports.unhideSelectedProduct = catchAsync(async (req, res, next) => {
+
+    let options = {
+        disableSchemaMiddleware: true, // can be checked in middleware with this.options.disableMiddlewares
+    };
+    if (!req.params.id) {
+        return next(new appError("please pass details", 400))
+    }
+    const products = await Product.findByIdAndUpdate
+        (req.params.id, { hidden: false }, {
+            new: true
+        }).setOptions(options)
+
+    res.status(200).send({
+        status: true,
+        data: products
+    })
+})

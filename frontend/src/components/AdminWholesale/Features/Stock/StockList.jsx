@@ -69,7 +69,9 @@ export default function StockList() {
 
   const handleHideProduct = async () => {
     try {
-      await axios.put(`/api/v1/product/hideProduct/${selectedProduct._id}`);
+      await axios.patch(`/api/v1/wholesale/product/${selectedProduct._id}`, {
+        hidden: true,
+      });
       setProducts((prevProducts) =>
         prevProducts.filter((p) => p._id !== selectedProduct._id)
       );
@@ -118,7 +120,11 @@ export default function StockList() {
                   </h2>
                   <span className="text-black">Size Option</span>
                   <span className="font-bold text-gray-500">
-                    {product.sizeOption ? "Available" : "Not Available"}
+                    {product.sizeOption ? (
+                      <span className="text-green-400">Available</span>
+                    ) : (
+                      "Not Available"
+                    )}
                   </span>
                   <div className="mb-4">
                     <h3 className="font-semibold mb-1">Sizes</h3>
@@ -326,12 +332,12 @@ const Dialog = ({ isOpen, onClose, product, onUpdateSize, onHideProduct }) => {
           </button>
         </div>
         <div className="mt-6 flex justify-between space-x-4">
-          {/* <button
+          <button
             onClick={onHideProduct}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Hide Product
-          </button> */}
+          </button>
 
           {/* <button
             onClick={() => onClose(!isOpen)}
